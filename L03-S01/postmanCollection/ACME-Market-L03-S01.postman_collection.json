@@ -1,0 +1,475 @@
+{
+	"variables": [],
+	"info": {
+		"name": "ACME-Market-L03-S01",
+		"_postman_id": "defb3f53-458d-2b35-6b42-5c5b8d031001",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST ACTOR-CUSTOMER",
+			"request": {
+				"url": "localhost:8080/v1/actors",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"CustomerName\",\n\t\"surname\": \"CustomerSurname\",\n\t\"email\": \"customer@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"role\": \"CUSTOMER\",\n\t\"address\": \"myAddress\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST ACTOR-CLERK",
+			"request": {
+				"url": "localhost:8080/v1/actors",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"ClerkName\",\n\t\"surname\": \"ClerkSurname\",\n\t\"email\": \"clerk@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345679\",\n\t\"role\": \"CLERK\",\n\t\"address\": \"myAddress\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT ACTOR-CUSTOMER2",
+			"request": {
+				"url": "localhost:8080/v1/actors",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"_id\": \"5c531bd26c769b42ead5e774\",\n\t\"name\": \"Customer2Name\",\n\t\"surname\": \"CustomerSurname\",\n\t\"email\": \"customer2@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"role\": \"CUSTOMER\",\n\t\"address\": \"myAddress\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT ACTOR-CLERK2",
+			"request": {
+				"url": "localhost:8080/v1/actors",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"_id\": \"5c531bd26c769b42ead5e799\",\n\t\"name\": \"Clerk2Name\",\n\t\"surname\": \"Clerk2Surname\",\n\t\"email\": \"clerk2@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345679\",\n\t\"role\": \"CLERK\",\n\t\"address\": \"myAddress\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST ACTOR-ADMIN",
+			"request": {
+				"url": "localhost:8080/v1/actors",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"AdminName\",\n\t\"surname\": \"AdminSurname\",\n\t\"email\": \"admin@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345670\",\n\t\"role\": \"ADMINISTRATOR\",\n\t\"address\": \"myAddress\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT ACTOR-CUSTOMER2",
+			"request": {
+				"url": "localhost:8080/v1/actors/5c531bd26c769b42ead5e774",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"CustomerEDITEDName\",\n\t\"surname\": \"CustomerSurname\",\n\t\"email\": \"customer2@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"role\": \"CUSTOMER\",\n\t\"address\": \"myAddress\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET ALL ACTORS",
+			"request": {
+				"url": "localhost:8080/v1/actors/",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"CustomerEDITEDName\",\n\t\"surname\": \"CustomerSurname\",\n\t\"email\": \"customer@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"role\": \"CUSTOMER\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST CATEGORY MOBILE",
+			"request": {
+				"url": "http://localhost:8080/v0/categories",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"_id\": \"5b1124a6e373da9109d990e5\",\n\t\"name\": \"Mobile devices\",\n\t\"description\": \"Mobile devices and tablets\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST CATEGORY LAPTOP",
+			"request": {
+				"url": "http://localhost:8080/v0/categories",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"_id\": \"5c540db609d0f74808f00805\",\n\t\"name\": \"Laptops\",\n\t\"description\": \"Laptops\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET CATEGORIES",
+			"request": {
+				"url": "http://localhost:8080/v0/categories",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"_id\": \"5b1124a6e373da9109d990e5\",\n\t\"name\": \"Mobile devices\",\n\t\"description\": \"Mobile devices and tablets\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST ITEM iPhone XR",
+			"request": {
+				"url": "http://localhost:8080/v1/items",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"deleted\": \"false\",\n    \"name\": \"iPhone X\",\n    \"description\": \"Ten years anniversary model\",\n    \"price\": 1000,\n    \"category\": \"5b1124a6e373da9109d990e5\",\n    \"sku\": \"abcde\",\n    \"comments\":[\n\t    {\n\t    \t\"title\": \"Really happy\",\n  \t\t\t\"commentText\": \"Face ID works perfectly\",\n  \t\t\t\"stars\": 5\n  \t\t},\n \t\t{\n \t\t    \"title\": \"One less thing...\",\n  \t\t\t\"commentText\": \"I miss the home button\",\n  \t\t\t\"stars\": 4,\n  \t\t\t\"author\": \"Alejandro\"\n \t\t}\n \t]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST ITEM Galaxy S8",
+			"request": {
+				"url": "http://localhost:8080/v1/items",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t    \"deleted\": \"false\",\n\t\t    \"name\": \"Samsung Galaxy S8\",\n\t\t    \"description\": \"Flagship model from Samsung\",\n\t\t    \"price\": 800,\n\t\t    \"category\": \"5b1124a6e373da9109d990e5\",\n\t\t    \"comments\":[\n\t\t\t    {\n\t\t\t    \t\"title\": \"Great\",\n\t\t  \t\t\t\"commentText\": \"OLED display looks sharp!\",\n\t\t  \t\t\t\"stars\": 5\n\t\t  \t\t},\n\t\t \t\t{\n\t\t \t\t    \"title\": \"Very good device.\",\n\t\t  \t\t\t\"commentText\": \"Battery life improved from previous model\",\n\t\t  \t\t\t\"stars\": 4\n\t\t \t\t}\n\t\t \t]\n\t\t}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST ITEM Macbook Air",
+			"request": {
+				"url": "http://localhost:8080/v1/items",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t    \"_id\": \"5c5410a9f0481f4870337184\",\n\t\t    \"deleted\": \"false\",\n\t\t    \"name\": \"Mac Book Air\",\n\t\t    \"description\": \"Thin laptop from Apple\",\n\t\t    \"price\": 800,\n\t\t    \"category\": \"5c540db609d0f74808f00805\",\n\t\t    \"sku\": \"abcde\",\n\t\t    \"comments\":[\n\t\t\t    {\n\t\t\t    \t\"title\": \"Great\",\n\t\t  \t\t\t\"commentText\": \"New keyboard is smooth\",\n\t\t  \t\t\t\"stars\": 5\n\t\t  \t\t},\n\t\t \t\t{\n\t\t \t\t    \"title\": \"Very good device.\",\n\t\t  \t\t\t\"commentText\": \"Frames around the screen are thinner than ever\",\n\t\t  \t\t\t\"stars\": 4\n\t\t \t\t}\n\t\t \t]\n\t\t}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT ITEM Macbook Air",
+			"request": {
+				"url": "http://localhost:8080/v1/items/5c5410a9f0481f4870337184",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t    \"deleted\": \"false\",\n\t\t    \"name\": \"Mac Book Air\",\n\t\t    \"description\": \"Thin laptop from Apple\",\n\t\t    \"price\": 1600,\n\t\t    \"category\": \"5c540db609d0f74808f00805\",\n\t\t    \"sku\": \"abcde\",\n\t\t    \"comments\":[\n\t\t\t    {\n\t\t\t    \t\"title\": \"Great\",\n\t\t  \t\t\t\"commentText\": \"New keyboard is smooth\",\n\t\t  \t\t\t\"stars\": 5\n\t\t  \t\t},\n\t\t \t\t{\n\t\t \t\t    \"title\": \"Very good device.\",\n\t\t  \t\t\t\"commentText\": \"Frames around the screen are thinner than ever\",\n\t\t  \t\t\t\"stars\": 4\n\t\t \t\t}\n\t\t \t]\n\t\t}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET ITEMS",
+			"request": {
+				"url": "http://localhost:8080/v1/items/",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"consumerName\": \"ConsumerName\",\n    \"deliveryAddress\": \"Dirección de envío\",\n    \"total\": 1000,\n    \"consumer\": \"5a2523f2d8e08f6803212456\",\n    \"creditCard\": {\n    \t\"holder\": \"Holder Name\",\n    \t\"brand\": \"MasterCard\",\n    \t\"number\": \"1234 1234 1234 1234\",\n    \t\"expirationMonth\":1,\n    \t\"expirationYear\": 2020,\n    \t\"cvv\": 123\n    },\n    \"comments\":[\"Comentario 1\", \"Comentario 2\"],\n    \"orderedItems\": [\n        {\n            \"sku\": \"123456\",\n            \"served\": false,\n            \"name\": \"iPhone X\",\n            \"quantity\": 1,\n            \"price\": 1000\n            \n        }\n    ]\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET \"SEARCH\" ITEMS",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/v1/items/search?sortedBy=category",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"items",
+						"search"
+					],
+					"query": [
+						{
+							"key": "sortedBy",
+							"value": "category",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"consumerName\": \"ConsumerName\",\n    \"deliveryAddress\": \"Dirección de envío\",\n    \"total\": 1000,\n    \"consumer\": \"5a2523f2d8e08f6803212456\",\n    \"creditCard\": {\n    \t\"holder\": \"Holder Name\",\n    \t\"brand\": \"MasterCard\",\n    \t\"number\": \"1234 1234 1234 1234\",\n    \t\"expirationMonth\":1,\n    \t\"expirationYear\": 2020,\n    \t\"cvv\": 123\n    },\n    \"comments\":[\"Comentario 1\", \"Comentario 2\"],\n    \"orderedItems\": [\n        {\n            \"sku\": \"123456\",\n            \"served\": false,\n            \"name\": \"iPhone X\",\n            \"quantity\": 1,\n            \"price\": 1000\n            \n        }\n    ]\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE ITEM",
+			"request": {
+				"url": "localhost:8080/v1/items/5c540db609d0f74808f00805",
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"CustomerEDITEDName\",\n\t\"surname\": \"CustomerSurname\",\n\t\"email\": \"customer@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"role\": \"CUSTOMER\"\n}"
+				},
+				"description": "Include previously generated id"
+			},
+			"response": []
+		},
+		{
+			"name": "POST ORDER",
+			"request": {
+				"url": "http://localhost:8080/v1/orders/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"consumerName\": \"ConsumerName\",\n    \"deliveryAddress\": \"Dirección de envío\",\n    \"total\": 1000,\n    \"consumer\": \"5a2523f2d8e08f6803212456\",\n    \"creditCard\": {\n    \t\"holder\": \"Holder Name\",\n    \t\"brand\": \"MasterCard\",\n    \t\"number\": \"1234 1234 1234 1234\",\n    \t\"expirationMonth\":1,\n    \t\"expirationYear\": 2020,\n    \t\"cvv\": 123\n    },\n    \"comments\":[\"Comentario 1\", \"Comentario 2\"],\n    \"orderedItems\": [\n        {\n            \"sku\": \"123456\",\n            \"served\": false,\n            \"name\": \"iPhone X\",\n            \"quantity\": 1,\n            \"price\": 1000\n            \n        }\n    ]\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST ORDER 2",
+			"request": {
+				"url": "http://localhost:8080/v1/orders/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_id\": \"5c5411d0f0481f4870337187\",\n    \"consumerName\": \"Alejandro\",\n    \"deliveryAddress\": \"Mi dirección\",\n    \"total\": 1000,\n    \"consumer\": \"5a2523f2d8e08f6803212458\",\n    \"creditCard\": {\n    \t\"holder\": \"Holder Name\",\n    \t\"brand\": \"MasterCard\",\n    \t\"number\": \"1234 1234 1234 1234\",\n    \t\"expirationMonth\":1,\n    \t\"expirationYear\": 2020,\n    \t\"cvv\": 123\n    },\n    \"comments\":[\"Comentario 1\", \"Comentario 2\"],\n    \"orderedItems\": [\n        {\n            \"sku\": \"123456\",\n            \"served\": false,\n            \"name\": \"iPhone XR\",\n            \"quantity\": 1,\n            \"price\": 1000\n            \n        },\n        {\n            \"sku\": \"654321\",\n            \"served\": false,\n            \"name\": \"Galaxy S8\",\n            \"quantity\": 2,\n            \"price\": 800\n            \n        }\n    ]\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT ORDER 2",
+			"request": {
+				"url": "http://localhost:8080/v1/orders/5c5411d0f0481f4870337187",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_id\": \"5c5411d0f0481f4870337187\",\n    \"consumerName\": \"Alejandro\",\n    \"deliveryAddress\": \"Mi dirección\",\n    \"total\": 1000,\n    \"consumer\": \"5a2523f2d8e08f6803212458\",\n    \"creditCard\": {\n    \t\"holder\": \"Holder Name\",\n    \t\"brand\": \"MasterCard\",\n    \t\"number\": \"1234 1234 1234 1234\",\n    \t\"expirationMonth\":1,\n    \t\"expirationYear\": 2020,\n    \t\"cvv\": 123\n    },\n    \"comments\":[\"Comentario 1\", \"Comentario 2\"],\n    \"orderedItems\": [\n        {\n            \"sku\": \"123456\",\n            \"served\": false,\n            \"name\": \"iPhone XR\",\n            \"quantity\": 1,\n            \"price\": 1000\n            \n        },\n        {\n            \"sku\": \"654321\",\n            \"served\": false,\n            \"name\": \"Galaxy S8\",\n            \"quantity\": 2,\n            \"price\": 800\n            \n        },\n        {\n            \"sku\": \"abcde\",\n            \"served\": false,\n            \"name\": \"Macbook Air\",\n            \"quantity\": 2,\n            \"price\": 1600\n            \n        }\n        \n    ]\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET \"SEARCH\" ORDERS",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/v1/orders/search?clerkId=5c531bd26c769b42ead5e799",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"orders",
+						"search"
+					],
+					"query": [
+						{
+							"key": "clerkId",
+							"value": "5c531bd26c769b42ead5e799",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"consumerName\": \"ConsumerName\",\n    \"deliveryAddress\": \"Dirección de envío\",\n    \"total\": 1000,\n    \"consumer\": \"5a2523f2d8e08f6803212456\",\n    \"creditCard\": {\n    \t\"holder\": \"Holder Name\",\n    \t\"brand\": \"MasterCard\",\n    \t\"number\": \"1234 1234 1234 1234\",\n    \t\"expirationMonth\":1,\n    \t\"expirationYear\": 2020,\n    \t\"cvv\": 123\n    },\n    \"comments\":[\"Comentario 1\", \"Comentario 2\"],\n    \"orderedItems\": [\n        {\n            \"sku\": \"123456\",\n            \"served\": false,\n            \"name\": \"iPhone X\",\n            \"quantity\": 1,\n            \"price\": 1000\n            \n        }\n    ]\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE ORDER 2",
+			"request": {
+				"url": "localhost:8080/v1/items/5c5410a9f0481f4870337184",
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"CustomerEDITEDName\",\n\t\"surname\": \"CustomerSurname\",\n\t\"email\": \"customer@fakemail.com\",\n\t\"password\": \"mypass\",\n\t\"phone\": \"+34612345678\",\n\t\"role\": \"CUSTOMER\"\n}"
+				},
+				"description": "Include previously generated id"
+			},
+			"response": []
+		}
+	]
+}
