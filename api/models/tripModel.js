@@ -68,9 +68,10 @@ var sponsorshipSchema = new Schema({
     sponsor:{
         type: Actor
     },
-    trip:{
-        type: Trip
-    }
+    trip:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Trip'
+    }]
 }, { strict: false })
 
 
@@ -114,9 +115,8 @@ var tripSchema = new Schema({
         data: String
     },
     stages: [stageSchema],
-    applications:{
-        type: [applicationSchema]
-    }
+    applications: [applicationSchema],
+    
 }, { strict: false });
 
 
