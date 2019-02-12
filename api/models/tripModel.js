@@ -66,10 +66,9 @@ var sponsorshipSchema = new Schema({
         default: false
     },
     sponsor:{
-        type: Actor
-    },
-    trip:{
-        type: Trip
+        type: Schema.Types.ObjectId,
+        ref: 'Actor',
+        required: 'Kindly enter the sponsor id'
     }
 }, { strict: false })
 
@@ -107,7 +106,7 @@ var tripSchema = new Schema({
         // Validate after startDate
     },
     pictures: {
-        data: [Buffer], 
+        data: [Buffer],
         contentType: String
     },
     reasonCancellation: {
@@ -116,7 +115,8 @@ var tripSchema = new Schema({
     stages: [stageSchema],
     applications:{
         type: [applicationSchema]
-    }
+    },
+    sponsorships: [sponsorshipSchema]
 }, { strict: false });
 
 
