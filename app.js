@@ -5,7 +5,6 @@ var express = require('express'),
   Actor = require('./api/models/actorModel'),
   Application = require('./api/models/applicationModel'),
   Trip = require('./api/models/tripModel'),
-  Sponsorship = require('./api/models/sponsorshipModel'),
   Config = require('./api/models/configModel'), // Singleton
   bodyParser = require('body-parser');
 
@@ -32,18 +31,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-var routesActors = require('./api/routes/actorRoutes');
-var routesApplication = require('./api/routes/applicationRoutes'); 
-var routesTrip = require('./api/routes/tripRoutes');
-var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
-var routesConfig = require('./api/routes/configRoutes');
+// var routesActors = require('./api/routes/actorRoutes');
+// var routesApplication = require('./api/routes/applicationRoutes'); 
+// var routesTrip = require('./api/routes/tripRoutes');
+// var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
+// var routesConfig = require('./api/routes/configRoutes');
 
 
-routesActors(app);
-routesApplication(app);
-routesTrip(app);
-routesSponsorship(app);
-routesConfig(app);
+// routesActors(app);
+// routesApplication(app);
+// routesTrip(app);
+// routesSponsorship(app);
+// routesConfig(app);
 
 
 console.log("Connecting DB to: " + mongoDBURI);
