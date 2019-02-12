@@ -90,6 +90,15 @@ var tripSchema = new Schema({
     }]
 }, { strict: false });
 
+// Execute before each trip.save() call
+TripSchema.pre('save', function(callback) {
+  var new_trip = this;
+  var date = new Date;
+  var day=dateFormat(new Date(), "yymmdd");
 
+  var generated_ticker = [day, generate('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4)].join('-')
+  new_trip.ticker = generated_ticker;
+  callback();
+});
 
 module.exports = mongoose.model('Trips', tripSchema);
