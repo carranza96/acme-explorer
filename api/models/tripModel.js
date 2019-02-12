@@ -44,6 +44,7 @@ var tripSchema = new Schema({
     ticker:{
         type: String,
         required: 'Kindly enter the ticker',
+        match: [/^([0-9]){2}([0-1]){1}([0-9]){1}([0-3]){1}([0-9]){1}-([A-Z]){4}$/, 'Please fill a valid ticker matching the pattern YYMMDD-XXXX']
         // Validate pattern "YYMMDD-XXXX"
     },
     title:{
