@@ -24,11 +24,6 @@ exports.create_an_actor = function(req, res) {
   var new_actor = new Actor(req.body);
   // If new_actor is a customer, validated = true;
   // If new_actor is a clerk, validated = false;
-  if ((new_actor.role.includes( 'CLERK' ))) {
-    new_actor.validated = false;
-  } else {
-    new_actor.validated = true;
-  }
   new_actor.save(function(err, actor) {
     if (err){
       if(err.name=='ValidationError') {
