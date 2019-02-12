@@ -1,8 +1,40 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Actor = require('./api/models/actorModel'),
-var Trip = require('./api/models/tripModel'),
+
+
+
+var applicationSchema = new Schema({
+    moment:{
+        type: Date,
+        required: 'Kindly enter the moment',
+        default: Date.now
+        // TODO: Validar restricción fecha pasada
+    },
+    status:{
+        type: String,
+        required: 'Kindly enter the status',
+        default: 'PENDING',
+        enum: ['PENDING','REJECTED', 'DUE','ACCEPTED','CANCELLED'],
+    },
+    comments:{
+        type: [String]
+    },
+    rejectReason:{
+        type: String
+    },
+    paid:{
+        type:Boolean,
+        default:false
+    },
+    explorer:{
+        type: Schema.Types.ObjectId,
+        ref: 'Actor',
+        required: 'Kindly enter the explorer id'
+    },
+},  { strict: false })
+
+
 
 
 var stageSchema = new Schema({
@@ -82,6 +114,9 @@ var tripSchema = new Schema({
         data: String
     },
     stages: [stageSchema],
+    applications:{
+        type: [applicationSchema]
+    }
 }, { strict: false });
 
 
