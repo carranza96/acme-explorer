@@ -72,6 +72,7 @@ var tripSchema = new Schema({
     endDate: {
         type: Date,
         required: 'Kindly enter the end date',
+        // Validate after startDate
     },
     pictures: {
         data: [Buffer], 

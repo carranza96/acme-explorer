@@ -31,7 +31,12 @@ exports.create_an_actor = function(req, res) {
   }
   new_actor.save(function(err, actor) {
     if (err){
-      res.send(err);
+      if(err.name=='ValidationError') {
+          res.status(422).send(err);
+      }
+      else{
+        res.status(500).send(err);
+      }
     }
     else{
       res.json(actor);
@@ -53,12 +58,17 @@ exports.read_an_actor = function(req, res) {
 exports.update_an_actor = function(req, res) {
     //Check that the user is the proper actor and if not: res.status(403); "an access token is valid, but requires more privileges"
     Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
-        if (err){
-            res.send(err);
+      if (err){
+        if(err.name=='ValidationError') {
+            res.status(422).send(err);
         }
         else{
-            res.json(actor);
+          res.status(500).send(err);
         }
+      }
+      else{
+          res.json(actor);
+      }
     });
 };
 
