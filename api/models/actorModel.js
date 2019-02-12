@@ -28,11 +28,13 @@ var FinderSchema = new Schema({
     default: null
   },
   results:{
-    type: [Trip.tripSchema]
+    type: [Trip]
   }
 
 
 }, { strict: false } )
+
+
 
 var ActorSchema = new Schema({
   name: {
@@ -62,7 +64,6 @@ var ActorSchema = new Schema({
   address:{
     type: String
   },
-
   role: [{
     type: String,
     required: 'Kindly enter the user role(s)',
