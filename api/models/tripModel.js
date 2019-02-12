@@ -4,39 +4,6 @@ var Schema = mongoose.Schema;
 
 
 
-var applicationSchema = new Schema({
-    moment:{
-        type: Date,
-        required: 'Kindly enter the moment',
-        default: Date.now
-        // TODO: Validar restricción fecha pasada
-    },
-    status:{
-        type: String,
-        required: 'Kindly enter the status',
-        default: 'PENDING',
-        enum: ['PENDING','REJECTED', 'DUE','ACCEPTED','CANCELLED'],
-    },
-    comments:{
-        type: [String]
-    },
-    rejectReason:{
-        type: String
-    },
-    paid:{
-        type:Boolean,
-        default:false
-    },
-    explorer:{
-        type: Schema.Types.ObjectId,
-        ref: 'Actor',
-        required: 'Kindly enter the explorer id'
-    },
-},  { strict: false })
-
-
-
-
 var stageSchema = new Schema({
     title:{
         type: String,
@@ -106,18 +73,21 @@ var tripSchema = new Schema({
         required: 'Kindly enter the end date',
         // Validate after startDate
     },
-    pictures: {
-        data: [Buffer],
+    pictures: [{
+        data: Buffer,
         contentType: String
-    },
+    }],
     reasonCancellation: {
         data: String
     },
-    stages: [stageSchema],
-    applications:{
-        type: [applicationSchema]
-    },
-    sponsorships: [sponsorshipSchema]
+    stages:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Stage',
+    }],
+    sponsorships:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Sponsorship',
+    }]
 }, { strict: false });
 
 // Execute before each trip.save() call

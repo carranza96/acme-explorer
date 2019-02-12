@@ -2,8 +2,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
-var Trip = require('./api/models/tripModel'),
-
 
 var FinderSchema = new Schema({
   keyWord:{
@@ -28,11 +26,11 @@ var FinderSchema = new Schema({
     type: Date,
     default: null
   },
-  results:{
-    type: [Trip]
-  }
-
-
+  results:[{
+    type: Schema.Types.ObjectId,
+    ref: 'Trip'
+  }]
+  
 }, { strict: false } )
 
 
