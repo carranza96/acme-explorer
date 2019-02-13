@@ -2,8 +2,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-
-
 var stageSchema = new Schema({
     title:{
         type: String,

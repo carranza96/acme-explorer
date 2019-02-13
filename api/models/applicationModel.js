@@ -35,3 +35,5 @@ var applicationSchema = new Schema({
         required: 'Kindly enter the trip id' 
     }
 },  { strict: false })
+
+module.exports = mongoose.model('Applications', applicationSchema);

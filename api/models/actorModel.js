@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 
-var FinderSchema = new Schema({
+var finderSchema = new Schema({
   keyWord:{
     type: String,
     default: null
@@ -34,8 +34,7 @@ var FinderSchema = new Schema({
 }, { strict: false } )
 
 
-
-var ActorSchema = new Schema({
+var actorSchema = new Schema({
   name: {
     type: String,
     required: 'Kindly enter the actor name'
@@ -82,7 +81,7 @@ var ActorSchema = new Schema({
 
 
 
-ActorSchema.pre('save', function(callback) {
+actorSchema.pre('save', function(callback) {
   var actor = this;
   // Break out if the password hasn't changed
   if (!actor.isModified('password')) return callback();
@@ -99,7 +98,7 @@ ActorSchema.pre('save', function(callback) {
   });
 });
 
-ActorSchema.methods.verifyPassword = function(password, cb) {
+actorSchema.methods.verifyPassword = function(password, cb) {
     bcrypt.compare(password, this.password, function(err, isMatch) {
     console.log('verifying password in actorModel: '+password);
     if (err) return cb(err);
@@ -110,4 +109,5 @@ ActorSchema.methods.verifyPassword = function(password, cb) {
 
 
 
-module.exports = mongoose.model('Actors', ActorSchema);
+module.exports = mongoose.model('Actors', actorSchema);
+module.exports = mongoose.model('Finders', finderSchema);

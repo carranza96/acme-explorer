@@ -20,3 +20,5 @@ var configSchema = new Schema({
     }
 
 }, { strict: false })
+
+module.exports = mongoose.model('Configs', configSchema);
