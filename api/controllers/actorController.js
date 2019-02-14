@@ -8,9 +8,8 @@ exports.list_all_actors = function(req, res) {
     var roleName;
     if(req.query.role){
         roleName=req.query.role;
-      }
-    //Adapt to find the actors with the specified role
-    Actor.find({}, function(err, actors) {
+    }
+    Actor.find({role:roleName}, function(err, actors) {
         if (err){
           res.send(err);
         }
@@ -22,8 +21,6 @@ exports.list_all_actors = function(req, res) {
 
 exports.create_an_actor = function(req, res) {
   var new_actor = new Actor(req.body);
-  // If new_actor is a customer, validated = true;
-  // If new_actor is a clerk, validated = false;
   new_actor.save(function(err, actor) {
     if (err){
       if(err.name=='ValidationError') {
@@ -67,10 +64,22 @@ exports.update_an_actor = function(req, res) {
     });
 };
 
-exports.validate_an_actor = function(req, res) {
+exports.ban_an_actor = function(req, res) {
     //Check that the user is an Administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
-    console.log("Validating an actor with id: "+req.params.actorId)
-    Actor.findOneAndUpdate({_id: req.params.actorId},  { $set: {"validated": "true" }}, {new: true}, function(err, actor) {
+    console.log("banning an actor with id: "+req.params.actorId)
+    Actor.findOneAndUpdate({_id: req.params.actorId},  { $set: {"banned": "true" }}, {new: true}, function(err, actor) {
+      if (err){
+        res.send(err);
+      }
+      else{
+        res.json(actor);
+      }
+    });
+  };
+exports.unban_an_actor = function(req, res) {
+    //Check that the user is an Administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
+    console.log("banning an actor with id: "+req.params.actorId)
+    Actor.findOneAndUpdate({_id: req.params.actorId},  { $set: {"banned": "false" }}, {new: true}, function(err, actor) {
       if (err){
         res.send(err);
       }
