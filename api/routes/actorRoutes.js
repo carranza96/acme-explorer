@@ -3,7 +3,7 @@ module.exports = function(app) {
   var actors = require('../controllers/actorController');
 
   /**
-   * Get all actors who are clerk (any role)
+   * Get all actors by role
    *    Required role: Administrator
    * Post an actor
    *    RequiredRoles: None
@@ -14,7 +14,7 @@ module.exports = function(app) {
 	 * @section actors
 	 * @type get post
 	 * @url /v1/actors
-   * @param {string} role (clerk|administrator|customer)
+   * @param {string} role (EXPLORER|ADMINISTRATOR|MANAGER|SPONSOR)
   */
   app.route('/v1/actors')
 	  .get(actors.list_all_actors)

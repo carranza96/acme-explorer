@@ -5,11 +5,12 @@ var mongoose = require('mongoose'),
 
 exports.list_all_actors = function(req, res) {
     //Check if the role param exist
-    var roleName;
+    var match = {};
     if(req.query.role){
-        roleName=req.query.role;
+        var roleName=req.query.role;
+        match = {role:roleName};
     }
-    Actor.find({role:roleName}, function(err, actors) {
+    Actor.find(match, function(err, actors) {
         if (err){
           res.send(err);
         }
