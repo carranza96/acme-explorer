@@ -1,5 +1,5 @@
 'use strict';
-/*---------------ACTOR----------------------*/
+/*---------------TRIP----------------------*/
 var mongoose = require('mongoose'),
   Trip = mongoose.model('Trips');
 
