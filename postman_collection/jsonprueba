@@ -1,0 +1,40 @@
+[
+	{
+	"name":"Manuel",
+	"surname":"Carranza",
+	"email":"mcg@us.es",
+	"password":"sevilla",
+	"phone":"608840009",
+	"address":"Calle Sevilla",
+	"role":"EXPLORER"
+	},
+	{
+	"name":"Pedro",
+	"surname":"Lara",
+	"email":"plb@us.es",
+	"password":"betis",
+	"phone":"608840010",
+	"address":"Calle Betis",
+	"role":"MANAGER"	
+	},
+	{
+	"name":"Miguel",
+	"surname":"Esteban",
+	"email":"meg@us.es",
+	"password":"rebeca",
+	"phone":"608840012",
+	"address":"Calle Madrid",
+	"role":["ADMINISTRATOR","MANAGER"]	
+	},
+	{
+	"name":"Jose María",
+	"surname":"Luna",
+	"email":"jml@us.es",
+	"password":"paquetaun",
+	"phone":"608840020",
+	"address":"Calle Paquete",
+	"role":"SPONSOR"	
+	}
+	
+	
+]

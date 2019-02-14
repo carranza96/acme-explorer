@@ -42,8 +42,8 @@ var tripSchema = new Schema({
     ticker:{
         type: String,
         required: 'Kindly enter the ticker',
+        unique: true,
         match: [/^([0-9]){2}([0-1]){1}([0-9]){1}([0-3]){1}([0-9]){1}-([A-Z]){4}$/, 'Please fill a valid ticker matching the pattern YYMMDD-XXXX']
-        // Validate pattern "YYMMDD-XXXX"
     },
     title:{
         type: String,
@@ -89,7 +89,7 @@ var tripSchema = new Schema({
 }, { strict: false });
 
 // Execute before each trip.save() call
-TripSchema.pre('save', function(callback) {
+tripSchema.pre('save', function(callback) {
   var new_trip = this;
   var date = new Date;
   var day=dateFormat(new Date(), "yymmdd");

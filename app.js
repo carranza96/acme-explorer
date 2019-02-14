@@ -31,15 +31,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-// var routesActors = require('./api/routes/actorRoutes');
-// var routesApplication = require('./api/routes/applicationRoutes'); 
+var routesActors = require('./api/routes/actorRoutes');
+var routesApplication = require('./api/routes/applicationRoutes'); 
 // var routesTrip = require('./api/routes/tripRoutes');
 // var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
 // var routesConfig = require('./api/routes/configRoutes');
 
 
-// routesActors(app);
-// routesApplication(app);
+routesActors(app);
+routesApplication(app);
 // routesTrip(app);
 // routesSponsorship(app);
 // routesConfig(app);
