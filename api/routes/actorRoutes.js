@@ -3,12 +3,14 @@ module.exports = function(app) {
   var actors = require('../controllers/actorController');
 
   /**
-   * Get an actor who is clerk (any role)
+   * Get all actors who are clerk (any role)
    *    Required role: Administrator
    * Post an actor
    *    RequiredRoles: None
-   *    validated if customer and not validated if clerk
-	 *
+   *    validated if explorer or sponsor and not validated if clerk
+	 * Delete all
+   *    this is just for debugging, it should be removed before production
+   *
 	 * @section actors
 	 * @type get post
 	 * @url /v1/actors
@@ -35,15 +37,26 @@ module.exports = function(app) {
     .delete(actors.delete_an_actor);
 
   /**
-	 * Put to Validate a clerk by actorId
+	 * Ban an actor by actorId
    *    RequiredRole: Administrator
 	 *
 	 * @section actors
 	 * @type put
-	 * @url /v1/actors/:actorId/validate
+	 * @url /v1/actors/:actorId/ban
 	 * @param {string} actorId
 	*/
-  app.route('/v1/actors/:actorId/validate')
-  .put(actors.validate_an_actor)
+  app.route('/v1/actors/:actorId/ban')
+  .put(actors.ban_an_actor)
+  /**
+   * Unban an actor by actorId
+   *    RequiredRole: Administrator
+   *
+   * @section actors
+   * @type put
+   * @url /v1/actors/:actorId/unban
+   * @param {string} actorId
+  */
+  app.route('/v1/actors/:actorId/unban')
+  .put(actors.unban_an_actor)
 
 };
