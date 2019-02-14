@@ -1,0 +1,374 @@
+{
+	"info": {
+		"_postman_id": "36c3cb06-68e5-4888-ac49-24c916ca5e09",
+		"name": "Acme-explorer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Actor",
+			"item": [
+				{
+					"name": "GET Actors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ActorByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/5c65936ca2f60731a2ad3e2b",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								"5c65936ca2f60731a2ad3e2b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Actors with role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors?role=EXPLORER",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "EXPLORER"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Actors",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"name\":\"Pedro\",\n\"surname\":\"Lara\",\n\"email\":\"plb@us.es\",\n\"password\":\"betis\",\n\"phone\":\"608840010\",\n\"address\":\"Calle Betis\",\n\"role\":\"MANAGER\"\t\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT ActorByID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"preferredLanguage\": \"en\",\n    \"role\": [\n        \"MANAGER\"\n    ],\n    \"banned\": true,\n    \"name\": \"Pedro\",\n    \"surname\": \"Lara\",\n    \"email\": \"plb@us.es\",\n    \"password\": \"betis\",\n    \"phone\": \"608840010\",\n    \"address\": \"Calle Betis\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/5c65936ca2f60731a2ad3e2b",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								"5c65936ca2f60731a2ad3e2b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Ban Actor",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/5c65936ca2f60731a2ad3e2b/ban",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								"5c65936ca2f60731a2ad3e2b",
+								"ban"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Unban Actor",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/5c65936ca2f60731a2ad3e2b/unban",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								"5c65936ca2f60731a2ad3e2b",
+								"unban"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Actors",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ActorByID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/5c6592bd757c762cc0f1f794",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								"5c6592bd757c762cc0f1f794"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Application",
+			"item": [
+				{
+					"name": "GET Applications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/applications/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ApplicationByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"3edf\",\n\t\"trip\": \"4df\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/applications/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT ApplicationByID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/applications/5c6595c80fc97734022e0362",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications",
+								"5c6595c80fc97734022e0362"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ApplicationByID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/applications/5c6595c80fc97734022e0362",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications",
+								"5c6595c80fc97734022e0362"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
