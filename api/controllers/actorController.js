@@ -102,7 +102,7 @@ exports.delete_an_actor = function(req, res) {
 };
 
 exports.delete_all_actors = function(req, res) {
-    Actor.remove({}, function(err, actor) {
+    Actor.deleteMany({}, function(err, actor) {
         if (err){
             res.send(err);
         }

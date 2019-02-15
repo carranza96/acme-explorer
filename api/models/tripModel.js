@@ -1,6 +1,8 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+const generate = require('nanoid/generate');
+const dateformat = require('dateformat');
 
 var stageSchema = new Schema({
     title:{
@@ -41,7 +43,6 @@ var sponsorshipSchema = new Schema({
 var tripSchema = new Schema({
     ticker:{
         type: String,
-        required: 'Kindly enter the ticker',
         unique: true,
         match: [/^([0-9]){2}([0-1]){1}([0-9]){1}([0-3]){1}([0-9]){1}-([A-Z]){4}$/, 'Please fill a valid ticker matching the pattern YYMMDD-XXXX']
     },
@@ -58,10 +59,10 @@ var tripSchema = new Schema({
         required: 'Kindly enter the description',
         min: 0
     },
-    requirements: {
-        type: [String],
+    requirements: [{
+        type: String,
         required: 'Kindly enter the requirements',
-    },
+    }],
     startDate: {
         type: Date,
         required: 'Kindly enter the start date',
@@ -69,7 +70,12 @@ var tripSchema = new Schema({
     endDate: {
         type: Date,
         required: 'Kindly enter the end date',
-        // Validate after startDate
+        validate: {
+            validator: function(value) {
+                return this.startDate < value;
+            },
+            message: 'End date must be after start date'
+          }
     },
     pictures: [{
         data: Buffer,
@@ -85,15 +91,28 @@ var tripSchema = new Schema({
     sponsorships:[{
         type: Schema.Types.ObjectId,
         ref: 'Sponsorship',
-    }]
+    }],
+    manager:{
+        type: Schema.Types.ObjectId,
+        ref:'Actor'
+    }
 }, { strict: false });
+
+
+
+// tripSchema.pre('validate', function (next) {
+//     if (this.startDate > this.endDate) {
+//       this.invalidate('startDate', 'Start date must be less than end date.', this.startDate);
+//     }
+
+//     next();
+// });
+
 
 // Execute before each trip.save() call
 tripSchema.pre('save', function(callback) {
   var new_trip = this;
-  var date = new Date;
-  var day=dateFormat(new Date(), "yymmdd");
-
+  var day = dateformat(new Date(), "yymmdd");
   var generated_ticker = [day, generate('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4)].join('-')
   new_trip.ticker = generated_ticker;
   callback();

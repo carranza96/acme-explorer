@@ -71,7 +71,7 @@ var mongoose = require('mongoose'),
   };
 
   exports.delete_config = function(req, res) {
-      Actor.remove({}, function(err, config) {
+      Actor.deleteMany({}, function(err, config) {
           if (err){
               res.send(err);
           }

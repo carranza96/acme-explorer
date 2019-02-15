@@ -86,7 +86,38 @@
 					"response": []
 				},
 				{
-					"name": "POST Actors",
+					"name": "POST Actors EXPLORER",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Manuel\",\n\t\"surname\":\"Carranza\",\n\t\"email\":\"mcg@us.es\",\n\t\"password\":\"sevilla\",\n\t\"phone\":\"608840009\",\n\t\"address\":\"Calle Sevilla\",\n\t\"role\":\"EXPLORER\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Actors MANAGER",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -100,6 +131,68 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n\"name\":\"Pedro\",\n\"surname\":\"Lara\",\n\"email\":\"plb@us.es\",\n\"password\":\"betis\",\n\"phone\":\"608840010\",\n\"address\":\"Calle Betis\",\n\"role\":\"MANAGER\"\t\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Actors ADMINISTRATOR",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Miguel\",\n\t\"surname\":\"Esteban\",\n\t\"email\":\"meg@us.es\",\n\t\"password\":\"rebeca\",\n\t\"phone\":\"608840012\",\n\t\"address\":\"Calle Madrid\",\n\t\"role\":[\"ADMINISTRATOR\",\"MANAGER\"]\t\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/actors/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"actors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Actors SPONSOR",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Jose María\",\n\t\"surname\":\"Luna\",\n\t\"email\":\"jml@us.es\",\n\t\"password\":\"paquetaun\",\n\t\"phone\":\"608840020\",\n\t\"address\":\"Calle Paquete\",\n\t\"role\":\"SPONSOR\"\t\n}"
 						},
 						"url": {
 							"raw": "localhost:8080/v1/actors/",
@@ -284,7 +377,16 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": ""
+							"raw": "localhost:8080/v1/applications/5c6595c80fc97734022e0362",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications",
+								"5c6595c80fc97734022e0362"
+							]
 						}
 					},
 					"response": []
@@ -303,7 +405,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"3edf\",\n\t\"trip\": \"4df\"\n}"
+							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"5c65936ca2f60731a2ad3e2d\",\n\t\"trip\":\"5c65936ca2f60731a2ad3e2e\"\n}"
 						},
 						"url": {
 							"raw": "localhost:8080/v1/applications/",
@@ -324,7 +426,14 @@
 					"name": "PUT ApplicationByID",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": ""
@@ -364,6 +473,136 @@
 								"applications",
 								"5c6595c80fc97734022e0362"
 							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trip",
+			"item": [
+				{
+					"name": "GET Trips",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/trips/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Trip",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ticker\":\"a\",\n\t\"title\":\"Excursión a Madrid\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":100,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2019-07-01\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/trips/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT TripByID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\":\"Excursión a Valencia\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":100,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2019-07-01\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/trips/5c671f8ee0a1bb5be474a92e",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								"5c671f8ee0a1bb5be474a92e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Trips",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/trips/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE TripByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": ""
 						}
 					},
 					"response": []

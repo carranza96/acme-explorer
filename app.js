@@ -33,14 +33,14 @@ app.use(bodyParser.json());
 
 var routesActors = require('./api/routes/actorRoutes');
 var routesApplication = require('./api/routes/applicationRoutes'); 
-// var routesTrip = require('./api/routes/tripRoutes');
+var routesTrip = require('./api/routes/tripRoutes');
 // var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
 // var routesConfig = require('./api/routes/configRoutes');
 
 
 routesActors(app);
 routesApplication(app);
-// routesTrip(app);
+routesTrip(app);
 // routesSponsorship(app);
 // routesConfig(app);
 
@@ -51,6 +51,9 @@ mongoose.connection.on("open", function (err, conn) {
         console.log('ACME-Explorer RESTful API server started on: ' + port);
     });
 });
+
+// mongoose.connection.dropDatabase()
+
 
 mongoose.connection.on("error", function (err, conn) {
     console.error("DB init error " + err);
