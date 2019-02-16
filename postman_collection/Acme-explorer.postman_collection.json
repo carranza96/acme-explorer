@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "36c3cb06-68e5-4888-ac49-24c916ca5e09",
+		"_postman_id": "3159bcb3-78c8-4d61-9231-9e4affe99514",
 		"name": "Acme-explorer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -665,6 +665,116 @@
 								"v1",
 								"trips",
 								"5c671f8ee0a1bb5be474a92e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Config",
+			"item": [
+				{
+					"name": "POST Config (init)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/config/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"config",
+								""
+							]
+						},
+						"description": "POST Config (init)"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Config",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/config/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"config",
+								""
+							]
+						},
+						"description": "get config params"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Config",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"finderResultCacheTime\": 120,\n    \"finderResultNumber\": 12,\n    \"sponsorshipFlatRate\": 1.5\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/config/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"config",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Config",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/config/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"config",
+								""
 							]
 						}
 					},

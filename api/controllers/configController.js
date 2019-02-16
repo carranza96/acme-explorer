@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
   Config = mongoose.model('Config');
 
   exports.init_config = function(req, res) {
-    newConfig = new Config();
+    var newConfig = new Config();
     Config.find({}, function(err, configs){
       if(err){
         res.send(err);
@@ -33,7 +33,8 @@ var mongoose = require('mongoose'),
               res.status(404).send('there is no config')
             }
             else{
-              res.json(config_ls[0]);
+              var config_res = config_ls[0];
+              res.json(config_res);
             }
           }
       });
@@ -41,7 +42,6 @@ var mongoose = require('mongoose'),
 
   exports.update_config = function(req, res) {
       //Check that the user is the proper actor and if not: res.status(403); "an access token is valid, but requires more privileges"
-
       Config.find({}, function(err, config_ls) {
           if (err){
             res.send(err);
@@ -51,10 +51,13 @@ var mongoose = require('mongoose'),
               res.status(404).send('there is no config')
             }
             else{
-              var id = res._id;
-              Config.findOneAndUpdate({_id: id}, req.body, {new: true}, function(err, config) {
-                if (err){
-                  if(err.name=='ValidationError') {
+              var id = config_ls[0]._id;
+              var v = config_ls[0].__v;
+              req.body._id = id;
+              req.body.__v = v;
+              Config.findOneAndUpdate({_id: id}, req.body, {new: true}, function(err1, config) {
+                if (err1){
+                  if(err1.name=='ValidationError') {
                       res.status(422).send(err);
                   }
                   else{
@@ -71,7 +74,7 @@ var mongoose = require('mongoose'),
   };
 
   exports.delete_config = function(req, res) {
-      Actor.deleteMany({}, function(err, config) {
+      Config.deleteMany({}, function(err, config) {
           if (err){
               res.send(err);
           }

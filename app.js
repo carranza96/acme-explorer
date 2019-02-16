@@ -33,16 +33,16 @@ app.use(bodyParser.json());
 
 var routesActors = require('./api/routes/actorRoutes');
 var routesTrip = require('./api/routes/tripRoutes');
-var routesApplication = require('./api/routes/applicationRoutes'); 
-// var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
-// var routesConfig = require('./api/routes/configRoutes');
+var routesApplication = require('./api/routes/applicationRoutes');
+// var routesSponsorship = require('./api/routes/sponsorshipRoutes');
+var routesConfig = require('./api/routes/configRoutes');
 
 
 routesActors(app);
 routesTrip(app);
 routesApplication(app);
 // routesSponsorship(app);
-// routesConfig(app);
+routesConfig(app);
 
 
 console.log("Connecting DB to: " + mongoDBURI);
