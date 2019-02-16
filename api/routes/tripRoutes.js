@@ -13,12 +13,26 @@ module.exports = function(app) {
 	 * @section trips
 	 * @type get post
 	 * @url /v1/trips
-   * @param {string} search (keyWord contained in the trips' tickers, titles or description)
   */
   app.route('/v1/trips')
 	  .get(trips.list_all_trips)
 	  .post(trips.create_a_trip)
     .delete(trips.delete_all_trips);
+
+  /**
+   * Search engine for trips
+   * Get trips using a single word that must be contained in either the ticker,
+   * titles, or descriptions
+   *    RequiredRoles: None
+   * @section trips
+   * @type get
+   * @url /v1/trips/search
+   * @param {string} keyword
+  */
+  app.route('/v1/trips/search')
+    .get(trips.search_trips)
+
+
 
   /**
    * Put a trip

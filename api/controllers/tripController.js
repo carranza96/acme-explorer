@@ -4,10 +4,22 @@ var mongoose = require('mongoose'),
 Trip = mongoose.model('Trips');
 
 exports.list_all_trips = function(req, res) {
+    Trip.find({}, function(err, trips) {
+        if (err){
+          res.send(err);
+        }
+        else{
+            res.json(trips);
+        }
+    });
+};
+
+
+exports.search_trips = function(req, res) {
     var match = {};
-    if(req.query.search){
-        var searchWord=req.query.search;
-        match = {$text:{$search:searchWord}}
+    if(req.query.keyword){
+        var keyword=req.query.keyword;
+        match = {$text:{$search:keyword}}
     }
     Trip.find(match, function(err, trips) {
         if (err){
@@ -17,7 +29,7 @@ exports.list_all_trips = function(req, res) {
             res.json(trips);
         }
     });
-};
+  };
 
 exports.create_a_trip = function(req, res) {
   var new_trip = new Trip(req.body);

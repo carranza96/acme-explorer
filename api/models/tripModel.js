@@ -81,8 +81,16 @@ var tripSchema = new Schema({
         data: Buffer,
         contentType: String
     }],
+    published:{
+        type: Boolean,
+        default: false
+    },
+    cancelled:{
+        type:Boolean,
+        default:false
+    },
     reasonCancellation: {
-        data: String
+        type: String
     },
     stages:[{
         type: Schema.Types.ObjectId,
@@ -98,7 +106,7 @@ var tripSchema = new Schema({
     }
 }, { strict: false });
 
-
+tripSchema.index({ticker: 'text',title:'text',description:'text'});
 
 // tripSchema.pre('validate', function (next) {
 //     if (this.startDate > this.endDate) {
@@ -118,4 +126,17 @@ tripSchema.pre('save', function(callback) {
   callback();
 });
 
+// Calculate price summing up individual stages
+// tripSchema.pre('save', function(callback) {
+//     var stages_id = this.stages;
+//     var Stages = this.model('Stages');
+//     Stages.find({'_id': }, function(err, stages)){
+
+//     }
+
+//     this.price = 
+//     callback();
+//   });
+
 module.exports = mongoose.model('Trips', tripSchema);
+

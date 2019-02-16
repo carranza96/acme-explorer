@@ -8,7 +8,6 @@ var applicationSchema = new Schema({
         type: Date,
         required: 'Kindly enter the moment',
         default: Date.now
-        // TODO: Validar restricción fecha pasada
     },
     status:{
         type: String,
