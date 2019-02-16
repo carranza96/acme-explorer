@@ -3,8 +3,8 @@ var express = require('express'),
   port = process.env.PORT || 8080,
   mongoose = require('mongoose'),
   Actor = require('./api/models/actorModel'),
-  Application = require('./api/models/applicationModel'),
   Trip = require('./api/models/tripModel'),
+  Application = require('./api/models/applicationModel'),
   Config = require('./api/models/configModel'), // Singleton
   bodyParser = require('body-parser');
 
@@ -32,15 +32,15 @@ app.use(bodyParser.json());
 
 
 var routesActors = require('./api/routes/actorRoutes');
-var routesApplication = require('./api/routes/applicationRoutes'); 
 var routesTrip = require('./api/routes/tripRoutes');
+var routesApplication = require('./api/routes/applicationRoutes'); 
 // var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
 // var routesConfig = require('./api/routes/configRoutes');
 
 
 routesActors(app);
-routesApplication(app);
 routesTrip(app);
+routesApplication(app);
 // routesSponsorship(app);
 // routesConfig(app);
 

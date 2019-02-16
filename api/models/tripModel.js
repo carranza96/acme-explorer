@@ -138,5 +138,5 @@ tripSchema.pre('save', function(callback) {
 //     callback();
 //   });
 
-module.exports = mongoose.model('Trips', tripSchema);
+module.exports = mongoose.model('Trip', tripSchema);
 

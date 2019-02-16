@@ -2,6 +2,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
+// var immutablePlugin = require('mongoose-immutable-plugin');
+
 
 var finderSchema = new Schema({
   keyWord:{
@@ -37,7 +39,8 @@ var finderSchema = new Schema({
 var actorSchema = new Schema({
   name: {
     type: String,
-    required: 'Kindly enter the actor name'
+    required: 'Kindly enter the actor name',
+    // immutable:true
   },
   surname: {
     type: String,
@@ -59,7 +62,7 @@ var actorSchema = new Schema({
     default : "en"
   },
   phone: {
-    type: String
+    type: String,
   },
   address:{
     type: String
@@ -79,7 +82,7 @@ var actorSchema = new Schema({
   }
 }, { strict: false });
 
-
+// actorSchema.plugin(immutablePlugin)
 
 actorSchema.pre('save', function(callback) {
   var actor = this;
@@ -109,5 +112,5 @@ actorSchema.methods.verifyPassword = function(password, cb) {
 
 
 
-module.exports = mongoose.model('Actors', actorSchema);
-module.exports = mongoose.model('Finders', finderSchema);
+module.exports = mongoose.model('Actor', actorSchema);
+module.exports = mongoose.model('Finder', finderSchema);

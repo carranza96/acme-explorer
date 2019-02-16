@@ -21,4 +21,4 @@ var configSchema = new Schema({
 
 }, { strict: false })
 
-module.exports = mongoose.model('Configs', configSchema);
+module.exports = mongoose.model('Config', configSchema);

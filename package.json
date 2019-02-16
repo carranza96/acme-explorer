@@ -11,6 +11,8 @@
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.12",
+    "mongoose-id-validator": "^0.5.0",
+    "mongoose-immutable-plugin": "^1.0.1",
     "nanoid": "^2.0.1"
   },
   "devDependencies": {},

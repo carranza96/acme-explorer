@@ -1,7 +1,7 @@
 'use strict';
 /*---------------ACTOR----------------------*/
 var mongoose = require('mongoose'),
-  Actor = mongoose.model('Actors');
+  Actor = mongoose.model('Actor');
 
 exports.list_all_actors = function(req, res) {
     //Check if the role param exist

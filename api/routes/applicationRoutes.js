@@ -5,15 +5,16 @@ module.exports = function (app) {
     /**
      * Get all applications
      * Post an application
-     *
+     * Delete all applications
+     * 
      * @section applications
-     * @type get post
+     * @type get post delete
      * @url /v1/applications
-     * @param {string} role (clerk|administrator|customer)
      */
     app.route('/v1/applications')
         .get(applications.list_all_applications)
-        .post(applications.create_an_application);
+        .post(applications.create_an_application)
+        .delete(applications.delete_all_applications);
 
     /**
      * Put an application

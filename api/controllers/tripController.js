@@ -1,7 +1,7 @@
 'use strict';
 /*---------------TRIP----------------------*/
 var mongoose = require('mongoose'),
-Trip = mongoose.model('Trips');
+Trip = mongoose.model('Trip');
 
 exports.list_all_trips = function(req, res) {
     Trip.find({}, function(err, trips) {

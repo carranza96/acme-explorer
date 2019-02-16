@@ -1,7 +1,10 @@
 'use strict';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+// var idValidator = require('mongoose-id-validator');
 
+var Schema = mongoose.Schema,
+    Actor = mongoose.model('Actor'),
+    Trip = mongoose.model('Trip');
 
 var applicationSchema = new Schema({
     moment:{
@@ -35,4 +38,55 @@ var applicationSchema = new Schema({
     }
 },  { strict: false })
 
-module.exports = mongoose.model('Applications', applicationSchema);
+// applicationSchema.plugin(idValidator);
+
+// Check if explorer is valid
+applicationSchema.pre('validate', function(next) {
+    var application = this;
+    var explorer_id = application.explorer;
+    if (explorer_id) {
+        Actor.findOne({_id:explorer_id}, function(err, result){
+            if(err){
+                return next(err);
+            }
+            if(!result){
+                application.invalidate('explorer', `Explorer id ${application.explorer} does not reference an existing actor`, application.explorer);
+            }
+            else if(!result.role.includes('EXPLORER')){
+                application.invalidate('explorer', `Referenced actor ${application.explorer} is not an explorer`, application.explorer);
+            }
+            return next();
+        });
+    }
+    else{
+        return next();
+    }
+    
+  });
+
+
+  // Check if trip is valid
+  applicationSchema.pre('validate', function(next) {
+    var application = this;
+    var trip_id = application.trip;
+    if (trip_id){
+        Trip.findOne({_id:trip_id}, function(err, result){
+            if(err){
+                return next(err);
+            }
+            if(!result){
+                application.invalidate('trip', `Trip id ${application.trip} does not reference an existing trip`, application.trip);
+            }
+            return next();
+        });
+    }
+    else{
+        return next();
+    }
+    
+  });
+
+
+
+
+module.exports = mongoose.model('Application', applicationSchema);

@@ -1,7 +1,7 @@
 'use strict';
 /*---------------CONFIG----------------------*/
 var mongoose = require('mongoose'),
-  Config = mongoose.model('Configs');
+  Config = mongoose.model('Config');
 
   exports.init_config = function(req, res) {
     newConfig = new Config();

@@ -223,10 +223,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"preferredLanguage\": \"en\",\n    \"role\": [\n        \"MANAGER\"\n    ],\n    \"banned\": true,\n    \"name\": \"Pedro\",\n    \"surname\": \"Lara\",\n    \"email\": \"plb@us.es\",\n    \"password\": \"betis\",\n    \"phone\": \"608840010\",\n    \"address\": \"Calle Betis\"\n}"
+							"raw": "{\n    \"preferredLanguage\": \"en\",\n    \"role\": [\n        \"MANAGER\"\n    ],\n    \"banned\": true,\n    \"name\": \"Mal\",\n    \"surname\": \"Lara\",\n    \"email\": \"plb@us.es\",\n    \"password\": \"betis\",\n    \"phone\": \"608840010\",\n    \"address\": \"Calle Betis\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/5c65936ca2f60731a2ad3e2b",
+							"raw": "localhost:8080/v1/actors/5c67f95a801e5b053c5cfb43",
 							"host": [
 								"localhost"
 							],
@@ -234,7 +234,7 @@
 							"path": [
 								"v1",
 								"actors",
-								"5c65936ca2f60731a2ad3e2b"
+								"5c67f95a801e5b053c5cfb43"
 							]
 						}
 					},
@@ -405,7 +405,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"5c65936ca2f60731a2ad3e2d\",\n\t\"trip\":\"5c65936ca2f60731a2ad3e2e\"\n}"
+							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"55c680c6288457117ae1c248e\"\n}"
 						},
 						"url": {
 							"raw": "localhost:8080/v1/applications/",
@@ -436,10 +436,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"5c680c6288457117ae1c248f\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications/5c6595c80fc97734022e0362",
+							"raw": "localhost:8080/v1/applications/5c6805f34e142b12bafcc144",
 							"host": [
 								"localhost"
 							],
@@ -447,7 +447,7 @@
 							"path": [
 								"v1",
 								"applications",
-								"5c6595c80fc97734022e0362"
+								"5c6805f34e142b12bafcc144"
 							]
 						}
 					},
@@ -463,7 +463,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications/5c6595c80fc97734022e0362",
+							"raw": "localhost:8080/v1/applications/5c67f775ef2b64039b70b719",
 							"host": [
 								"localhost"
 							],
@@ -471,7 +471,31 @@
 							"path": [
 								"v1",
 								"applications",
-								"5c6595c80fc97734022e0362"
+								"5c67f775ef2b64039b70b719"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Applications",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/applications/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications",
+								""
 							]
 						}
 					},
@@ -507,6 +531,36 @@
 					"response": []
 				},
 				{
+					"name": "GET Trips Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/trips/search?keyword=excursión",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								"search"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "excursión"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "POST Trip",
 					"request": {
 						"method": "POST",
@@ -520,7 +574,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"ticker\":\"a\",\n\t\"title\":\"Excursión a Madrid\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":100,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2019-07-01\"\n}"
+							"raw": "{\n\t\"title\":\"Excursión a Sevilla\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":100,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2020-07-01\"\n}"
 						},
 						"url": {
 							"raw": "localhost:8080/v1/trips/",
@@ -551,10 +605,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\":\"Excursión a Valencia\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":100,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2019-07-01\"\n}"
+							"raw": "{\n\t\"title\":\"Excursión a Valencia\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":20,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2018-07-01\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/5c671f8ee0a1bb5be474a92e",
+							"raw": "localhost:8080/v1/trips/5c673265bd00226b1f37148a",
 							"host": [
 								"localhost"
 							],
@@ -562,7 +616,7 @@
 							"path": [
 								"v1",
 								"trips",
-								"5c671f8ee0a1bb5be474a92e"
+								"5c673265bd00226b1f37148a"
 							]
 						}
 					},
@@ -595,14 +649,23 @@
 				{
 					"name": "DELETE TripByID",
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": ""
 						},
 						"url": {
-							"raw": ""
+							"raw": "localhost:8080/v1/trips/5c671f8ee0a1bb5be474a92e",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								"5c671f8ee0a1bb5be474a92e"
+							]
 						}
 					},
 					"response": []
