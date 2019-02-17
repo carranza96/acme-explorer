@@ -6,34 +6,34 @@ var bcrypt = require('bcrypt');
 
 
 var finderSchema = new Schema({
-  keyWord:{
+  keyWord: {
     type: String,
     default: null
   },
-  minPrice:{
+  minPrice: {
     type: Number,
     default: null,
-    min:0
+    min: 0
   },
-  maxPrice:{
+  maxPrice: {
     type: Number,
     default: null,
     min: this.minPrice
   },
-  minDate:{
+  minDate: {
     type: Date,
     default: null
   },
-  maxDate:{
+  maxDate: {
     type: Date,
     default: null
   },
-  results:[{
+  results: [{
     type: Schema.Types.ObjectId,
     ref: 'Trip'
   }]
-  
-}, { strict: false } )
+
+}, { strict: false })
 
 
 var actorSchema = new Schema({
@@ -50,29 +50,29 @@ var actorSchema = new Schema({
     type: String,
     required: 'Kindly enter the actor email',
     unique: true,
-    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']    
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
   },
   password: {
     type: String,
-    minlength:5,
+    minlength: 5,
     required: 'Kindly enter the actor password'
   },
-  preferredLanguage:{
-    type : String,
-    default : "en"
+  preferredLanguage: {
+    type: String,
+    default: "en"
   },
   phone: {
     type: String,
   },
-  address:{
+  address: {
     type: String
   },
   role: [{
     type: String,
     required: 'Kindly enter the user role(s)',
-    enum: ['EXPLORER', 'MANAGER', 'ADMINISTRATOR','SPONSOR']
+    enum: ['EXPLORER', 'MANAGER', 'ADMINISTRATOR', 'SPONSOR']
   }],
-  banned:{
+  banned: {
     type: Boolean,
     default: false
   },
@@ -84,16 +84,16 @@ var actorSchema = new Schema({
 
 // actorSchema.plugin(immutablePlugin)
 
-actorSchema.pre('save', function(callback) {
+actorSchema.pre('save', function (callback) {
   var actor = this;
   // Break out if the password hasn't changed
   if (!actor.isModified('password')) return callback();
 
   // Password changed so we need to hash it
-  bcrypt.genSalt(5, function(err, salt) {
+  bcrypt.genSalt(5, function (err, salt) {
     if (err) return callback(err);
 
-    bcrypt.hash(actor.password, salt, function(err, hash) {
+    bcrypt.hash(actor.password, salt, function (err, hash) {
       if (err) return callback(err);
       actor.password = hash;
       callback();
@@ -101,11 +101,11 @@ actorSchema.pre('save', function(callback) {
   });
 });
 
-actorSchema.methods.verifyPassword = function(password, cb) {
-    bcrypt.compare(password, this.password, function(err, isMatch) {
-    console.log('verifying password in actorModel: '+password);
+actorSchema.methods.verifyPassword = function (password, cb) {
+  bcrypt.compare(password, this.password, function (err, isMatch) {
+    console.log('verifying password in actorModel: ' + password);
     if (err) return cb(err);
-    console.log('iMatch: '+isMatch);
+    console.log('iMatch: ' + isMatch);
     cb(null, isMatch);
   });
 };
