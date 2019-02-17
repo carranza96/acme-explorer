@@ -6,6 +6,7 @@ var express = require('express'),
   Trip = require('./api/models/tripModel'),
   Application = require('./api/models/applicationModel'),
   Config = require('./api/models/configModel'), // Singleton
+  // TODO: Pienso que cada modelo debería estar en su propio .js
   bodyParser = require('body-parser');
 
 
@@ -14,8 +15,6 @@ var mongoDBHostname = process.env.mongoDBHostname || "localhost";
 var mongoDBPort = process.env.mongoDBPort || "27017";
 var mongoDBName = process.env.mongoDBName || "ACME-Explorer";
 var mongoDBURI = "mongodb://" + mongoDBHostname + ":" + mongoDBPort + "/" + mongoDBName;
-
-
 
 mongoose.connect(mongoDBURI, {
   reconnectTries: 10,
@@ -33,15 +32,17 @@ app.use(bodyParser.json());
 
 var routesActors = require('./api/routes/actorRoutes');
 var routesTrip = require('./api/routes/tripRoutes');
-var routesApplication = require('./api/routes/applicationRoutes');
-// var routesSponsorship = require('./api/routes/sponsorshipRoutes');
+var routesApplication = require('./api/routes/applicationRoutes'); 
+var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
+var routesFinder = require('./api/routes/finderRoutes'); 
 var routesConfig = require('./api/routes/configRoutes');
 
 
 routesActors(app);
 routesTrip(app);
 routesApplication(app);
-// routesSponsorship(app);
+routesSponsorship(app);
+routesFinder(app)
 routesConfig(app);
 
 
@@ -53,7 +54,6 @@ mongoose.connection.on("open", function (err, conn) {
 });
 
 // mongoose.connection.dropDatabase()
-
 
 mongoose.connection.on("error", function (err, conn) {
     console.error("DB init error " + err);
