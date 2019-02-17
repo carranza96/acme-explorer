@@ -98,3 +98,10 @@ exports.delete_all_trips = function(req, res) {
         }
     });
 };
+
+
+
+/*---------------STAGE----------------------*/
+
+
+
