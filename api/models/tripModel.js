@@ -20,7 +20,6 @@ var stageSchema = new Schema({
     }
 }, { strict: false })
 
-
 var sponsorshipSchema = new Schema({
     banner:{
         type: Buffer
@@ -54,9 +53,8 @@ var tripSchema = new Schema({
         type: String,
         required: 'Kindly enter the description',
     },
-    price:{
+    totalPrice:{
         type: Number,
-        required: 'Kindly enter the description',
         min: 0
     },
     requirements: [{
@@ -92,10 +90,7 @@ var tripSchema = new Schema({
     reasonCancellation: {
         type: String
     },
-    stages:[{
-        type: Schema.Types.ObjectId,
-        ref: 'Stage',
-    }],
+    stages:[stageSchema],
     sponsorships:[{
         type: Schema.Types.ObjectId,
         ref: 'Sponsorship',
@@ -108,16 +103,10 @@ var tripSchema = new Schema({
 
 tripSchema.index({ticker: 'text',title:'text',description:'text'});
 
-// tripSchema.pre('validate', function (next) {
-//     if (this.startDate > this.endDate) {
-//       this.invalidate('startDate', 'Start date must be less than end date.', this.startDate);
-//     }
-
-//     next();
-// });
 
 
 // Execute before each trip.save() call
+// Generate ticker
 tripSchema.pre('save', function(callback) {
   var new_trip = this;
   var day = dateformat(new Date(), "yymmdd");
@@ -127,16 +116,11 @@ tripSchema.pre('save', function(callback) {
 });
 
 // Calculate price summing up individual stages
-// tripSchema.pre('save', function(callback) {
-//     var stages_id = this.stages;
-//     var Stages = this.model('Stages');
-//     Stages.find({'_id': }, function(err, stages)){
+tripSchema.pre('save', function(callback) {
+    var stages_price = this.stages.map((stage) => stage.price);
+    this.totalPrice = stages_price.reduce((a, b) => a + b, 0);
+    callback();
+  });
 
-//     }
-
-//     this.price = 
-//     callback();
-//   });
 
 module.exports = mongoose.model('Trip', tripSchema);
-
