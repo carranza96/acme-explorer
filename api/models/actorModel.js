@@ -32,7 +32,7 @@ var finderSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Trip'
   }]
-  
+
 }, { strict: false } )
 
 
@@ -50,7 +50,7 @@ var actorSchema = new Schema({
     type: String,
     required: 'Kindly enter the actor email',
     unique: true,
-    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']    
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
   },
   password: {
     type: String,
@@ -79,6 +79,9 @@ var actorSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  }
+  finder:{
+    type: finderSchema
   }
 }, { strict: false });
 
