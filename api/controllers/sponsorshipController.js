@@ -16,7 +16,7 @@ exports.list_all_sponsorships = function (req, res) {
     });
 };
 
-exports.create_an_sponsorship = function (req, res) {
+exports.create_a_sponsorship = function (req, res) {
     var new_sponsorship = new Sponsorship(req.body);
 
     new_sponsorship.save(function (err, sponsorship) {
@@ -34,7 +34,7 @@ exports.create_an_sponsorship = function (req, res) {
     });
 };
 
-exports.read_an_sponsorship = function (req, res) {
+exports.read_a_sponsorship = function (req, res) {
     Sponsorship.findById(req.params.sponsorshipId, function (err, sponsorship) {
         if (err) {
             res.send(err);
@@ -45,7 +45,7 @@ exports.read_an_sponsorship = function (req, res) {
     });
 };
 
-exports.update_an_sponsorship = function (req, res) {
+exports.update_a_sponsorship = function (req, res) {
     Sponsorship.findOneAndUpdate({_id: req.params.sponsorshipId}, req.body, {new: true}, function (err, sponsorship) {
         if (err) {
             if (err.name == 'ValidationError') {
@@ -62,7 +62,7 @@ exports.update_an_sponsorship = function (req, res) {
 };
 
 
-exports.delete_an_sponsorship = function (req, res) {
+exports.delete_a_sponsorship = function (req, res) {
     Sponsorship.deleteOne({_id: req.params.sponsorshipId}, function (err, sponsorship) {
         if (err) {
             res.send(err);

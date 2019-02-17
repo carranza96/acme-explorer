@@ -15,7 +15,7 @@ exports.list_all_finders  = function (req, res) {
 };
 
 
-exports.create_finder = function (req, res) {
+exports.create_a_finder = function (req, res) {
     var new_finder = new Finder(req.body);
     new_finder .save(function (err, finder ) {
         if (err) {

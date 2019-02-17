@@ -37,7 +37,7 @@ var routesTrip = require('./api/routes/tripRoutes');
 var routesApplication = require('./api/routes/applicationRoutes'); 
 var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
 var routesFinder = require('./api/routes/finderRoutes'); 
-var routesConfig = require('./api/routes/configRoutes');
+var routesConfig = require('./api/routes/configRoute');
 
 
 routesActors(app);
