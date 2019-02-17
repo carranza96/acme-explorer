@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "36c3cb06-68e5-4888-ac49-24c916ca5e09",
+		"_postman_id": "8b6dff6f-2416-485c-b83b-bc2f7f98b1c8",
 		"name": "Acme-explorer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -608,7 +608,7 @@
 							"raw": "{\n\t\"title\":\"Excursión a Valencia\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":20,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2018-07-01\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/5c673265bd00226b1f37148a",
+							"raw": "localhost:8080/v1/trips/5c699798d410896d5329fa0c",
 							"host": [
 								"localhost"
 							],
@@ -616,7 +616,7 @@
 							"path": [
 								"v1",
 								"trips",
-								"5c673265bd00226b1f37148a"
+								"5c699798d410896d5329fa0c"
 							]
 						}
 					},
@@ -665,6 +665,284 @@
 								"v1",
 								"trips",
 								"5c671f8ee0a1bb5be474a92e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Finder",
+			"item": [
+				{
+					"name": "GET Finders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/finders/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"finders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Finder",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"keyWord\":\"sevilla\",\n\t\"minPrice\":50,\n\t\"maxPrice\":100,\n\t\"minDate\":\"2019-05-28\",\n\t\"maxDate\": \"2020-07-01\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/finders/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"finders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT FinderByID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"keyWord\": \"barcelona\",\n    \"minPrice\": 50,\n    \"maxPrice\": 100,\n    \"minDate\": \"2019-05-28T00:00:00.000Z\",\n    \"maxDate\": \"2020-07-01T00:00:00.000Z\",\n    \"results\": [],\n    \"_id\": \"5c69965fd410896d5329fa08\",\n    \"__v\": 0\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/finders/5c69965fd410896d5329fa08",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"finders",
+								"5c69965fd410896d5329fa08"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Finders",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/finders/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"finders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE FinderByID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/finders/5c699748d410896d5329fa0b",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"finders",
+								"5c699748d410896d5329fa0b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sponsorship",
+			"item": [
+				{
+					"name": "GET Sponsorships",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/sponsorships/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"sponsorships",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Sponsorship",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"banner\":\"\",\n\t\"landingPage\":\"www.sponsors.com\",\n\t\"paid\":true,\n\t\"sponsor\":\"5c699a5ad410896d5329fa0d\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/sponsorships/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"sponsorships",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT SponsorshipByID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "   {\n        \"paid\": true,\n        \"_id\": \"5c699a84d410896d5329fa0e\",\n        \"banner\": {\n            \"type\": \"Buffer\",\n            \"data\": []\n        },\n        \"landingPage\": \"www.sponsors_edited.com\",\n        \"sponsor\": \"5c699a5ad410896d5329fa0d\",\n        \"__v\": 0\n    }"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/sponsorships/5c699a84d410896d5329fa0e",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"sponsorships",
+								"5c699a84d410896d5329fa0e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Sponsorships",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/sponsorships/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"sponsorships",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE sponsorshipByID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/sponsorships/5c699ae1d410896d5329fa0f",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"sponsorships",
+								"5c699ae1d410896d5329fa0f"
 							]
 						}
 					},
