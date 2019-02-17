@@ -21,4 +21,10 @@ var configSchema = new Schema({
 
 }, { strict: false })
 
+configSchema.methods.toJSON = function() {
+ var obj = this.toObject();
+ delete obj._id;
+ return obj;
+}
+
 module.exports = mongoose.model('Config', configSchema);

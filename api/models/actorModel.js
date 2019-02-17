@@ -33,7 +33,7 @@ var finderSchema = new Schema({
     ref: 'Trip'
   }]
 
-}, { strict: false })
+}, { strict: false } )
 
 
 var actorSchema = new Schema({
@@ -79,6 +79,9 @@ var actorSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  finder:{
+    type: finderSchema
   }
 }, { strict: false });
 
