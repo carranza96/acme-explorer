@@ -1,0 +1,306 @@
+---
+swagger: "2.0"
+info:
+  description: "This is Acme-explorer  server. It has been created by Pedro, Manuel\
+    \ and Miguel for a university project. \n"
+  version: "1.0.0"
+  title: "Acme Explorer"
+  contact:
+    email: "invented@acme-explorer.us.es"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/acme-explorer/Acme-explorer/1.0.0"
+tags:
+- name: "Actor"
+  description: "Operations about the actors"
+- name: "Trip"
+  description: "Everything about the trips of the system"
+- name: "Application"
+  description: "Aplications of the trips"
+schemes:
+- "https"
+- "http"
+paths:
+  /actors:
+    get:
+      tags:
+      - "Actor"
+      summary: "Get all actors by role"
+      description: "If role parameter is notprovided it return the list of all actors"
+      operationId: "get_actors"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "role"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Actor"
+        400:
+          description: "Invalid status value"
+      security:
+      - petstore_auth:
+        - "Any"
+      x-swagger-router-controller: "Actor"
+    post:
+      tags:
+      - "Actor"
+      summary: "Register a new actor to the store"
+      operationId: "addActor"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Actor object that needs to be register"
+        required: true
+        schema:
+          $ref: "#/definitions/Actor"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - petstore_auth:
+        - "Administrator"
+        - "Any"
+      x-swagger-router-controller: "Actor"
+    delete:
+      tags:
+      - "Actor"
+      summary: "Delete all actors"
+      description: "(This method is only for debugging)"
+      operationId: "delete_actors"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "All actors successfully deleted"
+      security:
+      - petstore_auth:
+        - "Any"
+      x-swagger-router-controller: "Actor"
+  /actors/{actorId}:
+    get:
+      tags:
+      - "Actor"
+      summary: "Get an actors by id"
+      description: "It returns the actor with the id in the url parameter."
+      operationId: "get_actor_by_id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "actorId"
+        in: "path"
+        description: "id of the actor we are looking for"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Actor"
+        400:
+          description: "Invalid status value"
+      security:
+      - petstore_auth:
+        - "Any"
+      x-swagger-router-controller: "Actor"
+    put:
+      tags:
+      - "Actor"
+      summary: "Update an existing actor"
+      operationId: "update_actor"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Actor object that needs to be updated to the system"
+        required: true
+        schema:
+          $ref: "#/definitions/Actor"
+      - name: "actorId"
+        in: "path"
+        description: "id of the actor we are updating"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Actor not found"
+        405:
+          description: "Validation exception"
+      security:
+      - petstore_auth:
+        - "Any"
+      x-swagger-router-controller: "Actor"
+    delete:
+      tags:
+      - "Actor"
+      summary: "Delete an actor"
+      description: "(This method is only for debugging)"
+      operationId: "delete_actor_by_id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "actorId"
+        in: "path"
+        description: "id of the actor we are deleting"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Actor successfully deleted"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Pet not found"
+      security:
+      - petstore_auth:
+        - "Any"
+      x-swagger-router-controller: "Actor"
+  /actors/{actorId}/ban:
+    get:
+      tags:
+      - "Actor"
+      summary: "Ban an actor"
+      description: "It set ban parameter of the actor with the id given in the parameters\
+        \ to True"
+      operationId: "ban_actor"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "actorId"
+        in: "path"
+        description: "id of the actor we are banning"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+      security:
+      - petstore_auth:
+        - "Administrator"
+      x-swagger-router-controller: "Actor"
+  /v1/actors/{actorId}/unban:
+    get:
+      tags:
+      - "Actor"
+      summary: "Unban an actor"
+      description: "It set ban parameter of the actor with the id given in the parameters\
+        \ to False"
+      operationId: "unban_actor"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "actorId"
+        in: "path"
+        description: "id of the actor we are unbanning"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+      security:
+      - petstore_auth:
+        - "Administrator"
+      x-swagger-router-controller: "Actor"
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://inventedURL.ACME.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      Any: "any role"
+      Administrator: "It's an administrator"
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Actor:
+    type: "object"
+    required:
+    - "banned"
+    - "email"
+    - "name"
+    - "password"
+    - "role"
+    - "surname"
+    properties:
+      _id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        example: "Manolo"
+      surname:
+        type: "string"
+        example: "Fernandez"
+      email:
+        type: "string"
+        example: "manolo@example.com"
+      password:
+        type: "string"
+        example: "v3Ry$tR0nGp@$w0rD"
+      preferredLanguage:
+        type: "string"
+        example: "es"
+        default: "en"
+      phone:
+        type: "string"
+        example: "654123890"
+      address:
+        type: "string"
+        example: "Av. Reina Mercedes N1 41018, Sevilla"
+      role:
+        type: "array"
+        description: "User role"
+        items:
+          type: "string"
+          enum:
+          - "EXPLORER"
+          - "MANAGER"
+          - "ADMINISTRATOR"
+      banned:
+        type: "boolean"
+        default: false
+      created:
+        type: "string"
+        pattern: "date"
+    xml:
+      name: "Actor"
+    example:
+      password: "v3Ry$tR0nGp@$w0rD"
+      preferredLanguage: "es"
+      address: "Av. Reina Mercedes N1 41018, Sevilla"
+      role:
+      - "EXPLORER"
+      - "EXPLORER"
+      phone: "654123890"
+      surname: "Fernandez"
+      created: "created"
+      name: "Manolo"
+      _id: 0
+      banned: false
+      email: "manolo@example.com"
+externalDocs:
+  description: "Find out more about ACME-Explorer"
+  url: "http://acme-explorer.com"
