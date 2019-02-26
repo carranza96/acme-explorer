@@ -27,7 +27,6 @@ module.exports = function(app) {
    * @section trips
    * @type get
    * @url /v1/trips/search
-   * @param {string} deleted (true|false)
    * @param {string} startFrom
    * @param {string} pageSize
    * @param {string} sortedBy (category)

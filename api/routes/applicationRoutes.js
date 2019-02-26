@@ -30,4 +30,15 @@ module.exports = function (app) {
         .put(applications.update_an_application)
         .delete(applications.delete_an_application);
 
+    
+    /**
+     * Change status of an application
+     *
+     * @section applications
+     * @type put
+     * @url /v1/applications/:applicationId
+     */
+    app.route('/v1/applications/:applicationId/changeStatus')
+        .put(applications.change_status_application);
+
 };

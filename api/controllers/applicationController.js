@@ -62,6 +62,56 @@ exports.update_an_application = function (req, res) {
 };
 
 
+exports.change_status_application = function(req,res){
+    // Get new status
+    var newStatus = null;
+    if(req.query.status){
+        var newStatus=req.query.status;
+    }
+
+
+    Application.findById(req.params.applicationId, function (err, application) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            var status = application.status;
+            var condition = 
+                (status=="PENDING" && (newStatus=="DUE" || newStatus=="REJECTED")) ||
+                (status=="DUE" & newStatus=="ACCEPTED")
+                (status=="ACCEPTED" & newStatus=="CANCELLED");
+            
+            if(condition){
+                findOneAndUpdate({_id: req.params.applicationId}, { $set: {"status": newStatus }}, {new: true}, function (err1, application) {
+                    if (err1) {
+                        if (err1.name == 'ValidationError') {
+                            res.status(422).send(err);
+                        }
+                        else {
+                            res.status(500).send(err);
+                        }
+                    }
+                    else {
+                        res.json(application);
+                    }
+                });
+            }
+        }
+    });
+    
+    
+    
+
+
+
+
+
+
+};
+
+
+
+
 exports.delete_an_application = function (req, res) {
     Application.deleteOne({_id: req.params.applicationId}, function (err, application) {
         if (err) {
@@ -84,3 +134,5 @@ exports.delete_all_applications = function(req, res) {
         }
     });
 };
+
+

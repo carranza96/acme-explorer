@@ -8,6 +8,8 @@ var express = require('express'),
   Trip = require('./api/models/tripModel'),
   Application = require('./api/models/applicationModel'),
   Config = require('./api/models/configModel'), // Singleton
+  DataWareHouse = require('./api/models/dataWareHouseModel'), 
+  DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
   bodyParser = require('body-parser');
 
 
@@ -41,6 +43,7 @@ var routesApplication = require('./api/routes/applicationRoutes');
 var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
 var routesFinder = require('./api/routes/finderRoutes'); 
 var routesConfig = require('./api/routes/configRoutes');
+var routesDataWareHouse = require('./api/routes/dataWareHouseRoutes');
 
 
 routesActors(app);
@@ -49,6 +52,8 @@ routesApplication(app);
 routesSponsorship(app);
 routesFinder(app)
 routesConfig(app);
+routesDataWareHouse(app);
+
 
 
 console.log("Connecting DB to: " + mongoDBURI);
