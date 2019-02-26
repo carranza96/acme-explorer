@@ -1,6 +1,8 @@
 'use strict';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema,
+    Actor = mongoose.model('Actor');
+
 const generate = require('nanoid/generate');
 const dateformat = require('dateformat');
 
@@ -84,10 +86,34 @@ var tripSchema = new Schema({
     }
 }, { strict: false });
 
-
-
+tripSchema.index({startDate:1})
+tripSchema.index({  price: 1, startDate: 1 }); //1 ascending,  -1 descending
 tripSchema.index({ ticker: 'text', title: 'text', description: 'text' });
 
+
+
+// Check if manager is valid
+tripSchema.pre('validate', function(next) {
+    var trip = this;
+    var manager_id = trip.manager;
+    if (manager_id) {
+        Actor.findOne({_id:manager_id}, function(err, result){
+            if(err){
+                return next(err);
+            }
+            if(!result){
+                application.invalidate('manager', `Manager id ${trip.manager} does not reference an existing actor`, trip.manager);
+            }
+            else if(!result.role.includes('MANAGER')){
+                application.invalidate('manager', `Referenced actor ${trip.manager} is not an explorer`, trip.manager);
+            }
+            return next();
+        });
+    }
+    else{
+        return next();
+    }
+  });
 
 
 // Execute before each trip.save() call
@@ -105,6 +131,13 @@ tripSchema.pre('save', function(callback) {
     this.totalPrice = stages_price.reduce((a, b) => a + b, 0);
     callback();
 });
+
+tripSchema.pre('findOneAndUpdate', function (next) {
+    var stages_price = this._update.stages.map((stage) => stage.price);
+    var totalPrice = stages_price.reduce((a, b) => a + b, 0);
+    this.update({},{ $set:{price: totalPrice}});
+    next();
+   });
 
 
 module.exports = mongoose.model('Trip', tripSchema);
