@@ -8,7 +8,6 @@ var actorSchema = new Schema({
   name: {
     type: String,
     required: 'Kindly enter the actor name',
-    // immutable:true
   },
   surname: {
     type: String,
@@ -54,6 +53,7 @@ var actorSchema = new Schema({
 }, { strict: false });
 
 
+actorSchema.index({role:'text'})
 
 actorSchema.pre('save', function (callback) {
   var actor = this;

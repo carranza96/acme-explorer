@@ -1,6 +1,8 @@
 'use strict';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema,
+    Actor = mongoose.model('Actor');
+
 
 var sponsorshipSchema = new Schema({
     banner: {
@@ -21,5 +23,32 @@ var sponsorshipSchema = new Schema({
         required: 'Kindly enter the sponsor id'
     }
 }, { strict: false })
+
+sponsorshipSchema.index({sponsor:1, paid:1})
+
+
+// Check if sponsor is valid
+sponsorshipSchema.pre('validate', function(next) {
+    var sponsorship = this;
+    var sponsor_id = sponsorship.sponsor;
+    if (sponsor_id) {
+        Actor.findOne({_id:sponsor_id}, function(err, result){
+            if(err){
+                return next(err);
+            }
+            if(!result){
+                application.invalidate('sponsor', `Sponsor id ${sponsorship.sponsor} does not reference an existing actor`, sponsorship.sponso);
+            }
+            else if(!result.role.includes('SPONSOR')){
+                application.invalidate('sponsor', `Referenced actor ${sponsorship.sponso} is not an sponsor`, sponsorship.sponso);
+            }
+            return next();
+        });
+    }
+    else{
+        return next();
+    }
+    
+  });
 
 module.exports = mongoose.model('Sponsorship', sponsorshipSchema);

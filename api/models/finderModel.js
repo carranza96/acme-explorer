@@ -1,7 +1,6 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var bcrypt = require('bcrypt');
 
 
 var finderSchema = new Schema({
@@ -34,5 +33,6 @@ var finderSchema = new Schema({
   
   }, { strict: false } )
 
+finderSchema.index({keyword:"text"})
 
 module.exports = mongoose.model('Finder', finderSchema);
