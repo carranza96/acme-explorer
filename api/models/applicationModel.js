@@ -1,6 +1,6 @@
 'use strict';
 var mongoose = require('mongoose');
-// var idValidator = require('mongoose-id-validator');
+
 
 var Schema = mongoose.Schema,
     Actor = mongoose.model('Actor'),
@@ -38,7 +38,6 @@ var applicationSchema = new Schema({
     }
 },  { strict: false })
 
-// applicationSchema.plugin(idValidator);
 
 // Check if explorer is valid
 applicationSchema.pre('validate', function(next) {

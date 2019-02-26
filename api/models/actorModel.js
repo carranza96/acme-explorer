@@ -1,39 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var bcrypt = require('bcrypt');
-// var immutablePlugin = require('mongoose-immutable-plugin');
-
-
-var finderSchema = new Schema({
-  keyWord: {
-    type: String,
-    default: null
-  },
-  minPrice: {
-    type: Number,
-    default: null,
-    min: 0
-  },
-  maxPrice: {
-    type: Number,
-    default: null,
-    min: this.minPrice
-  },
-  minDate: {
-    type: Date,
-    default: null
-  },
-  maxDate: {
-    type: Date,
-    default: null
-  },
-  results: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Trip'
-  }]
-
-}, { strict: false } )
+var Schema = mongoose.Schema,
+  Finder = mongoose.model('Finder');
 
 
 var actorSchema = new Schema({
@@ -81,11 +49,11 @@ var actorSchema = new Schema({
     default: Date.now
   },
   finder:{
-    type: finderSchema
+    type: Finder.schema
   }
 }, { strict: false });
 
-// actorSchema.plugin(immutablePlugin)
+
 
 actorSchema.pre('save', function (callback) {
   var actor = this;
@@ -114,6 +82,4 @@ actorSchema.methods.verifyPassword = function (password, cb) {
 };
 
 
-
 module.exports = mongoose.model('Actor', actorSchema);
-module.exports = mongoose.model('Finder', finderSchema);

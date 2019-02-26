@@ -20,25 +20,6 @@ var stageSchema = new Schema({
     }
 }, { strict: false })
 
-var sponsorshipSchema = new Schema({
-    banner: {
-        type: Buffer,
-        //required:"Please add an image for your sponsorship"
-    },
-    landingPage: {
-        type: String,
-        //required:"Please add an url to your landing page"
-    },
-    paid: {
-        type: Boolean,
-        default: false
-    },
-    sponsor: {
-        type: Schema.Types.ObjectId,
-        ref: 'Actor',
-        required: 'Kindly enter the sponsor id'
-    }
-}, { strict: false })
 
 
 var tripSchema = new Schema({
@@ -92,10 +73,7 @@ var tripSchema = new Schema({
     reasonCancellation: {
         type: String
     },
-    stages: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Stage',
-    }],
+    stages: [stageSchema],
     sponsorships: [{
         type: Schema.Types.ObjectId,
         ref: 'Sponsorship',
@@ -105,6 +83,8 @@ var tripSchema = new Schema({
         ref: 'Actor'
     }
 }, { strict: false });
+
+
 
 tripSchema.index({ ticker: 'text', title: 'text', description: 'text' });
 
@@ -124,9 +104,8 @@ tripSchema.pre('save', function(callback) {
     var stages_price = this.stages.map((stage) => stage.price);
     this.totalPrice = stages_price.reduce((a, b) => a + b, 0);
     callback();
-  });
+});
 
 
 module.exports = mongoose.model('Trip', tripSchema);
-module.exports = mongoose.model('Sponsorship', sponsorshipSchema);
 module.exports = mongoose.model('Stage', stageSchema);

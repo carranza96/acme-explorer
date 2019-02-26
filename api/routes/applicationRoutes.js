@@ -25,7 +25,7 @@ module.exports = function (app) {
      * @type get put delete
      * @url /v1/applications/:applicationId
      */
-    app.route('/v1/applications/:applicationId')
+    app.route('/v1/applications/:applicationId/')
         .get(applications.read_an_application)
         .put(applications.update_an_application)
         .delete(applications.delete_an_application);

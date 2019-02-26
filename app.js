@@ -2,11 +2,12 @@ var express = require('express'),
   app = express(),
   port = process.env.PORT || 8080,
   mongoose = require('mongoose'),
+  Finder = require('./api/models/finderModel'),
+  Sponsorship = require('./api/models/sponsorshipModel')
   Actor = require('./api/models/actorModel'),
   Trip = require('./api/models/tripModel'),
   Application = require('./api/models/applicationModel'),
   Config = require('./api/models/configModel'), // Singleton
-  // TODO: Pienso que cada modelo debería estar en su propio .js
   bodyParser = require('body-parser');
 
 
