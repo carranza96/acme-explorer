@@ -86,9 +86,10 @@ var tripSchema = new Schema({
     }
 }, { strict: false });
 
+tripSchema.index({ ticker: 'text', title: 'text', description: 'text' });
 tripSchema.index({startDate:-1})
 tripSchema.index({  price: 1, startDate: -1 }); //1 ascending,  -1 descending
-tripSchema.index({ ticker: 'text', title: 'text', description: 'text' });
+
 
 
 
