@@ -39,9 +39,9 @@ var applicationSchema = new Schema({
 },  { strict: false })
 
 
-applicationSchema.index({explorer:1, moment:1})
+applicationSchema.index({explorer:1, moment:-1})
 applicationSchema.index({trip:1, status:'text'})
-applicationSchema.index({moment: 1})
+applicationSchema.index({moment: -1})
 
 // Check if explorer is valid
 applicationSchema.pre('validate', function(next) {
