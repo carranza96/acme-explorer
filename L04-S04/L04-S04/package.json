@@ -1,0 +1,29 @@
+{
+  "name": "l01-s01",
+  "version": "1.0.0",
+  "description": "ACMEMarket REST API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alejandrofdez-us/ACME-Market.git"
+  },
+  "author": "afdez@us.es, cmuller@us.es",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alejandrofdez-us/ACME-Market/issues"
+  },
+  "homepage": "https://github.com/alejandrofdez-us/ACME-Market#readme",
+  "dependencies": {
+    "async": "^2.6.2",
+    "bcrypt": "^3.0.4",
+    "body-parser": "^1.18.3",
+    "cron": "^1.6.0",
+    "dateformat": "^3.0.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.8",
+    "nanoid": "^2.0.1"
+  }
+}
