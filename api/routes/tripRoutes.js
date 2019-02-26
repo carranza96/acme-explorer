@@ -27,7 +27,12 @@ module.exports = function(app) {
    * @section trips
    * @type get
    * @url /v1/trips/search
-   * @param {string} keyword
+   * @param {string} deleted (true|false)
+   * @param {string} startFrom
+   * @param {string} pageSize
+   * @param {string} sortedBy (category)
+   * @param {string} reverse (true|false)
+   * @param {string} keyword //in ticker, title or description
   */
   app.route('/v1/trips/search')
     .get(trips.search_trips)
@@ -50,5 +55,3 @@ module.exports = function(app) {
     .delete(trips.delete_a_trip);
 
 };
-
-

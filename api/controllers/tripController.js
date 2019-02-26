@@ -16,12 +16,37 @@ exports.list_all_trips = function (req, res) {
 
 
 exports.search_trips = function (req, res) {
-  var match = {};
-  if (req.query.keyword) {
-    var keyword = req.query.keyword;
-    match = { $text: { $search: keyword } }
+  var query = {};
+
+  if (req.query.q) {
+    query.$text = {$search: req.query.q};
   }
-  Trip.find(match, function (err, trips) {
+
+  var skip=0;
+  if(req.query.startFrom){
+    skip = parseInt(req.query.startFrom);
+  }
+  var limit=0;
+  if(req.query.pageSize){
+    limit=parseInt(req.query.pageSize);
+  }
+
+  var sort="";
+  if(req.query.reverse=="true"){
+    sort="-";
+  }
+  if(req.query.sortedBy){
+    sort+=req.query.sortedBy;
+  }
+
+  console.log("Query: "+query+" Skip:" + skip+" Limit:" + limit+" Sort:" + sort);
+
+  Trip.find(query)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .exec(function (err, trips) {
     if (err) {
       res.send(err);
     }
@@ -102,6 +127,3 @@ exports.delete_all_trips = function (req, res) {
 
 
 /*---------------STAGE----------------------*/
-
-
-
