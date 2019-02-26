@@ -27,12 +27,11 @@ module.exports = function(app) {
    * @section trips
    * @type get
    * @url /v1/trips/search
-   * @param {string} deleted (true|false)
    * @param {string} startFrom
    * @param {string} pageSize
    * @param {string} sortedBy (category)
    * @param {string} reverse (true|false)
-   * @param {string} keyword //in ticker, title or description
+   * @param {string} q //in ticker, title or description
   */
   app.route('/v1/trips/search')
     .get(trips.search_trips)
