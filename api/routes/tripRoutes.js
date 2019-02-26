@@ -31,7 +31,7 @@ module.exports = function(app) {
    * @param {string} pageSize
    * @param {string} sortedBy (category)
    * @param {string} reverse (true|false)
-   * @param {string} keyword //in ticker, title or description
+   * @param {string} q //in ticker, title or description
   */
   app.route('/v1/trips/search')
     .get(trips.search_trips)

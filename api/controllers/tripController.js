@@ -14,7 +14,7 @@ exports.list_all_trips = function (req, res) {
   });
 };
 
-
+// /trips/search?q="searchString"&reverse="false|true"&startFrom="valor"&pageSize="tam"
 exports.search_trips = function (req, res) {
   var query = {};
 
