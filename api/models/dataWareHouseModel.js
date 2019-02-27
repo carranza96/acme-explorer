@@ -2,71 +2,22 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var StatsSchema = new mongoose.Schema({
-  avg: {
-    type: Number,
-    min: 0
-  },
-
-  min: {
-    type: Number,
-    min: 0
-  },
-
-  max: {
-    type: Number,
-    min: 0
-  },
-
-  std: {
-    type: Number,
-    min: 0
-  }
-}, { strict: false })
 
 var DataWareHouseSchema = new mongoose.Schema({
 
   // Number of trips managed per managers
     tripsPerManagerStats: {
-      type: StatsSchema
+      avg:Number, min:Number, max:Number, std:Number
+    },
+  // Price of trips
+    tripPriceStats:{
+      avg:Number, min:Number, max:Number, std:Number
     },
   // Number of applications per trip
-    avgNumApplicationsTrip: {
-      type: Number,
-      min: 0
+    ApplicationsTripStats:{
+      avg:Number, min:Number, max:Number, std:Number
     },
-    minNumApplicationsTrip: {
-      type: Number,
-      min: 0
-    },
-    maxNumApplicationsTrip: {
-      type: Number,
-      min: 0
-    },
-    stdNumApplicationsTrip: {
-      type: Number,
-      min: 0
-    },
-
-  // Price of trips
-    avgPriceTrip: {
-      type: Number,
-      min: 0
-    },
-    minPriceTrip: {
-      type: Number,
-      min: 0
-    },
-    maxPriceTrip: {
-      type: Number,
-      min: 0
-    },
-    stdPriceTrip: {
-      type: Number,
-      min: 0
-    },
-
-  // Ratio of applications grouped by status
+    // Ratio of applications grouped by status
     // ratioApplicationsStatus: [{
     //   type: Schema.Types.ObjectId
     // }],
