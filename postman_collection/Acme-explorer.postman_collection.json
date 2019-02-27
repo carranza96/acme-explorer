@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8b6dff6f-2416-485c-b83b-bc2f7f98b1c8",
+		"_postman_id": "75435d51-46ad-4046-9a01-f2e7d81d7d9a",
 		"name": "Acme-explorer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -130,7 +130,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"name\":\"Pedro\",\n\"surname\":\"Lara\",\n\"email\":\"plb@us.es\",\n\"password\":\"betis\",\n\"phone\":\"608840010\",\n\"address\":\"Calle Betis\",\n\"role\":\"MANAGER\"\t\n}"
+							"raw": "{\n\"name\":\"Pedro\",\n\"surname\":\"Benitez\",\n\"email\":\"pb@us.es\",\n\"password\":\"betis\",\n\"phone\":\"608840010\",\n\"address\":\"Calle Betis\",\n\"role\":\"MANAGER\"\t\n}"
 						},
 						"url": {
 							"raw": "localhost:8080/v1/actors/",
@@ -368,6 +368,36 @@
 					"response": []
 				},
 				{
+					"name": "GET Aplications by status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/applications?status=PENDING",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "PENDING"
+								}
+							]
+						},
+						"description": "returns all the aplications group by status"
+					},
+					"response": []
+				},
+				{
 					"name": "GET ApplicationByID",
 					"request": {
 						"method": "GET",
@@ -405,7 +435,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"55c680c6288457117ae1c248e\"\n}"
+							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"5c758a036a6b1a2b6319feb4\",\n\t\"trip\":\"5c7686ad0d48eb48017de9ed\"\n}"
 						},
 						"url": {
 							"raw": "localhost:8080/v1/applications/",
@@ -500,6 +530,38 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "PUT Change status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/applications/5c758ab36a6b1a2b6319febc/changeStatus?status=ACCEPTED",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications",
+								"5c758ab36a6b1a2b6319febc",
+								"changeStatus"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "ACCEPTED"
+								}
+							]
+						},
+						"description": "change status of an application"
+					},
+					"response": []
 				}
 			]
 		},
@@ -574,7 +636,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\":\"Excursión a Sevilla\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":100,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2020-07-01\"\n}"
+							"raw": "{\n\t\"title\":\"Excursión a Lebrija\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\": 0,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2020-07-01\",\n\t\"published\":\"true\",\n\t\"manager\": \"5c758a1a6a6b1a2b6319feb5\"\n}"
 						},
 						"url": {
 							"raw": "localhost:8080/v1/trips/",
@@ -605,10 +667,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\":\"Excursión a Valencia\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":20,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2018-07-01\"\n}"
+							"raw": "{\n\t\"title\":\"Excursión a Valencia\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":20,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2018-07-01\",\n\t\"published\": \"true\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/5c699798d410896d5329fa0c",
+							"raw": "localhost:8080/v1/trips/5c7686540d48eb48017de9eb",
 							"host": [
 								"localhost"
 							],
@@ -616,7 +678,7 @@
 							"path": [
 								"v1",
 								"trips",
-								"5c699798d410896d5329fa0c"
+								"5c7686540d48eb48017de9eb"
 							]
 						}
 					},
@@ -667,6 +729,71 @@
 								"5c671f8ee0a1bb5be474a92e"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Add Stage",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\":\"Visitar la catedral\",\n\t\"description\": \"entraremos en la catedral y conoceremos sus secretos de la mano de un guía experto\",\n\t\"price\": 10\n}\n\t"
+						},
+						"url": {
+							"raw": "localhost:8080/v1/trips/5c767911510ab83bcc4430fd/addStage",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								"5c767911510ab83bcc4430fd",
+								"addStage"
+							]
+						},
+						"description": "add a new stage to an existing trip"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Cancel Trip",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/trips/5c7686ad0d48eb48017de9ed/cancel?reasonCancellation=una razon",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								"5c7686ad0d48eb48017de9ed",
+								"cancel"
+							],
+							"query": [
+								{
+									"key": "reasonCancellation",
+									"value": "una razon"
+								}
+							]
+						},
+						"description": "Cancel a trip"
 					},
 					"response": []
 				}
