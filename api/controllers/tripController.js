@@ -102,6 +102,42 @@ exports.update_a_trip = function (req, res) {
   });
 };
 
+exports.add_stage = function(req,res){
+  var trip_id = req.params.tripId;
+  var new_stage = req.body;
+  console.log(trip_id);
+  console.log(new_stage);
+  Trip.update({ _id: trip_id}, {$push: {stages: new_stage}}, {new:true}, function (err, succ) {
+    if (err) {
+      if (err.name == 'ValidationError') {
+        res.status(422).send(err);
+      }
+      else {
+        console.log(err);
+        res.status(500).send(err);
+      }
+    }
+    else {
+      console.log("done");
+      Trip.findById(trip_id, function (err, trip) {
+        if(err){
+          res.status(500).send(err);
+        }else{
+          var totalPrice = trip.price + new_stage.price;
+          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err_u, success){
+            if(err){
+
+            }else{
+              trip.price=totalPrice;
+              res.json(trip);
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
 exports.delete_a_trip = function (req, res) {
   Trip.deleteOne({ _id: req.params.tripId }, function (err, trip) {
     if (err) {

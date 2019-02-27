@@ -53,4 +53,18 @@ module.exports = function(app) {
 	  .put(trips.update_a_trip)
     .delete(trips.delete_a_trip);
 
+    /**
+     * Put a trip
+     *    RequiredRoles: MANAGER
+     * Get an trip
+     *    RequiredRoles: None
+  	 *
+  	 * @section trips
+  	 * @type get put
+  	 * @url /v1/trips/:tripId
+    */
+    app.route('/v1/trips/:tripId/addStage')
+      .put(trips.add_stage)
+
+
 };
