@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "bcrypt": "^3.0.4",
+    "cron": "^1.6.0",
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.12",

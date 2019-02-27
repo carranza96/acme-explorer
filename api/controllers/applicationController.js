@@ -70,19 +70,19 @@ exports.change_status_application = function(req,res){
     }
 
 
-    Application.findById(req.params.applicationId, function (err, application) {
+    Application.findById(req.params.applicationId, function (err, appli) {
         if (err) {
             res.send(err);
         }
         else {
-            var status = application.status;
-            var condition = 
+            var status = appli.status;
+            var condition =
                 (status=="PENDING" && (newStatus=="DUE" || newStatus=="REJECTED")) ||
-                (status=="DUE" & newStatus=="ACCEPTED")
-                (status=="ACCEPTED" & newStatus=="CANCELLED");
-            
+                (status=="DUE" && newStatus=="ACCEPTED") ||
+                (status=="ACCEPTED" && newStatus=="CANCELLED");
+
             if(condition){
-                findOneAndUpdate({_id: req.params.applicationId}, { $set: {"status": newStatus }}, {new: true}, function (err1, application) {
+                Application.findOneAndUpdate({_id: req.params.applicationId}, { $set: {"status": newStatus }}, {new: true}, function (err1, appli1) {
                     if (err1) {
                         if (err1.name == 'ValidationError') {
                             res.status(422).send(err);
@@ -92,21 +92,15 @@ exports.change_status_application = function(req,res){
                         }
                     }
                     else {
-                        res.json(application);
+                        res.json(appli1);
                     }
                 });
             }
+            else{
+              res.status(422).send("status not valid"+ newStatus);
+            }
         }
     });
-    
-    
-    
-
-
-
-
-
-
 };
 
 
@@ -134,5 +128,3 @@ exports.delete_all_applications = function(req, res) {
         }
     });
 };
-
-
