@@ -1,7 +1,8 @@
 
 var async = require("async");
 var mongoose = require('mongoose'),
-  DataWareHouse = mongoose.model('DataWareHouse');
+  DataWareHouse = mongoose.model('DataWareHouse'),
+  Trip =  mongoose.model('Trip');
 
 
   exports.list_all_indicators = function(req, res) {
@@ -56,7 +57,7 @@ var mongoose = require('mongoose'),
     var new_dataWareHouse = new DataWareHouse();
     console.log('Cron job submitted. Rebuild period: '+rebuildPeriod);
     async.parallel([
-    //   computeTopCancellers,
+      // computeTripsPerManagerStats,
     //   computeTopNotCancellers,
 
     ], function (err, results) {
@@ -64,8 +65,8 @@ var mongoose = require('mongoose'),
         console.log("Error computing datawarehouse: "+err);
       }
       else{
-        //console.log("Resultados obtenidos por las agregaciones: "+JSON.stringify(results));
-        // new_dataWareHouse.topCancellers = results[0];
+        console.log("Resultados obtenidos por las agregaciones: "+JSON.stringify(results));
+        // new_dataWareHouse.avgNumTripsManaged = results[0];
         // new_dataWareHouse.topNotCancellers = results[1];
   
         new_dataWareHouse.save(function(err, datawarehouse) {
@@ -82,5 +83,16 @@ var mongoose = require('mongoose'),
 }
 
 
+
+function computeTripsPerManagerStats (callback) {
+  Trip.aggregate([
+    {$group: {	_id: "$manager",
+      avgNumTripsManaged : {$avg:1}
+      }
+    }	
+    ], function(err, res){
+       callback(err, res[0].avgNumTripsManaged)
+   }); 
+};
 
   module.exports.createDataWareHouseJob = createDataWareHouseJob;

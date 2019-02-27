@@ -88,6 +88,7 @@ var tripSchema = new Schema({
 
 tripSchema.index({ ticker: 'text', title: 'text', description: 'text' });
 tripSchema.index({startDate:-1})
+tripSchema.index({manager: 1})
 tripSchema.index({  price: 1, startDate: -1 }); //1 ascending,  -1 descending
 
 
@@ -102,10 +103,10 @@ tripSchema.pre('validate', function(next) {
                 return next(err);
             }
             if(!result){
-                application.invalidate('manager', `Manager id ${trip.manager} does not reference an existing actor`, trip.manager);
+                trip.invalidate('manager', `Manager id ${trip.manager} does not reference an existing actor`, trip.manager);
             }
             else if(!result.role.includes('MANAGER')){
-                application.invalidate('manager', `Referenced actor ${trip.manager} is not an explorer`, trip.manager);
+                trip.invalidate('manager', `Referenced actor ${trip.manager} is not an explorer`, trip.manager);
             }
             return next();
         });

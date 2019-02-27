@@ -37,10 +37,10 @@ sponsorshipSchema.pre('validate', function(next) {
                 return next(err);
             }
             if(!result){
-                application.invalidate('sponsor', `Sponsor id ${sponsorship.sponsor} does not reference an existing actor`, sponsorship.sponso);
+                sponsorship.invalidate('sponsor', `Sponsor id ${sponsorship.sponsor} does not reference an existing actor`, sponsorship.sponso);
             }
             else if(!result.role.includes('SPONSOR')){
-                application.invalidate('sponsor', `Referenced actor ${sponsorship.sponso} is not an sponsor`, sponsorship.sponso);
+                sponsorship.invalidate('sponsor', `Referenced actor ${sponsorship.sponso} is not an sponsor`, sponsorship.sponso);
             }
             return next();
         });
