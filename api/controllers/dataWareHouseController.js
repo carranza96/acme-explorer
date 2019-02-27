@@ -57,7 +57,7 @@ var mongoose = require('mongoose'),
     var new_dataWareHouse = new DataWareHouse();
     console.log('Cron job submitted. Rebuild period: '+rebuildPeriod);
     async.parallel([
-      // computeTripsPerManagerStats,
+      computeTripsPerManagerStats,
     //   computeTopNotCancellers,
 
     ], function (err, results) {
@@ -66,7 +66,7 @@ var mongoose = require('mongoose'),
       }
       else{
         console.log("Resultados obtenidos por las agregaciones: "+JSON.stringify(results));
-        // new_dataWareHouse.avgNumTripsManaged = results[0];
+        new_dataWareHouse.tripsPerManagerStats = results[0];
         // new_dataWareHouse.topNotCancellers = results[1];
   
         new_dataWareHouse.save(function(err, datawarehouse) {
@@ -87,11 +87,20 @@ var mongoose = require('mongoose'),
 function computeTripsPerManagerStats (callback) {
   Trip.aggregate([
     {$group: {	_id: "$manager",
-      avgNumTripsManaged : {$avg:1}
-      }
-    }	
+	    		numTrips: {$sum: 1}
+	    	}
+	},
+	{$group: {_id:null, 
+	    avg: {$avg: "$numTrips"},
+	    max: {$max: "$numTrips"},
+	    min: {$min: "$numTrips"},
+	    std: {$stdDevPop: "$numTrips"}
+	    }
+	},
+	{$project: {_id:0}
+	}
     ], function(err, res){
-       callback(err, res[0].avgNumTripsManaged)
+       callback(err, res[0])
    }); 
 };
 
