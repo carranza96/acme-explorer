@@ -2,26 +2,34 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var DataWareHouseSchema = new mongoose.Schema({
-    
-  // Number of trips managed per managers
-    avgNumTripsManaged: {
-      type: Number,
-      min: 0
-    },
-    minNumTripsManaged: {
-      type: Number,
-      min: 0
-    },
-    maxNumTripsManaged: {
-      type: Number,
-      min: 0
-    },
-    stdNumTripsManaged: {
-      type: Number,
-      min: 0
-    },
+var StatsSchema = new mongoose.Schema({
+  avg: {
+    type: Number,
+    min: 0
+  },
 
+  min: {
+    type: Number,
+    min: 0
+  },
+
+  max: {
+    type: Number,
+    min: 0
+  },
+
+  std: {
+    type: Number,
+    min: 0
+  }
+}, { strict: false })
+
+var DataWareHouseSchema = new mongoose.Schema({
+
+  // Number of trips managed per managers
+    tripsPerManagerStats: {
+      type: StatsSchema
+    },
   // Number of applications per trip
     avgNumApplicationsTrip: {
       type: Number,
@@ -63,7 +71,7 @@ var DataWareHouseSchema = new mongoose.Schema({
     //   type: Schema.Types.ObjectId
     // }],
 
-    
+
     computationMoment: {
         type: Date,
         default: Date.now
@@ -80,4 +88,3 @@ var DataWareHouseSchema = new mongoose.Schema({
 DataWareHouseSchema.index({ computationMoment: -1 });
 
 module.exports = mongoose.model('DataWareHouse', DataWareHouseSchema);
-
