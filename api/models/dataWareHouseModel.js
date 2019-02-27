@@ -31,6 +31,8 @@ var DataWareHouseSchema = new mongoose.Schema({
       minPriceAvg:Number,
       maxPriceAvg:Number
     },
+    // Top 10 keywords in finders
+    finderKeyWordsStats:[String],
 
 
     computationMoment: {

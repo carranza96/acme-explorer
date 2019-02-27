@@ -74,6 +74,7 @@ var mongoose = require('mongoose'),
       computeTripPriceStats,
       computeApplicationsPerTripStats,
       computeFinderPriceStats,
+      computeFinderKeyWordsStats
 
     ], function (err, results) {
       if (err){
@@ -85,6 +86,7 @@ var mongoose = require('mongoose'),
         new_dataWareHouse.tripPriceStats = results[1];
         new_dataWareHouse.applicationsPerTripStats = results[2];
         new_dataWareHouse.finderPriceStats = results[3];
+        new_dataWareHouse.finderKeyWordsStats = results[4];
 
         new_dataWareHouse.save(function(err, datawarehouse) {
           if (err){
@@ -176,6 +178,15 @@ function computeFinderPriceStats(callback){
 
 };
 
-
+function computeFinderKeyWordsStats(callback){
+  Finder.aggregate([
+    {"$sortByCount": "$keyWord"},
+	  { "$limit": 10 },
+	  {$project: {keyWord:"$_id", _id:0, count:"$count"}}
+  ],function(err, res){
+     var res_ls= res.map(function(rankingObject) { return rankingObject.keyWord; });
+     callback(err, res_ls)
+   });
+}
 
 module.exports.createDataWareHouseJob = createDataWareHouseJob;
