@@ -104,4 +104,27 @@ function computeTripsPerManagerStats (callback) {
    }); 
 };
 
-  module.exports.createDataWareHouseJob = createDataWareHouseJob;
+
+function computeApplicationsPerTripStats (callback) {
+  Trip.aggregate([
+    {$group: {	_id: "$manager",
+	    		numTrips: {$sum: 1}
+	    	}
+	},
+	{$group: {_id:null, 
+	    avg: {$avg: "$numTrips"},
+	    max: {$max: "$numTrips"},
+	    min: {$min: "$numTrips"},
+	    std: {$stdDevPop: "$numTrips"}
+	    }
+	},
+	{$project: {_id:0}
+	}
+    ], function(err, res){
+       callback(err, res[0])
+   }); 
+};
+
+
+
+module.exports.createDataWareHouseJob = createDataWareHouseJob;

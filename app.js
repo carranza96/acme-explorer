@@ -59,7 +59,7 @@ routesDataWareHouse(app);
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
     app.listen(port, function () {
-        console.log('ACME-Explorer RESTful API server started on: ' + port);
+        console.log('Acme-Explorer RESTful API server started on: ' + port);
     });
 });
 
@@ -68,3 +68,6 @@ mongoose.connection.on("open", function (err, conn) {
 mongoose.connection.on("error", function (err, conn) {
     console.error("DB init error " + err);
 });
+
+
+DataWareHouseTools.createDataWareHouseJob();
