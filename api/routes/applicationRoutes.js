@@ -6,10 +6,11 @@ module.exports = function (app) {
      * Get all applications
      * Post an application
      * Delete all applications
-     * 
+     *
      * @section applications
      * @type get post delete
      * @url /v1/applications
+     * @param {string} status
      */
     app.route('/v1/applications')
         .get(applications.list_all_applications)
@@ -30,7 +31,7 @@ module.exports = function (app) {
         .put(applications.update_an_application)
         .delete(applications.delete_an_application);
 
-    
+
     /**
      * Change status of an application
      *

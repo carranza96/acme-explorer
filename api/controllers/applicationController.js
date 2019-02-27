@@ -6,7 +6,12 @@ var mongoose = require('mongoose'),
 
 /*---------------Methods---------------------*/
 exports.list_all_applications = function (req, res) {
-    Application.find({}, function (err, applications) {
+  var match = {};
+  if(req.query.status){
+      var statusName=req.query.status;
+      match = {status:statusName};
+  }
+  Application.find(match, function (err, applications) {
         if (err) {
             res.send(err);
         }
