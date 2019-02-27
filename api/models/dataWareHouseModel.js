@@ -19,11 +19,11 @@ var DataWareHouseSchema = new mongoose.Schema({
     },
     // Ratio of applications grouped by status
     ratioApplicationsStatus:{
-      pending:Number,
-      rejected:Number,
-      due:Number,
-      accepted:Number,
-      cancelled:Number
+      PENDING:Number,
+      REJECTED:Number,
+      DUE:Number,
+      ACCEPTED:Number,
+      CANCELLED:Number
     },
 
     // Average price range that explores indicate in their finders

@@ -73,6 +73,7 @@ var mongoose = require('mongoose'),
       computeTripsPerManagerStats,
       computeTripPriceStats,
       computeApplicationsPerTripStats,
+      computeRatioApplicationsStatus,
       computeFinderPriceStats,
 
     ], function (err, results) {
@@ -84,7 +85,9 @@ var mongoose = require('mongoose'),
         new_dataWareHouse.tripsPerManagerStats = results[0];
         new_dataWareHouse.tripPriceStats = results[1];
         new_dataWareHouse.applicationsPerTripStats = results[2];
-        new_dataWareHouse.finderPriceStats = results[3];
+        new_dataWareHouse.ratioApplicationsStatus = results[3];
+        new_dataWareHouse.finderPriceStats = results[4];
+
 
         new_dataWareHouse.save(function(err, datawarehouse) {
           if (err){
@@ -137,7 +140,30 @@ function computeTripPriceStats (callback) {
 };
 
 
-
+function computeRatioApplicationsStatus (callback) {
+  Application.aggregate([
+    {$facet:{
+	    applications:[ {$group: {_id:null, numTotalApplications: {$sum:1} } } ],
+	    applicationsPerStatus: [{$group: {_id: "$status", numApplications: {$sum: 1}}}]
+	    }
+	  },
+	{$project:{_id:0,
+		ratio: {"$arrayToObject": {
+            "$map": {
+              "input": "$applicationsPerStatus",
+              "as": "status",
+              "in": {
+                "k": "$$status._id",
+                "v": {$divide: ["$$status.numApplications", {$arrayElemAt: ["$applications.numTotalApplications",0] }]  }
+              }
+            }
+          }
+      }
+    }	
+	}], function(err, res){
+    callback(err, res[0].ratio)
+  }); 
+};
 
 
 
