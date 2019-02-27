@@ -130,12 +130,10 @@ tripSchema.pre('save', function (callback) {
 tripSchema.pre('save', function(callback) {
     var stages_price = this.stages.map((stage) => stage.price);
     this.price = stages_price.reduce((a, b) => a + b, 0);
-    console.log(this.price)
     callback();
 });
 
 tripSchema.pre('findOneAndUpdate', function (next) {
-    console.log(this._update);
     var stages_price = this._update.stages.map((stage) => stage.price);
     var totalPrice = stages_price.reduce((a, b) => a + b, 0);
     this.update({},{ $set:{price: totalPrice}});

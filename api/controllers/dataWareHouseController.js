@@ -2,7 +2,8 @@
 var async = require("async");
 var mongoose = require('mongoose'),
   DataWareHouse = mongoose.model('DataWareHouse'),
-  Trip =  mongoose.model('Trip');
+  Trip =  mongoose.model('Trip'),
+  Application = mongoose.model('Application');
 
 
   exports.list_all_indicators = function(req, res) {
@@ -29,6 +30,17 @@ var mongoose = require('mongoose'),
         res.json(indicators);
       }
     });
+  };
+
+  exports.delete_all_indicators = function(req, res) {
+      DataWareHouse.deleteMany({}, function(err, actor) {
+      if (err){
+          res.send(err);
+      }
+      else{
+          res.json({ message: 'All indicators in DataWareHouse successfully deleted' });
+      }
+  });
   };
   
   var CronJob = require('cron').CronJob;
@@ -58,7 +70,8 @@ var mongoose = require('mongoose'),
     console.log('Cron job submitted. Rebuild period: '+rebuildPeriod);
     async.parallel([
       computeTripsPerManagerStats,
-    //   computeTopNotCancellers,
+      computeTripPriceStats,
+      computeApplicationsPerTripStats,
 
     ], function (err, results) {
       if (err){
@@ -67,7 +80,8 @@ var mongoose = require('mongoose'),
       else{
         console.log("Resultados obtenidos por las agregaciones: "+JSON.stringify(results));
         new_dataWareHouse.tripsPerManagerStats = results[0];
-        // new_dataWareHouse.topNotCancellers = results[1];
+        new_dataWareHouse.tripPriceStats = results[1];
+        new_dataWareHouse.applicationsPerTripStats = results[2];
   
         new_dataWareHouse.save(function(err, datawarehouse) {
           if (err){
@@ -97,29 +111,47 @@ function computeTripsPerManagerStats (callback) {
 	    std: {$stdDevPop: "$numTrips"}
 	    }
 	},
-	{$project: {_id:0}
-	}
-    ], function(err, res){
-       callback(err, res[0])
-   }); 
+	{$project: {_id:0}}
+  ], function(err, res){
+      callback(err, res[0])
+  }); 
 };
 
 
-function computeApplicationsPerTripStats (callback) {
+function computeTripPriceStats (callback) {
   Trip.aggregate([
-    {$group: {	_id: "$manager",
-	    		numTrips: {$sum: 1}
+    {$group: {_id:null, 
+	    avg: {$avg: "$price"},
+	    max: {$max: "$price"},
+	    min: {$min: "$price"},
+	    std: {$stdDevPop: "$price"}
+	    }
+	},
+	{$project: {_id:0}}
+  ], function(err, res){
+      callback(err, res[0])
+  }); 
+};
+
+
+
+
+
+
+function computeApplicationsPerTripStats (callback) {
+  Application.aggregate([
+    {$group: {	_id: "$trip",
+	    		numApplications: {$sum: 1}
 	    	}
 	},
 	{$group: {_id:null, 
-	    avg: {$avg: "$numTrips"},
-	    max: {$max: "$numTrips"},
-	    min: {$min: "$numTrips"},
-	    std: {$stdDevPop: "$numTrips"}
+	    avg: {$avg: "$numApplications"},
+	    max: {$max: "$numApplications"},
+	    min: {$min: "$numApplications"},
+	    std: {$stdDevPop: "$numApplications"}
 	    }
 	},
-	{$project: {_id:0}
-	}
+	{$project: {_id:0}}
     ], function(err, res){
        callback(err, res[0])
    }); 

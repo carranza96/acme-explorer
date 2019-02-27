@@ -14,7 +14,7 @@ var DataWareHouseSchema = new mongoose.Schema({
       avg:Number, min:Number, max:Number, std:Number
     },
   // Number of applications per trip
-    ApplicationsTripStats:{
+    applicationsPerTripStats:{
       avg:Number, min:Number, max:Number, std:Number
     },
     // Ratio of applications grouped by status

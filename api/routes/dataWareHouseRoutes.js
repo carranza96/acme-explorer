@@ -14,7 +14,8 @@ module.exports = function(app) {
 	*/
 	app.route('/dataWareHouse')
 	.get(dataWareHouse.list_all_indicators)
-	.post(dataWareHouse.rebuildPeriod);
+	.post(dataWareHouse.rebuildPeriod)
+	.delete(dataWareHouse.delete_all_indicators);
 
 	/**
 	 * Get a list of last computed indicator
