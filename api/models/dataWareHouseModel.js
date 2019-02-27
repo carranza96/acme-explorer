@@ -14,16 +14,31 @@ var DataWareHouseSchema = new mongoose.Schema({
       avg:Number, min:Number, max:Number, std:Number
     },
   // Number of applications per trip
-    applicationsTripStats:{
+    applicationsPerTripStats:{
       avg:Number, min:Number, max:Number, std:Number
     },
     // Ratio of applications grouped by status
     ratioApplicationsStatus:{
-      PENDING:Number,
-      REJECTED:Number,
-      DUE:Number,
-      ACCEPTED:Number,
-      CANCELLED:Number
+      PENDING:{
+        type:Number,
+        default:0
+      },
+      REJECTED:{
+        type:Number,
+        default:0
+      },
+      DUE:{
+        type:Number,
+        default:0
+      },
+      ACCEPTED:{
+        type:Number,
+        default:0
+      },
+      CANCELLED:{
+        type:Number,
+        default:0
+      },
     },
 
     // Average price range that explores indicate in their finders
