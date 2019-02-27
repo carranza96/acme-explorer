@@ -1,7 +1,9 @@
 'use strict';
 /*---------------TRIP----------------------*/
 var mongoose = require('mongoose'),
-  Trip = mongoose.model('Trip');
+  Trip = mongoose.model('Trip'),
+  Application = mongoose.model('Application');
+
 
 exports.list_all_trips = function (req, res) {
   Trip.find({}, function (err, trips) {
@@ -98,6 +100,56 @@ exports.update_a_trip = function (req, res) {
     }
     else {
       res.json(trip);
+    }
+  });
+};
+
+exports.cancel = function (req, res) {
+  var set_attributes = {cancelled:true, reasonCancellation:req.query.reasonCancellation};
+  Trip.findById(req.params.tripId,function(err,trip){
+    if(trip==null){
+      res.status(422).send("wrong trip id");
+      return
+    }
+    if(trip.published){
+      if(trip.startDate > new Date()){
+        res.status(422).send("trip already started");
+        return;
+      }
+      else{
+        Application.find({trip:trip.id, status: "ACCEPTED"}, function (err, applications) {
+            if (err) {
+                res.status(500).send(err);
+            }
+            else {
+              if(applications.length != 0){
+                res.status(422).send("trip has applications");
+                return;
+              }
+            }
+        });
+      }
+    }
+  });
+  Trip.update({ _id: req.params.tripId }, {$set: set_attributes}, { new: true }, function (err, succ) {
+    if (err) {
+      if (err.name == 'ValidationError') {
+        res.status(422).send(err);
+      }
+      else {
+        console.log(err);
+        res.status(500).send(err);
+      }
+    }
+    else {
+      Trip.findById(req.params.tripId, function(err1, trip){
+        if(err1){
+          res.status(500).send(err1);
+        }else{
+          res.json(trip);
+        }
+      });
+
     }
   });
 };
