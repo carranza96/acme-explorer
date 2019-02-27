@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "75435d51-46ad-4046-9a01-f2e7d81d7d9a",
+		"_postman_id": "a2be6403-a4ab-431f-b81d-f4744ab68818",
 		"name": "Acme-explorer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1070,6 +1070,81 @@
 								"v1",
 								"sponsorships",
 								"5c699ae1d410896d5329fa0f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DataWarehouse",
+			"item": [
+				{
+					"name": "GET Indicators",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/dataWareHouse",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"dataWareHouse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Last indicator",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/dataWareHouse/latest",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"dataWareHouse",
+								"latest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Indicators",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/v1/dataWareHouse",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"dataWareHouse"
 							]
 						}
 					},
