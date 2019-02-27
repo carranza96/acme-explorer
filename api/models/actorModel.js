@@ -49,7 +49,8 @@ var actorSchema = new Schema({
     default: Date.now
   },
   finder:{
-    type: Finder.schema
+    type: Schema.Types.ObjectId,
+    ref: "Finder"
   }
 }, { strict: false });
 
