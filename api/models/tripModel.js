@@ -129,7 +129,8 @@ tripSchema.pre('save', function (callback) {
 // Calculate price summing up individual stages
 tripSchema.pre('save', function(callback) {
     var stages_price = this.stages.map((stage) => stage.price);
-    this.totalPrice = stages_price.reduce((a, b) => a + b, 0);
+    this.price = stages_price.reduce((a, b) => a + b, 0);
+    console.log(this.price)
     callback();
 });
 
@@ -140,16 +141,7 @@ tripSchema.pre('findOneAndUpdate', function (next) {
     this.update({},{ $set:{price: totalPrice}});
     next();
   });
-tripSchema.post('findOneAndUpdate', function (next) {
 
-       console.log("post");
-       //console.log(this);
-       //console.log(this._update);
-       //var stages_price = this._update.stages.map((stage) => stage.price);
-       //var totalPrice = stages_price.reduce((a, b) => a + b, 0);
-       //this.update({},{ $set:{price: totalPrice}});
-       //next();
-      });
 
 
 module.exports = mongoose.model('Trip', tripSchema);
