@@ -3,12 +3,13 @@ var async = require("async");
 var mongoose = require('mongoose'),
   DataWareHouse = mongoose.model('DataWareHouse'),
   Trip =  mongoose.model('Trip'),
-  Application = mongoose.model('Application');
+  Application = mongoose.model('Application'),
+  Finder = mongoose.model('Finder');
 
 
   exports.list_all_indicators = function(req, res) {
     console.log('Requesting indicators');
-    
+
     DataWareHouse.find().sort("-computationMoment").exec(function(err, indicators) {
       if (err){
         res.send(err);
@@ -21,7 +22,7 @@ var mongoose = require('mongoose'),
 
 
   exports.last_indicator = function(req, res) {
-  
+
     DataWareHouse.find().sort("-computationMoment").limit(1).exec(function(err, indicators) {
       if (err){
         res.send(err);
@@ -42,36 +43,37 @@ var mongoose = require('mongoose'),
       }
   });
   };
-  
+
   var CronJob = require('cron').CronJob;
   var CronTime = require('cron').CronTime;
-  
+
   //'0 0 * * * *' una hora
   //'*/30 * * * * *' cada 30 segundos
   //'*/10 * * * * *' cada 10 segundos
   //'* * * * * *' cada segundo
   var rebuildPeriod = '*/10 * * * * *';  //El que se usará por defecto
   var computeDataWareHouseJob;
-  
+
   exports.rebuildPeriod = function(req, res) {
     console.log('Updating rebuild period. Request: period:'+req.query.rebuildPeriod);
     rebuildPeriod = req.query.rebuildPeriod;
     computeDataWareHouseJob.setTime(new CronTime(rebuildPeriod));
     computeDataWareHouseJob.start();
-  
+
     res.json(req.query.rebuildPeriod);
   };
 
 
   function createDataWareHouseJob(){
     computeDataWareHouseJob = new CronJob(rebuildPeriod,  function() {
-    
+
     var new_dataWareHouse = new DataWareHouse();
     console.log('Cron job submitted. Rebuild period: '+rebuildPeriod);
     async.parallel([
       computeTripsPerManagerStats,
       computeTripPriceStats,
       computeApplicationsPerTripStats,
+      computeFinderPriceStats,
 
     ], function (err, results) {
       if (err){
@@ -82,7 +84,8 @@ var mongoose = require('mongoose'),
         new_dataWareHouse.tripsPerManagerStats = results[0];
         new_dataWareHouse.tripPriceStats = results[1];
         new_dataWareHouse.applicationsPerTripStats = results[2];
-  
+        new_dataWareHouse.finderPriceStats = results[3];
+
         new_dataWareHouse.save(function(err, datawarehouse) {
           if (err){
             console.log("Error saving datawarehouse: "+err);
@@ -104,7 +107,7 @@ function computeTripsPerManagerStats (callback) {
 	    		numTrips: {$sum: 1}
 	    	}
 	},
-	{$group: {_id:null, 
+	{$group: {_id:null,
 	    avg: {$avg: "$numTrips"},
 	    max: {$max: "$numTrips"},
 	    min: {$min: "$numTrips"},
@@ -114,13 +117,13 @@ function computeTripsPerManagerStats (callback) {
 	{$project: {_id:0}}
   ], function(err, res){
       callback(err, res[0])
-  }); 
+  });
 };
 
 
 function computeTripPriceStats (callback) {
   Trip.aggregate([
-    {$group: {_id:null, 
+    {$group: {_id:null,
 	    avg: {$avg: "$price"},
 	    max: {$max: "$price"},
 	    min: {$min: "$price"},
@@ -130,7 +133,7 @@ function computeTripPriceStats (callback) {
 	{$project: {_id:0}}
   ], function(err, res){
       callback(err, res[0])
-  }); 
+  });
 };
 
 
@@ -144,7 +147,7 @@ function computeApplicationsPerTripStats (callback) {
 	    		numApplications: {$sum: 1}
 	    	}
 	},
-	{$group: {_id:null, 
+	{$group: {_id:null,
 	    avg: {$avg: "$numApplications"},
 	    max: {$max: "$numApplications"},
 	    min: {$min: "$numApplications"},
@@ -154,7 +157,23 @@ function computeApplicationsPerTripStats (callback) {
 	{$project: {_id:0}}
     ], function(err, res){
        callback(err, res[0])
-   }); 
+   });
+};
+
+function computeFinderPriceStats(callback){
+  Finder.aggregate([
+    {$group: {	_id: null,
+	    		minPriceAvg: {$avg: "$minPrice"},
+	    		maxPriceAvg: {$avg: "$maxPrice"}
+	    	}
+	     },
+	      {$project:
+          { _id:0 }
+	     }
+  ],function(err, res){
+     callback(err, res[0])
+ });
+
 };
 
 
