@@ -7,86 +7,86 @@ var Schema = mongoose.Schema,
     Trip = mongoose.model('Trip');
 
 var applicationSchema = new Schema({
-    moment:{
+    moment: {
         type: Date,
         required: 'Kindly enter the moment',
         default: Date.now
     },
-    status:{
+    status: {
         type: String,
         required: 'Kindly enter the status',
         default: 'PENDING',
-        enum: ['PENDING','REJECTED', 'DUE','ACCEPTED','CANCELLED'],
+        enum: ['PENDING', 'REJECTED', 'DUE', 'ACCEPTED', 'CANCELLED'],
     },
     comments: [String],
-    rejectReason:{
+    rejectReason: {
         type: String
     },
-    paid:{
-        type:Boolean,
-        default:false
+    paid: {
+        type: Boolean,
+        default: false
     },
-    explorer:{
+    explorer: {
         type: Schema.Types.ObjectId,
         ref: 'Actor',
         required: 'Kindly enter the explorer id'
     },
-    trip:{
+    trip: {
         type: Schema.Types.ObjectId,
         ref: 'Trip',
-        required: 'Kindly enter the trip id' 
+        required: 'Kindly enter the trip id'
     }
-},  { strict: false })
+}, { strict: false })
 
-applicationSchema.index({trip:1, status:'text'})
-applicationSchema.index({explorer:1, moment:-1})
-applicationSchema.index({moment: -1})
+applicationSchema.index({ trip: 1, status: 'text' })
+applicationSchema.index({ explorer: 1, moment: -1 })
+applicationSchema.index({ moment: -1 })
 
 // Check if explorer is valid
-applicationSchema.pre('validate', function(next) {
+applicationSchema.pre('validate', function (next) {
     var application = this;
     var explorer_id = application.explorer;
     if (explorer_id) {
-        Actor.findOne({_id:explorer_id}, function(err, result){
-            if(err){
+        Actor.findOne({ _id: explorer_id }, function (err, result) {
+            if (err) {
                 return next(err);
             }
-            if(!result){
+            if (!result) {
                 application.invalidate('explorer', `Explorer id ${application.explorer} does not reference an existing actor`, application.explorer);
             }
-            else if(!result.role.includes('EXPLORER')){
+            else if (!result.role.includes('EXPLORER')) {
                 application.invalidate('explorer', `Referenced actor ${application.explorer} is not an explorer`, application.explorer);
             }
             return next();
         });
     }
-    else{
+    else {
         return next();
     }
-    
-  });
+
+});
 
 
-  // Check if trip is valid
-  applicationSchema.pre('validate', function(next) {
+// Check if trip is valid
+applicationSchema.pre('validate', function (next) {
     var application = this;
     var trip_id = application.trip;
-    if (trip_id){
-        Trip.findOne({_id:trip_id}, function(err, result){
-            if(err){
+    if (trip_id) {
+        Trip.findOne({ _id: trip_id }, function (err, result) {
+            if (err) {
                 return next(err);
             }
-            if(!result){
+            if (!result) {
                 application.invalidate('trip', `Trip id ${application.trip} does not reference an existing trip`, application.trip);
             }
             return next();
         });
     }
-    else{
+    else {
         return next();
     }
-    
-  });
+
+});
 
 
 

@@ -5,10 +5,10 @@ var express = require('express'),
   Finder = require('./api/models/finderModel'),
   Actor = require('./api/models/actorModel'),
   Sponsorship = require('./api/models/sponsorshipModel')
-  Trip = require('./api/models/tripModel'),
+Trip = require('./api/models/tripModel'),
   Application = require('./api/models/applicationModel'),
   Config = require('./api/models/configModel'), // Singleton
-  DataWareHouse = require('./api/models/dataWareHouseModel'), 
+  DataWareHouse = require('./api/models/dataWareHouseModel'),
   DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
   bodyParser = require('body-parser');
 
@@ -39,9 +39,9 @@ app.use(bodyParser.json());
 
 var routesActors = require('./api/routes/actorRoutes');
 var routesTrip = require('./api/routes/tripRoutes');
-var routesApplication = require('./api/routes/applicationRoutes'); 
-var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
-var routesFinder = require('./api/routes/finderRoutes'); 
+var routesApplication = require('./api/routes/applicationRoutes');
+var routesSponsorship = require('./api/routes/sponsorshipRoutes');
+var routesFinder = require('./api/routes/finderRoutes');
 var routesConfig = require('./api/routes/configRoutes');
 var routesDataWareHouse = require('./api/routes/dataWareHouseRoutes');
 
@@ -58,15 +58,15 @@ routesDataWareHouse(app);
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
-    app.listen(port, function () {
-        console.log('Acme-Explorer RESTful API server started on: ' + port);
-    });
+  app.listen(port, function () {
+    console.log('Acme-Explorer RESTful API server started on: ' + port);
+  });
 });
 
 // mongoose.connection.dropDatabase()
 
 mongoose.connection.on("error", function (err, conn) {
-    console.error("DB init error " + err);
+  console.error("DB init error " + err);
 });
 
 

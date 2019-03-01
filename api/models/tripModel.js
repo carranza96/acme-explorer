@@ -87,34 +87,33 @@ var tripSchema = new Schema({
 }, { strict: false });
 
 tripSchema.index({ ticker: 'text', title: 'text', description: 'text' });
-tripSchema.index({startDate:-1})
-tripSchema.index({manager: 1})
-tripSchema.index({  price: 1, startDate: -1 }); //1 ascending,  -1 descending
-
+tripSchema.index({ startDate: -1 })
+tripSchema.index({ manager: 1 })
+tripSchema.index({ price: 1, startDate: -1 }); //1 ascending,  -1 descending
 
 
 // Check if manager is valid
-tripSchema.pre('validate', function(next) {
+tripSchema.pre('validate', function (next) {
     var trip = this;
     var manager_id = trip.manager;
     if (manager_id) {
-        Actor.findOne({_id:manager_id}, function(err, result){
-            if(err){
+        Actor.findOne({ _id: manager_id }, function (err, result) {
+            if (err) {
                 return next(err);
             }
-            if(!result){
+            if (!result) {
                 trip.invalidate('manager', `Manager id ${trip.manager} does not reference an existing actor`, trip.manager);
             }
-            else if(!result.role.includes('MANAGER')){
+            else if (!result.role.includes('MANAGER')) {
                 trip.invalidate('manager', `Referenced actor ${trip.manager} is not an explorer`, trip.manager);
             }
             return next();
         });
     }
-    else{
+    else {
         return next();
     }
-  });
+});
 
 
 // Execute before each trip.save() call
@@ -127,7 +126,7 @@ tripSchema.pre('save', function (callback) {
 });
 
 // Calculate price summing up individual stages
-tripSchema.pre('save', function(callback) {
+tripSchema.pre('save', function (callback) {
     var stages_price = this.stages.map((stage) => stage.price);
     this.price = stages_price.reduce((a, b) => a + b, 0);
     callback();
@@ -136,9 +135,9 @@ tripSchema.pre('save', function(callback) {
 tripSchema.pre('findOneAndUpdate', function (next) {
     var stages_price = this._update.stages.map((stage) => stage.price);
     var totalPrice = stages_price.reduce((a, b) => a + b, 0);
-    this.update({},{ $set:{price: totalPrice}});
+    this.update({}, { $set: { price: totalPrice } });
     next();
-  });
+});
 
 
 

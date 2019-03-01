@@ -6,63 +6,59 @@ var Schema = mongoose.Schema;
 var DataWareHouseSchema = new mongoose.Schema({
 
   // Number of trips managed per managers
-    tripsPerManagerStats: {
-      avg:Number, min:Number, max:Number, std:Number
-    },
+  tripsPerManagerStats: {
+    avg: Number, min: Number, max: Number, std: Number
+  },
   // Price of trips
-    tripPriceStats:{
-      avg:Number, min:Number, max:Number, std:Number
-    },
+  tripPriceStats: {
+    avg: Number, min: Number, max: Number, std: Number
+  },
   // Number of applications per trip
-    applicationsPerTripStats:{
-      avg:Number, min:Number, max:Number, std:Number
+  applicationsPerTripStats: {
+    avg: Number, min: Number, max: Number, std: Number
+  },
+  // Ratio of applications grouped by status
+  ratioApplicationsStatus: {
+    PENDING: {
+      type: Number,
+      default: 0
     },
-    // Ratio of applications grouped by status
-    ratioApplicationsStatus:{
-      PENDING:{
-        type:Number,
-        default:0
-      },
-      REJECTED:{
-        type:Number,
-        default:0
-      },
-      DUE:{
-        type:Number,
-        default:0
-      },
-      ACCEPTED:{
-        type:Number,
-        default:0
-      },
-      CANCELLED:{
-        type:Number,
-        default:0
-      },
+    REJECTED: {
+      type: Number,
+      default: 0
     },
-
-    // Average price range that explores indicate in their finders
-    finderPriceStats:{
-      minPriceAvg:Number,
-      maxPriceAvg:Number
+    DUE: {
+      type: Number,
+      default: 0
     },
-    // Top 10 keywords in finders
-    finderKeyWordsStats:[String],
+    ACCEPTED: {
+      type: Number,
+      default: 0
+    },
+    CANCELLED: {
+      type: Number,
+      default: 0
+    },
+  },
 
+  // Average price range that explorers indicate in their finders
+  finderPriceStats: {
+    minPriceAvg: Number,
+    maxPriceAvg: Number
+  },
 
-    computationMoment: {
-        type: Date,
-        default: Date.now
-      },
-      rebuildPeriod: {
-        type: String
-      }
+  // Top 10 keywords in finders
+  finderKeyWordsStats: [String],
 
+  computationMoment: {
+    type: Date,
+    default: Date.now
+  },
+  rebuildPeriod: {
+    type: String
+  }
 
 }, { strict: false });
 
-
-
 DataWareHouseSchema.index({ computationMoment: -1 });
-
 module.exports = mongoose.model('DataWareHouse', DataWareHouseSchema);

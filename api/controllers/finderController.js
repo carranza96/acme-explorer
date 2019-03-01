@@ -1,5 +1,5 @@
 'use strict';
-/*---------------TRIP----------------------*/
+
 var mongoose = require('mongoose'),
     Finder = mongoose.model('Finder');
 

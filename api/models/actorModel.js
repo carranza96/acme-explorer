@@ -48,14 +48,14 @@ var actorSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  finder:{
+  finder: {
     type: Schema.Types.ObjectId,
     ref: "Finder"
   }
 }, { strict: false });
 
 
-actorSchema.index({role:'text'})
+actorSchema.index({ role: 'text' })
 
 actorSchema.pre('save', function (callback) {
   var actor = this;
