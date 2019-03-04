@@ -9,7 +9,7 @@ var express = require('express'),
   DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
   bodyParser = require('body-parser'),
   admin = require('firebase-admin'),
-  serviceAccount = require('./acmesupermarketauth-serviceAccountKey.json');
+  serviceAccount = require('./acmeexplorerauth-serviceAccountKey.json');
 
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";

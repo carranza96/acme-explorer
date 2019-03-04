@@ -7,11 +7,12 @@ var express = require('express'),
   Sponsorship = require('./api/models/sponsorshipModel')
   Trip = require('./api/models/tripModel'),
   Application = require('./api/models/applicationModel'),
-  Config = require('./api/models/configModel'), // Singleton
+  Config = require('./api/models/configModel'),
   DataWareHouse = require('./api/models/dataWareHouseModel'), 
   DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
   bodyParser = require('body-parser');
-
+  admin = require('firebase-admin'),
+  serviceAccount = require('./acmeexplorerauth-serviceAccountKey.json');
 
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
@@ -36,6 +37,23 @@ mongoose.connect(mongoDBURI, {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, idToken" //ojo, que si metemos un parametro propio por la cabecera hay que declararlo aquí para que no de el error CORS
+  );
+  //res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+  next();
+});
+
+var adminConfig = {
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://acme-explorer-14440.firebaseio.com"
+};
+
+admin.initializeApp(adminConfig);
 
 var routesActors = require('./api/routes/actorRoutes');
 var routesTrip = require('./api/routes/tripRoutes');
@@ -44,6 +62,8 @@ var routesSponsorship = require('./api/routes/sponsorshipRoutes');
 var routesFinder = require('./api/routes/finderRoutes'); 
 var routesConfig = require('./api/routes/configRoutes');
 var routesDataWareHouse = require('./api/routes/dataWareHouseRoutes');
+var routesLogin = require('./api/routes/loginRoutes');
+
 
 
 routesActors(app);
@@ -53,6 +73,8 @@ routesSponsorship(app);
 routesFinder(app)
 routesConfig(app);
 routesDataWareHouse(app);
+routesLogin(app);
+
 
 
 
