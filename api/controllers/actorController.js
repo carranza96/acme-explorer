@@ -51,7 +51,7 @@ exports.login_an_actor = async function(req, res) {
         res.json({message: 'forbidden',error: err});
       }
 
-      else if ((actor.role.includes( 'CLERK' )) && (actor.validated == false)) {
+      else if ((actor.banned == false)) {
         res.status(403); //an access token is valid, but requires more privileges
         res.json({message: 'forbidden',error: err});
       }

@@ -63,8 +63,8 @@ exports.verifyUser = function(requiredRoles) {
               for (var i = 0; i < requiredRoles.length; i++) {
                 for (var j = 0; j < actor.role.length; j++) {
                    if (requiredRoles[i] == actor.role[j]) {
-                    if (requiredRoles[i] == "CLERK") {
-                      if (actor.validated == true) isAuth = true;
+                    if (actor.banned){ 
+                      isAuth = false;
                     } 
                     else isAuth = true;
                    }
