@@ -73,7 +73,7 @@ async function run() {
   // Connect to the replica set
   const uri = 'mongodb://localhost:31000,localhost:31001,localhost:31002/' +
     'Acme-Explorer?replicaSet=rs0';
-  console.log(new Date(),"Connecting to DB: " + uri);
+  console.log(new Date(), "Connecting to DB: " + uri);
   await mongoose.connect(uri,
     {
       reconnectTries: 10,
@@ -92,10 +92,21 @@ async function run() {
 
   Actor.watch().
     on('change', function (data) {
-      console.log(new Date(),"Actor changed, updating DataWarehouse...");
+      console.log(new Date(), "Actor changed, updating DataWarehouse...");
       DataWareHouseTools.computeDataWareHouse();
     });
 
+  Finder.watch().
+    on('change', function (data) {
+      console.log(new Date(), "Finder changed, updating DataWarehouse...");
+      DataWareHouseTools.computeDataWareHouse();
+    });
+
+  Trip.watch().
+    on('change', function (data) {
+      console.log(new Date(), "Trip changed, updating DataWarehouse...");
+      DataWareHouseTools.computeDataWareHouse();
+    });
   // TODO: Add other collections which alter the datawarehouse
 }
 
@@ -112,7 +123,7 @@ async function setupReplicaSet() {
   ], { replSet: 'rs0' });
 
   // Initialize the replica set
-  await replSet.purge();
+  //await replSet.purge();
   await replSet.start();
   console.log(new Date(), 'Replica set started...');
 }

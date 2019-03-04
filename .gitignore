@@ -84,3 +84,6 @@ typings/
 
 # Mac
 .DS_Store
+
+# Ignore Data
+.data
