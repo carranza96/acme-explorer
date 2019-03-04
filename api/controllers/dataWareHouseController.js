@@ -64,6 +64,45 @@ exports.rebuildPeriod = function (req, res) {
 };
 
 
+// Re-calculates DataWareHouse stats
+function computeDataWareHouse(){
+  var new_dataWareHouse = new DataWareHouse();
+
+  console.log("Re-calculating DataWareHouse...");
+
+  async.parallel([
+    computeTripsPerManagerStats,
+    computeTripPriceStats,
+    computeApplicationsPerTripStats,
+    computeRatioApplicationsStatus,
+    computeFinderPriceStats,
+    computeFinderKeyWordsStats
+
+  ], function (err, results) {
+    if (err) {
+      console.log("Error computing DataWareHouse: " + err);
+    }
+    else {
+      console.log("Resultados obtenidos por las agregaciones: " + JSON.stringify(results));
+      new_dataWareHouse.tripsPerManagerStats = results[0];
+      new_dataWareHouse.tripPriceStats = results[1];
+      new_dataWareHouse.applicationsPerTripStats = results[2];
+      new_dataWareHouse.ratioApplicationsStatus = results[3];
+      new_dataWareHouse.finderPriceStats = results[4];
+      new_dataWareHouse.finderKeyWordsStats = results[5];
+
+      new_dataWareHouse.save(function (err, datawarehouse) {
+        if (err) {
+          console.log("Error saving DataWareHouse: " + err);
+        }
+        else {
+          console.log("New DataWareHouse succesfully saved. Date: " + new Date());
+        }
+      });
+    }
+  });
+}
+
 function createDataWareHouseJob() {
   computeDataWareHouseJob = new CronJob(rebuildPeriod, function () {
 
@@ -233,3 +272,4 @@ function computeFinderKeyWordsStats(callback) {
 }
 
 module.exports.createDataWareHouseJob = createDataWareHouseJob;
+module.exports.computeDataWareHouse = computeDataWareHouse;

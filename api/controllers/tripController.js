@@ -131,6 +131,7 @@ exports.cancel = function (req, res) {
       }
     }
   });
+  
   Trip.update({ _id: req.params.tripId }, {$set: set_attributes}, { new: true }, function (err, succ) {
     if (err) {
       if (err.name == 'ValidationError') {
