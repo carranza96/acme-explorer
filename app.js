@@ -68,12 +68,15 @@ async function run() {
   // Make sure you're using mongoose >= 5.0.0
   console.log(new Date(), `mongoose version: ${mongoose.version}`);
 
-  await setupReplicaSet();
+  // Important!: Comment it if you already ran it once!
+  //await setupReplicaSet();
 
   // Connect to the replica set
   const uri = 'mongodb://localhost:31000,localhost:31001,localhost:31002/' +
     'Acme-Explorer?replicaSet=rs0';
-  console.log(new Date(), "Connecting to DB: " + uri);
+
+  console.log(new Date(), "Attenting to connect to DB: " + uri);
+
   await mongoose.connect(uri,
     {
       reconnectTries: 10,
@@ -85,14 +88,15 @@ async function run() {
       useNewUrlParser: true
     });
 
+  console.log("Connection stablished!");
   /*We will watch all connections which alter the DataWareHouse and 
   re-calculate it if any of them changes. 
   I don't think this is a good practice if our system has a high volume of operations.
   */
 
-  Actor.watch().
+  Trip.watch().
     on('change', function (data) {
-      console.log(new Date(), "Actor changed, updating DataWarehouse...");
+      console.log(new Date(), "Trip changed, updating DataWarehouse...");
       DataWareHouseTools.computeDataWareHouse();
     });
 
@@ -101,13 +105,6 @@ async function run() {
       console.log(new Date(), "Finder changed, updating DataWarehouse...");
       DataWareHouseTools.computeDataWareHouse();
     });
-
-  Trip.watch().
-    on('change', function (data) {
-      console.log(new Date(), "Trip changed, updating DataWarehouse...");
-      DataWareHouseTools.computeDataWareHouse();
-    });
-  // TODO: Add other collections which alter the datawarehouse
 }
 
 // Boilerplate to start a new replica set. You can skip this if you already
@@ -123,7 +120,7 @@ async function setupReplicaSet() {
   ], { replSet: 'rs0' });
 
   // Initialize the replica set
-  //await replSet.purge();
+  await replSet.purge();
   await replSet.start();
   console.log(new Date(), 'Replica set started...');
 }
