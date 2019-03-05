@@ -88,7 +88,7 @@ routesLogin(app);
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
-    app.listen(port, function () { 
+    app.listen(8000, function () { 
         console.log('ACME-Market RESTful API server started with https on: ' + port);
     });
     https.createServer(options, app).listen(port);
