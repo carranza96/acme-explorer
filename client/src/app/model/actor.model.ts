@@ -2,15 +2,18 @@ import { Entity } from './entity.model';
 
 export class Actor extends Entity {
 
-    name: string;
-    surname: string;
-    phone: string;
-    role: string;
-    email: string;
-    password: string;
-    address: string;
-    validated: boolean;
-    customToken: string;
-    preferredLanguage = 'en';
-    idToken: string;
+  name: String;
+  surname: String;
+  email: String;
+  password: String;
+  preferredLanguage = 'en';
+  phone: String;
+  address: String;
+  role: String
+  banned: Boolean
+  created: Date;
+  finder: string;
+  customToken: string;
+  idToken: string;
+
 }
