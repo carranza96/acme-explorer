@@ -1,0 +1,41 @@
+<br>
+<div *ngIf="email">
+  <span class="float-left" > The user {{email}} is logged in the system</span>
+  <button type="submit" class="btn btn-danger float-right" (click)="onLogout()">Logout</button>
+</div>
+<br>
+<br>
+<form *ngIf="!email" class="form-horizontal" (ngSubmit)="onLogin(f)" #f="ngForm">
+    <div class="form-group">
+      <label class="control-label col-sm-2" 
+      for="email">E-mail:
+      </label>
+      <div class="col-sm-10">
+        <input class="form-control" type="email" 
+          id="email" name="email" placeholder="Enter email" 
+          ngModel>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" 
+        for="pwd">Pasword:</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="password"
+        id="pwd" name="password" placeholder="Enter password" 
+        ngModel>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">
+            Login </button>
+      </div>
+    </div>
+  </form>  
+
+  <div class="text-danger">{{errorMessage}}</div>
+
+  <button  class="btn btn-secondary" (click)="onclick()">Edit Profile</button>
+
+
+  

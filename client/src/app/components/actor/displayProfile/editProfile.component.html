@@ -1,0 +1,25 @@
+<legend>Edit Profile</legend>
+
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <div class="form-group has-danger" >
+    <!-- Id is needed to update the profile-->
+    <input class="form-control" formControlName="id" type="hidden">
+    
+    <label class="center-block">Name:
+      <input class="form-control" formControlName="name">
+    </label>
+    <br/>
+    
+    <label class="center-block">Surname:
+      <input class="form-control" formControlName="surname">
+    </label>
+    <br/>
+
+    <!--form buttons-->
+    <button type="submit" class="btn btn-success">Save</button>
+  </div>
+</form>
+
+<div class="text-danger">{{errorMessage}}</div>
+
+<!--p>Form status: {{ profileForm.status | json }}</p-->
