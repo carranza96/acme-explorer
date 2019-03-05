@@ -9,7 +9,15 @@ var express = require('express'),
   DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
   bodyParser = require('body-parser'),
   admin = require('firebase-admin'),
-  serviceAccount = require('./acmeexplorerauth-serviceAccountKey.json');
+  serviceAccount = require('./acmesupermarketauth-serviceAccountKey.json'),
+  https = require("https"),
+  fs = require("fs");
+
+  const options = {
+    key: fs.readFileSync('C:/GitRepositories/ACME-Market/L05-S02/keys/server.key'),
+    cert: fs.readFileSync('C:/GitRepositories/ACME-Market/L05-S02/keys/server.cert')
+  };
+  
 
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
@@ -70,11 +78,13 @@ routesDataWareHouse(app);
 routesLogin(app);
 
 
+
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
-    app.listen(port, function () {
-        console.log('ACME-Market RESTful API server started on: ' + port);
+    app.listen(8000, function () { //port 8000
+        console.log('ACME-Market RESTful API server started with https on: ' + port);
     });
+    https.createServer(options, app).listen(port);
 });
 
 mongoose.connection.on("error", function (err, conn) {
