@@ -14,7 +14,7 @@ const httpOptions = {
 })
 export class AuthService implements OnInit {
 
-  private apiBackendUrl = 'https://localhost:8080';
+  private apiBackendUrl = 'http://localhost:8080';
   private currentActor: Actor;
 
 
