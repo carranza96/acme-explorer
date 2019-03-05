@@ -1,3 +1,7 @@
+#client
+client/node_modules/
+L00.code-workspace
+
 # intellij
 .idea
 
