@@ -44,6 +44,9 @@ var actorSchema = new Schema({
     type: Boolean,
     default: false
   },
+  customToken: {
+    type: String
+  },
   created: {
     type: Date,
     default: Date.now
