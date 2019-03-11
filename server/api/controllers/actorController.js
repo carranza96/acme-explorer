@@ -53,7 +53,7 @@ exports.login_an_actor = async function(req, res) {
 
       else if ((actor.banned)) {
         res.status(403); //an access token is valid, but requires more privileges
-        res.json({message: 'forbidden',error: err});
+        res.json({message: 'banned actor',error: err});
       }
       else{
         // Make sure the password is correct
@@ -97,7 +97,7 @@ exports.read_an_actor = function(req, res) {
   });
 };
 
-exports.update_an_actor = function(req, res) {
+exports.update_an_actor_v1 = function(req, res) {
     //Check that the user is the proper actor and if not: res.status(403); "an access token is valid, but requires more privileges"
     Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
       if (err){
@@ -113,6 +113,50 @@ exports.update_an_actor = function(req, res) {
       }
     });
 };
+
+
+exports.update_an_actor_v2 = function(req, res) {
+  //Managers,Explorers and Sponsors can update theirselves, administrators can update any actor
+  Actor.findById(req.params.actorId, async function(err, actor) {
+    if (err){
+      res.send(err);
+    }
+    else{
+      console.log('actor: '+actor);
+      var idToken = req.headers['idtoken'];//WE NEED the FireBase custom token in the req.header['idToken']... it is created by FireBase!!
+      if (actor.role.includes('MANAGER') || actor.role.includes('EXPLORER') || actor.role.includes('SPONSOR') ){
+        var authenticatedUserId = await authController.getUserId(idToken);
+        if (authenticatedUserId == req.params.actorId){
+          Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
+            if (err){
+              res.send(err);
+            }
+            else{
+              res.json(actor);
+            }
+          });
+        } else{
+          res.status(403); //Auth error
+          res.send('The Actor is trying to update an Actor that is not himself!');
+        }    
+      } else if (actor.role.includes('ADMINISTRATOR')){
+          Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
+            if (err){
+              res.send(err);
+            }
+            else{
+              res.json(actor);
+            }
+          });
+      } else {
+        res.status(405); //Not allowed
+        res.send('The Actor has unidentified roles');
+      }
+    }
+  });
+
+};
+
 
 exports.ban_an_actor = function(req, res) {
     //Check that the user is an Administrator and if not: res.status(403); "an access token is valid, but requires more privileges"

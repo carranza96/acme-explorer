@@ -35,7 +35,7 @@ export class LoginComponent {
       this.errorMessage = data;
     }).catch((error) => {
       console.log(error);
-      this.errorMessage = error;
+      this.errorMessage = error.error.message;
     });
   }
 

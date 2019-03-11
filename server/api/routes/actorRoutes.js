@@ -1,6 +1,7 @@
 'use strict';
 module.exports = function(app) {
   var actors = require('../controllers/actorController');
+  var authController = require('../controllers/authController');
 
   /**
    * Get all actors by role
@@ -33,8 +34,26 @@ module.exports = function(app) {
   */
   app.route('/v1/actors/:actorId')
     .get(actors.read_an_actor)
-	  .put(actors.update_an_actor)
+	  .put(actors.update_an_actor_v1)
     .delete(actors.delete_an_actor);
+
+
+  /**
+   * Put an actor
+   *    RequiredRoles: to be the proper actor
+   * Get an actor
+   *    RequiredRoles: any
+	 *
+	 * @section actors
+	 * @type get put
+	 * @url /v1/actors/:actorId
+  */  
+ app.route('/v2/actors/:actorId')
+ .get(actors.read_an_actor)
+ .put(authController.verifyUser(["ADMINISTRATOR","EXPLORER","MANAGER"])
+ ,actors.update_an_actor_v2) //Consumer y clerk no puede modificar la info de otro consumer/clerk
+
+
 
   /**
 	 * Ban an actor by actorId
