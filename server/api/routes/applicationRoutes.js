@@ -40,6 +40,16 @@ module.exports = function (app) {
      * @url /v1/applications/:applicationId
      */
     app.route('/v1/applications/:applicationId/changeStatus')
-        .put(applications.change_status_application);
+        .put(applications.change_status_application_v1);
+
+    /**
+     * Change status of an application
+     *
+     * @section applications
+     * @type put
+     * @url /v1/applications/:applicationId
+     */
+    app.route('/v2/applications/:applicationId/changeStatus')
+        .put(authController.verifyUser(["MANAGER"]),applications.change_status_application_v2);
 
 };

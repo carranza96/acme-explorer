@@ -67,7 +67,7 @@ exports.update_an_application = function (req, res) {
 };
 
 
-exports.change_status_application = function(req,res){
+exports.change_status_application_v1 = function(req,res){
     // Get new status
     var newStatus = null;
     if(req.query.status){
@@ -85,6 +85,46 @@ exports.change_status_application = function(req,res){
                 (status=="PENDING" && (newStatus=="DUE" || newStatus=="REJECTED")) ||
                 (status=="DUE" && newStatus=="ACCEPTED") ||
                 (status=="ACCEPTED" && newStatus=="CANCELLED");
+
+            if(condition){
+                Application.findOneAndUpdate({_id: req.params.applicationId}, { $set: {"status": newStatus }}, {new: true}, function (err1, appli1) {
+                    if (err1) {
+                        if (err1.name == 'ValidationError') {
+                            res.status(422).send(err);
+                        }
+                        else {
+                            res.status(500).send(err);
+                        }
+                    }
+                    else {
+                        res.json(appli1);
+                    }
+                });
+            }
+            else{
+              res.status(422).send("status not valid"+ newStatus);
+            }
+        }
+    });
+};
+
+// Managers can change the applications' status from pending to rejected or from pending to due.
+exports.change_status_application_v2 = function(req,res){
+    // Get new status
+    var newStatus = null;
+    if(req.query.status){
+        var newStatus=req.query.status;
+    }
+
+
+    Application.findById(req.params.applicationId, function (err, appli) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            var status = appli.status;
+            var condition =
+                (status=="PENDING" && (newStatus=="DUE" || newStatus=="REJECTED"));
 
             if(condition){
                 Application.findOneAndUpdate({_id: req.params.applicationId}, { $set: {"status": newStatus }}, {new: true}, function (err1, appli1) {
