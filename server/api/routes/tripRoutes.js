@@ -122,18 +122,28 @@ module.exports = function(app) {
 
 
   /**
-   * Put a stage
-   *    RequiredRoles: MANAGER
+   * Put a stage v1
+   *    RequiredRoles: None
    *
 	 * @section trips
-	 * @type get put
+	 * @type put
 	 * @url /v1/trips/:tripId/addStage
   */
   app.route('/v1/trips/:tripId/addStage')
       .put(trips.add_stage);
 
 
-
+  
+  /**
+   * Put a stage v2
+   *    RequiredRoles: MANAGER
+   *
+	 * @section trips
+	 * @type put
+	 * @url /v1/trips/:tripId/addStage
+  */
+ app.route('/v2/trips/:tripId/addStage')
+ .put(authController.verifyUser(["MANAGER"]),trips.add_stage);
 
 
 

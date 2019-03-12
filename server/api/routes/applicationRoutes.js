@@ -1,6 +1,8 @@
 'use strict';
 module.exports = function (app) {
     var applications = require('../controllers/applicationController');
+    var authController = require('../controllers/authController');
+
 
     /**
      * Get all applications
