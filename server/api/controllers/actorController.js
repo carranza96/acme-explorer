@@ -2,6 +2,8 @@
 /*---------------ACTOR----------------------*/
 var mongoose = require('mongoose'),
   Actor = mongoose.model('Actor');
+  var admin = require('firebase-admin');
+  var authController = require('./authController');
 
 exports.list_all_actors = function(req, res) {
     //Check if the role param exist
@@ -98,7 +100,6 @@ exports.read_an_actor = function(req, res) {
 };
 
 exports.update_an_actor_v1 = function(req, res) {
-    //Check that the user is the proper actor and if not: res.status(403); "an access token is valid, but requires more privileges"
     Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
       if (err){
         if(err.name=='ValidationError') {

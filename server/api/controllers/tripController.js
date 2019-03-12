@@ -2,8 +2,11 @@
 /*---------------TRIP----------------------*/
 var mongoose = require('mongoose'),
   Trip = mongoose.model('Trip'),
+  Actor = mongoose.model('Actor'),
   Application = mongoose.model('Application');
-
+  var admin = require('firebase-admin');
+  var authController = require('./authController');
+  var actorController = require('./actorController');
 
 exports.list_all_trips = function (req, res) {
   Trip.find({}, function (err, trips) {
@@ -75,6 +78,9 @@ exports.create_a_trip = function (req, res) {
   });
 };
 
+
+
+
 exports.read_a_trip = function (req, res) {
   Trip.findById(req.params.tripId, function (err, trip) {
     if (err) {
@@ -87,8 +93,7 @@ exports.read_a_trip = function (req, res) {
 };
 
 exports.update_a_trip = function (req, res) {
-  //Check that the user is the proper trip and if not: res.status(403); "an access token is valid, but requires more privileges"
-  // var opts = {new: true, runValidators:true, context: 'query'}
+
   Trip.findOneAndUpdate({ _id: req.params.tripId }, req.body, { new: true }, function (err, trip) {
     if (err) {
       if (err.name == 'ValidationError') {
