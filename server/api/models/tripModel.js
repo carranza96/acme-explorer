@@ -134,12 +134,22 @@ tripSchema.pre('save', function(callback) {
 });
 
 tripSchema.pre('findOneAndUpdate', function (next) {
+    if(!this._update.stages){
+      next();
+      return;
+    }
     var stages_price = this._update.stages.map((stage) => stage.price);
     var totalPrice = stages_price.reduce((a, b) => a + b, 0);
     this.update({},{ $set:{price: totalPrice}});
     next();
   });
 
+tripSchema.pre('findOneAndUpdate', function (next) {
+    if(this._update.ticker){
+      delete this._update.ticker;
+    }
+    next();
+  });
 
 
 module.exports = mongoose.model('Trip', tripSchema);
