@@ -109,33 +109,53 @@ exports.update_a_trip = function (req, res) {
   });
 };
 
-exports.cancel = function (req, res) {
-  var set_attributes = {cancelled:true, reasonCancellation:req.query.reasonCancellation};
+exports.cancel_a_trip = function (req, res) {
+  
+  // Check that reasonCancellation is provided
+  if (req.body.reasonCancellation){
+    var reasonCancellation = req.body.reasonCancellation;
+  }
+  else{
+    res.status(422).send("Reason of cancellation not provided");
+    return
+  }
+
+
+  var set_attributes = {cancelled:true, reasonCancellation:reasonCancellation};
+
+  // Check conditions:
+  // - reasonCancellation not blank
+  // - trip has not started
+  // - trip does not have any existing applications
+  
   Trip.findById(req.params.tripId,function(err,trip){
-    if(trip==null){
-      res.status(422).send("wrong trip id");
-      return
+    if (err) {
+      res.send(err);
     }
-    if(trip.published){
-      if(trip.startDate > new Date()){
-        res.status(422).send("trip already started");
-        return;
-      }
-      else{
-        Application.find({trip:trip.id, status: "ACCEPTED"}, function (err, applications) {
-            if (err) {
-                res.status(500).send(err);
-            }
-            else {
-              if(applications.length != 0){
-                res.status(422).send("trip has applications");
-                return;
+    else{
+      if(trip.published){
+        if(trip.startDate > new Date()){
+          res.status(422).send("The trip cannot be cancelled because it has already started");
+          return;
+        }
+        else{
+          Application.find({trip:trip.id, status: "ACCEPTED"}, function (err, applications) {
+              if (err) {
+                  res.status(500).send(err);
               }
-            }
-        });
+              else {
+                if(applications.length != 0){
+                  res.status(422).send("trip has applications");
+                  return;
+                }
+              }
+          });
+        }
       }
     }
   });
+
+
   Trip.update({ _id: req.params.tripId }, {$set: set_attributes}, { new: true }, function (err, succ) {
     if (err) {
       if (err.name == 'ValidationError') {
@@ -158,6 +178,9 @@ exports.cancel = function (req, res) {
     }
   });
 };
+
+
+
 
 exports.add_stage = function(req,res){
   var trip_id = req.params.tripId;
