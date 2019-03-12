@@ -28,7 +28,7 @@ module.exports = function (app) {
      *
      */
     app.route('/v2/applications')
-        .post(applications.create_an_application);
+        .post(authController.verifyUser(["EXPLORER"]),applications.create_an_application);
 
     /**
      * Put an application
@@ -46,23 +46,66 @@ module.exports = function (app) {
 
 
     /**
-     * Change status of an application
+     * Change status of an application (from pending to due or rejected)
      *
      * @section applications
      * @type put
      * @url /v1/applications/:applicationId
      */
     app.route('/v1/applications/:applicationId/changeStatus')
-        .put(applications.change_status_application_v1);
+        .put(applications.change_status_application);
 
     /**
-     * Change status of an application
+     * Change status of an application (from pending to due or rejected)
+     * Required Role: MANAGER
      *
      * @section applications
      * @type put
      * @url /v1/applications/:applicationId
      */
     app.route('/v2/applications/:applicationId/changeStatus')
-        .put(authController.verifyUser(["MANAGER"]),applications.change_status_application_v2);
+        .put(authController.verifyUser(["MANAGER"]),applications.change_status_application);
+
+    /**
+     * Pay a trip fee (status from due to accepted and paid = true)
+     *
+     * @section applications
+     * @type put
+     * @url /v1/applications/:applicationId
+     */
+    app.route('/v1/applications/:applicationId/pay')
+        .put(applications.pay_application);
+
+    /**
+     * Pay a trip fee (status from due to accepted and paid = true)
+     * Required Role: Explorer
+     *
+     * @section applications
+     * @type put
+     * @url /v1/applications/:applicationId
+     */
+    app.route('/v2/applications/:applicationId/pay')
+        .put(authController.verifyUser(["EXPLORER"]),applications.pay_application);
+
+    /**
+     * Cancel an application (status from accepted to cancelled)
+     *
+     * @section applications
+     * @type put
+     * @url /v1/applications/:applicationId
+     */
+    app.route('/v1/applications/:applicationId/cancel')
+        .put(applications.cancel_application);
+
+    /**
+     * Cancel an application (status from accepted to cancelled)
+     * Required Role: Explorer
+     *
+     * @section applications
+     * @type put
+     * @url /v1/applications/:applicationId
+     */
+    app.route('/v2/applications/:applicationId/cancel')
+        .put(authController.verifyUser(["EXPLORER"]),applications.cancel_application);
 
 };
