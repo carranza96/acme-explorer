@@ -105,7 +105,7 @@ module.exports = function(app) {
 	 * @url /v1/trips/:tripId/cancel
   */
  app.route('/v1/trips/:tripId/cancel')
- .put(trips.cancel);
+ .put(trips.cancel_a_trip);
 
 
  /**
@@ -132,17 +132,6 @@ module.exports = function(app) {
   app.route('/v1/trips/:tripId/addStage')
       .put(trips.add_stage);
 
-
-      /**
-   * Cancel a trip
-   *    RequiredRoles: MANAGER
-   *
-   * @section trips
-   * @type get put
-   * @url /v1/trips/:tripId/cancel
-  */
-  app.route('/v1/trips/:tripId/cancel')
-      .put(trips.cancel);
 
 
 
