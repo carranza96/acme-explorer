@@ -3,7 +3,6 @@ module.exports = function (app) {
     var applications = require('../controllers/applicationController');
     var authController = require('../controllers/authController');
 
-
     /**
      * Get all applications
      * Post an application
@@ -16,8 +15,20 @@ module.exports = function (app) {
      */
     app.route('/v1/applications')
         .get(applications.list_all_applications)
-        .post(applications.create_an_application)
+        .post(applications.create_an_application_v1)
         .delete(applications.delete_all_applications);
+    /**
+     *
+     * Post an application (Apply for a trip)
+     * Required Role: Explorer
+     *
+     * @section applications
+     * @type post
+     * @url /v2/applications
+     *
+     */
+    app.route('/v2/applications')
+        .post(applications.create_an_application_v2);
 
     /**
      * Put an application

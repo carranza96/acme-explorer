@@ -2,7 +2,9 @@
 
 /*---------------Application----------------------*/
 var mongoose = require('mongoose'),
-    Application = mongoose.model('Application');
+    Application = mongoose.model('Application')
+    Trip = mongoose.model('Trip');
+var authController = require('./authController');
 
 /*---------------Methods---------------------*/
 exports.list_all_applications = function (req, res) {
@@ -21,7 +23,47 @@ exports.list_all_applications = function (req, res) {
     });
 };
 
-exports.create_an_application = function (req, res) {
+exports.create_an_application_v2 = function (req, res) {
+    var new_application = new Application(req.body);
+    if(!req.body.trip){
+      res.status(422).send("Trip not defined");
+    }
+    else{
+      Trip.findOne({_id:req.body.trip}, function(err_trip, trip){
+        if(err_trip){
+          if (err_trip.name == 'ValidationError') {
+              res.status(422).send(err);
+          }
+          else {
+              res.status(500).send(err);
+          }
+        }
+        else{
+          var condition = (trip.published) && (trip.startDate < new Date()) && (!trip.cancelled)
+          if(condition){
+            res.status(422).send("Trip not valid");
+          }else{
+            new_application.save(function (err, application) {
+                if (err) {
+                    if (err.name == 'ValidationError') {
+                        res.status(422).send(err);
+                    }
+                    else {
+                        res.status(500).send(err);
+                    }
+                }
+                else {
+                    res.json(application);
+                }
+            });
+          }
+        }
+      });
+    }
+
+};
+
+exports.create_an_application_v1 = function (req, res) {
     var new_application = new Application(req.body);
 
     new_application.save(function (err, application) {
