@@ -20,7 +20,7 @@ module.exports = function(app) {
 	  .post(trips.create_a_trip)
     .delete(trips.delete_all_trips);
 
-  
+
   /**
    * Get all trips v2
    *    Required role: None
@@ -61,12 +61,12 @@ module.exports = function(app) {
   /**
    * Get a trip v1
    *    RequiredRoles: None
-   * 
+   *
    * Put a trip v1
    *    RequiredRoles: None
 	 * Delete a trip v1
    *    RequiredRoles: None
-   * 
+   *
 	 * @section trips
 	 * @type get put delete
 	 * @url /v1/trips/:tripId
@@ -79,13 +79,13 @@ module.exports = function(app) {
     /**
    * Get a trip v2
    *    RequiredRoles: None
-   * 
+   *
    * Put a trip v2
    *    RequiredRoles: MANAGER
-   * 
+   *
 	 * Delete a trip v2
    *    RequiredRoles: MANAGER
-   * 
+   *
 	 * @section trips
 	 * @type get put delete
 	 * @url /v1/trips/:tripId
@@ -105,7 +105,7 @@ module.exports = function(app) {
 	 * @url /v1/trips/:tripId/cancel
   */
  app.route('/v1/trips/:tripId/cancel')
- .put(trips.cancel_a_trip);
+ .put(trips.cancel);
 
 
  /**
@@ -117,7 +117,7 @@ module.exports = function(app) {
 	 * @url /v1/trips/:tripId/cancel
   */
  app.route('/v1/trips/:tripId/cancel')
- .put(authController.verifyUser(["MANAGER"],trips.cancel_a_trip);
+ .put(authController.verifyUser(["MANAGER"]),trips.cancel);
 
 
 
