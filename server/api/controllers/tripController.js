@@ -92,21 +92,43 @@ exports.read_a_trip = function (req, res) {
   });
 };
 
-exports.update_a_trip = function (req, res) {
 
-  Trip.findOneAndUpdate({ _id: req.params.tripId }, req.body, { new: true }, function (err, trip) {
+exports.update_a_trip = function (req, res) {
+  
+  // Can only update if trip is not published
+
+  Trip.findById(req.params.tripId, function (err, trip) {
     if (err) {
-      if (err.name == 'ValidationError') {
-        res.status(422).send(err);
-      }
-      else {
-        res.status(500).send(err);
-      }
+      return res.send(err);
+    }
+    else if (!trip){
+      return res.status(404).send(`Trip with id ${tripId} does not exist in database`);
     }
     else {
-      res.json(trip);
+      if(trip.published){
+        return res.status(422).send("Validation error: Trip cannot be modified because it is already published"); 
+      }
+      else{
+        Trip.findOneAndUpdate({ _id: req.params.tripId }, req.body, { new: true }, function (err, trip) {
+          if (err) {
+            if (err.name == 'ValidationError') {
+              res.status(422).send(err);
+            }
+            else {
+              res.status(500).send(err);
+            }
+          }
+          else {
+            res.json(trip);
+          }
+        });
+      }
     }
   });
+
+
+  
+
 };
 
 
@@ -217,16 +239,50 @@ exports.add_stage = function(req,res){
   });
 };
 
+
+
 exports.delete_a_trip = function (req, res) {
-  Trip.deleteOne({ _id: req.params.tripId }, function (err, trip) {
+
+  // Can only update if trip is not published
+
+  Trip.findById(req.params.tripId, function (err, trip) {
     if (err) {
-      res.send(err);
+      return res.send(err);
+    }
+    else if (!trip){
+      return res.status(404).send(`Trip with id ${tripId} does not exist in database`);
     }
     else {
-      res.json({ message: 'Trip successfully deleted' });
+      if(trip.published){
+        return res.status(422).send("Validation error: Trip cannot be deleted because it is already published"); 
+      }
+      else{
+        Trip.deleteOne({ _id: req.params.tripId }, function (err, trip) {
+          if (err) {
+            res.send(err);
+          }
+          else {
+            res.json({ message: 'Trip successfully deleted' });
+          }
+        });
+      }
     }
   });
+
+
+
+ 
+
+
+
+
+
+
+
 };
+
+
+
 
 exports.delete_all_trips = function (req, res) {
   Trip.deleteMany({}, function (err, trip) {
