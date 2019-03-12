@@ -4,6 +4,7 @@
 var mongoose = require('mongoose'),
     Application = mongoose.model('Application')
     Trip = mongoose.model('Trip');
+var authController = require('./authController');
 
 /*---------------Methods---------------------*/
 exports.list_all_applications = function (req, res) {
