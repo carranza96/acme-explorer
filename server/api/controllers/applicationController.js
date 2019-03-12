@@ -23,7 +23,7 @@ exports.list_all_applications = function (req, res) {
     });
 };
 
-exports.create_an_application_v2 = function (req, res) {
+exports.create_an_application = function (req, res) {
     var new_application = new Application(req.body);
     if(!req.body.trip){
       res.status(422).send("Trip not defined");
@@ -39,8 +39,8 @@ exports.create_an_application_v2 = function (req, res) {
           }
         }
         else{
-          var condition = (trip.published) && (trip.startDate < new Date()) && (!trip.cancelled)
-          if(condition){
+          var condition = (trip.published) && (trip.startDate < new Date()) && (!trip.cancelled);
+          if(!condition){
             res.status(422).send("Trip not valid");
           }else{
             new_application.save(function (err, application) {
@@ -61,24 +61,6 @@ exports.create_an_application_v2 = function (req, res) {
       });
     }
 
-};
-
-exports.create_an_application_v1 = function (req, res) {
-    var new_application = new Application(req.body);
-
-    new_application.save(function (err, application) {
-        if (err) {
-            if (err.name == 'ValidationError') {
-                res.status(422).send(err);
-            }
-            else {
-                res.status(500).send(err);
-            }
-        }
-        else {
-            res.json(application);
-        }
-    });
 };
 
 exports.read_an_application = function (req, res) {

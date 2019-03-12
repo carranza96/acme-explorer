@@ -15,7 +15,7 @@ module.exports = function (app) {
      */
     app.route('/v1/applications')
         .get(applications.list_all_applications)
-        .post(applications.create_an_application_v1)
+        .post(applications.create_an_application)
         .delete(applications.delete_all_applications);
     /**
      *
@@ -28,7 +28,7 @@ module.exports = function (app) {
      *
      */
     app.route('/v2/applications')
-        .post(applications.create_an_application_v2);
+        .post(applications.create_an_application);
 
     /**
      * Put an application
