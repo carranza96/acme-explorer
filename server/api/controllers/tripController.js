@@ -109,6 +109,8 @@ exports.update_a_trip = function (req, res) {
   });
 };
 
+
+
 exports.cancel_a_trip = function (req, res) {
   
   // Check that reasonCancellation is provided
@@ -116,67 +118,64 @@ exports.cancel_a_trip = function (req, res) {
     var reasonCancellation = req.body.reasonCancellation;
   }
   else{
-    res.status(422).send("Reason of cancellation not provided");
-    return
+    return res.status(422).send("Validation error: Reason of cancellation not provided");
   }
 
-
-  var set_attributes = {cancelled:true, reasonCancellation:reasonCancellation};
-
-  // Check conditions:
-  // - reasonCancellation not blank
-  // - trip has not started
-  // - trip does not have any existing applications
   
-  Trip.findById(req.params.tripId,function(err,trip){
+  Trip.findById(req.params.tripId, function(err,trip){
     if (err) {
-      res.send(err);
+      return res.send(err);
+    }
+    else if(!trip){
+      return res.status(404).send(`Trip with id ${tripId} does not exist in database`);
     }
     else{
+
+      // Check conditions:
+      // If the trip is published
+      // - trip has not started
+      // - trip does not have any existing applications
+
       if(trip.published){
-        if(trip.startDate > new Date()){
-          res.status(422).send("The trip cannot be cancelled because it has already started");
-          return;
+        if(trip.startDate < new Date()){
+          return res.status(422).send("Validation error: The trip cannot be cancelled because it has already started");
         }
+
         else{
           Application.find({trip:trip.id, status: "ACCEPTED"}, function (err, applications) {
               if (err) {
-                  res.status(500).send(err);
+                  return res.status(500).send(err);
               }
               else {
                 if(applications.length != 0){
-                  res.status(422).send("trip has applications");
-                  return;
+                  return res.status(422).send("Validation error: The trip cannot be cancelled because it has accepted applications");
                 }
               }
           });
         }
       }
-    }
-  });
 
 
-  Trip.update({ _id: req.params.tripId }, {$set: set_attributes}, { new: true }, function (err, succ) {
-    if (err) {
-      if (err.name == 'ValidationError') {
-        res.status(422).send(err);
-      }
-      else {
-        console.log(err);
-        res.status(500).send(err);
-      }
-    }
-    else {
-      Trip.findById(req.params.tripId, function(err1, trip){
-        if(err1){
-          res.status(500).send(err1);
-        }else{
+      Trip.findOneAndUpdate({ _id: req.params.tripId },  {$set: {cancelled:true, reasonCancellation:reasonCancellation}}, { new: true }, function (err, trip) {
+        if (err) {
+          if (err.name == 'ValidationError') {
+            res.status(422).send(err);
+          }
+          else {
+            console.log(req.params.tripId)
+            res.status(500).send(err);
+          }
+        }
+        else {
           res.json(trip);
         }
       });
 
+  
+
     }
   });
+  
 };
 
 
