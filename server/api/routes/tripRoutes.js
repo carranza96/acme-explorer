@@ -116,13 +116,8 @@ module.exports = function(app) {
 	 * @type put
 	 * @url /v1/trips/:tripId/cancel
   */
-<<<<<<< HEAD
  app.route('/v2/trips/:tripId/cancel')
  .put(authController.verifyUser(["MANAGER"]),trips.cancel_a_trip);
-=======
- app.route('/v1/trips/:tripId/cancel')
- .put(authController.verifyUser(["MANAGER"]),trips.cancel);
->>>>>>> f5dbad47e3fb373b8e485f5eb16d0bff620a1d0d
 
 
 
