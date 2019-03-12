@@ -50,8 +50,8 @@ module.exports = function(app) {
   */  
  app.route('/v2/actors/:actorId')
  .get(actors.read_an_actor)
- .put(authController.verifyUser(["ADMINISTRATOR","EXPLORER","MANAGER"])
- ,actors.update_an_actor_v2) //Consumer y clerk no puede modificar la info de otro consumer/clerk
+ .put(authController.verifyUser(["ADMINISTRATOR","EXPLORER","MANAGER","SPONSOR"])
+ ,actors.update_an_actor_v2) //Manager, Explorer, Sponsor no puede modificar la info de otro Manager/Explorer/Sponsor
 
 
 
