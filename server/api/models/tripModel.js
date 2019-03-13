@@ -127,7 +127,7 @@ tripSchema.path('startDate').validate(async function(value){
             var condition;
             await Trip.findById(this._conditions._id, function (err, trip) {
                 if (err) {
-                  throw new Error("Trip not found");
+                  throw new Error();
                 }
                 else {
                     condition = trip.endDate > value;
@@ -143,55 +143,58 @@ tripSchema.path('startDate').validate(async function(value){
 },'End date must be after start date')
 
 
-trip.Schema.path('manager').validate(function (value){
-    
-    // var manager_id;
-    // if(this._update){
-    //     manager_id = this._update.manager
-    // }
-    // else{
-    //     manager_id = this.manager
-    // }
-    var manager_id = value;
 
-    Actor.findOne({_id:manager_id}, function(err, result){
+tripSchema.path('manager').validate(
+{
+   validator: function (value){
+    
+    return new Promise(function (resolve, reject) {
+
+        var manager_id = value;
+
+        Actor.findOne({_id:manager_id}, function(err, result){
         if(err){
-            return next(err);
+            reject(new Error());
         }
         if(!result){
-            trip.invalidate('manager', `Manager id ${trip.manager} does not reference an existing actor`, trip.manager);
+            reject(new Error(`Manager id ${manager_id} does not reference an existing actor`));
         }
         else if(!result.role.includes('MANAGER')){
-            trip.invalidate('manager', `Referenced actor ${trip.manager} is not an explorer`, trip.manager);
+            reject(new Error(`Referenced actor ${manager_id} is not an explorer`));
         }
-        return next();
-    });
+        else{
+            resolve(true)
+        }
+        })
 
-})
+      });
+    }
+ , message: function(props) { return props.reason.message; }} );
+
 
 
 // Check if manager is valid
-tripSchema.pre('validate', function(next) {
-    var trip = this;
-    var manager_id = trip.manager;
-    if (manager_id) {
-        Actor.findOne({_id:manager_id}, function(err, result){
-            if(err){
-                return next(err);
-            }
-            if(!result){
-                trip.invalidate('manager', `Manager id ${trip.manager} does not reference an existing actor`, trip.manager);
-            }
-            else if(!result.role.includes('MANAGER')){
-                trip.invalidate('manager', `Referenced actor ${trip.manager} is not an explorer`, trip.manager);
-            }
-            return next();
-        });
-    }
-    else{
-        return next();
-    }
-  });
+// tripSchema.pre('validate', function(next) {
+//     var trip = this;
+//     var manager_id = trip.manager;
+//     if (manager_id) {
+//         Actor.findOne({_id:manager_id}, function(err, result){
+//             if(err){
+//                 return next(err);
+//             }
+//             if(!result){
+//                 trip.invalidate('manager', `Manager id ${trip.manager} does not reference an existing actor`, trip.manager);
+//             }
+//             else if(!result.role.includes('MANAGER')){
+//                 trip.invalidate('manager', `Referenced actor ${trip.manager} is not an explorer`, trip.manager);
+//             }
+//             return next();
+//         });
+//     }
+//     else{
+//         return next();
+//     }
+//   });
 
 
 // Execute before each trip.save() call
