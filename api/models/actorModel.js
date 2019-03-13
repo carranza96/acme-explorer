@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema,
-  Finder = mongoose.model('Finder');
+Finder = mongoose.model('Finder');
 
 
 var actorSchema = new Schema({

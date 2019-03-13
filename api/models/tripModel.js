@@ -1,7 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema,
-    Actor = mongoose.model('Actor');
+Actor = mongoose.model('Actor');
 
 const generate = require('nanoid/generate');
 const dateformat = require('dateformat');
@@ -140,6 +140,9 @@ tripSchema.pre('findOneAndUpdate', function (next) {
 });
 
 
-
-module.exports = mongoose.model('Trip', tripSchema);
-module.exports = mongoose.model('Stage', stageSchema);
+//module.exports = mongoose.model('Stage', stageSchema);
+//module.exports = mongoose.model('Trip', tripSchema);
+module.exports = {
+    Stage: mongoose.model('Stage', stageSchema),
+    Trip: mongoose.model('Trip', tripSchema)
+}

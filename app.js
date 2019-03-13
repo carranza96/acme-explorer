@@ -28,7 +28,6 @@ var mongoDBURI = "mongodb://" + mongoDBCredentials + mongoDBHostname + ":" + mon
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
 var routesActors = require('./api/routes/actorRoutes');
 var routesTrip = require('./api/routes/tripRoutes');
 var routesApplication = require('./api/routes/applicationRoutes');
@@ -36,7 +35,6 @@ var routesSponsorship = require('./api/routes/sponsorshipRoutes');
 var routesFinder = require('./api/routes/finderRoutes');
 var routesConfig = require('./api/routes/configRoutes');
 var routesDataWareHouse = require('./api/routes/dataWareHouseRoutes');
-
 
 routesActors(app);
 routesTrip(app);
@@ -46,7 +44,28 @@ routesFinder(app)
 routesConfig(app);
 routesDataWareHouse(app);
 
-run().catch(error => console.error(error));
+run().then(function () {
+  /*We will watch all connections which alter the DataWareHouse and re-calculate it if any of them changes. 
+  I don't think this is a good practice if our system has a high volume of operations.
+*/
+  Actor.watch().
+    on('change', function (data) {
+      console.log(new Date(), "Actor changed, updating DataWarehouse...");
+      DataWareHouseTools.computeDataWareHouse();
+    });
+
+  Trip.Trip.watch().
+    on('change', function (data) {
+      console.log(new Date(), "Trip changed, updating DataWarehouse...");
+      DataWareHouseTools.computeDataWareHouse();
+    });
+
+  Finder.watch().
+    on('change', function (data) {
+      console.log(new Date(), "Finder changed, updating DataWarehouse...");
+      DataWareHouseTools.computeDataWareHouse();
+    });
+}).catch(error => console.error(error));
 
 mongoose.connection.on("open", function (err, conn) {
   app.listen(port, function () {
@@ -63,13 +82,12 @@ mongoose.connection.on("error", function (err, conn) {
 //DataWareHouseTools.createDataWareHouseJob();
 
 // Defined functions:
-
 async function run() {
   // Make sure you're using mongoose >= 5.0.0
   console.log(new Date(), `mongoose version: ${mongoose.version}`);
 
   // Important!: Comment it if you already ran it once!
-  //await setupReplicaSet();
+  await setupReplicaSet();
 
   // Connect to the replica set
   const uri = 'mongodb://localhost:31000,localhost:31001,localhost:31002/' +
@@ -89,22 +107,6 @@ async function run() {
     });
 
   console.log("Connection stablished!");
-  /*We will watch all connections which alter the DataWareHouse and 
-  re-calculate it if any of them changes. 
-  I don't think this is a good practice if our system has a high volume of operations.
-  */
-
-  Trip.watch().
-    on('change', function (data) {
-      console.log(new Date(), "Trip changed, updating DataWarehouse...");
-      DataWareHouseTools.computeDataWareHouse();
-    });
-
-  Finder.watch().
-    on('change', function (data) {
-      console.log(new Date(), "Finder changed, updating DataWarehouse...");
-      DataWareHouseTools.computeDataWareHouse();
-    });
 }
 
 // Boilerplate to start a new replica set. You can skip this if you already
