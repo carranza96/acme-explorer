@@ -53,12 +53,12 @@ var tripSchema = new Schema({
     endDate: {
         type: Date,
         required: 'Kindly enter the end date',
-        validate: {
-            validator: function (value) {
-                return this.startDate < value;
-            },
-            message: 'End date must be after start date'
-        }
+        // validate: {
+        //     validator: function (value) {
+        //         return this.startDate < value;
+        //     },
+        //     message: 'End date must be after start date'
+        // }
     },
     pictures: [{
         data: Buffer,
@@ -91,6 +91,83 @@ tripSchema.index({startDate:-1})
 tripSchema.index({manager: 1})
 tripSchema.index({  price: 1, startDate: -1 }); //1 ascending,  -1 descending
 
+
+tripSchema.path('endDate').validate(async function(value){
+    if(this._update){
+        if (this._update.startDate){
+            return new Date(this._update.startDate) < value;
+        }
+        else{
+            var condition;
+            await Trip.findById(this._conditions._id, function (err, trip) {
+                if (err) {
+                  throw new Error("Trip not found");
+                }
+                else {
+                    condition = trip.startDate < value;
+                }
+            });
+            return condition;
+        }
+    }
+
+    else{
+        return this.startDate < value;
+    }
+},'End date must be after start date')
+
+
+
+tripSchema.path('startDate').validate(async function(value){
+    if(this._update){
+        if (this._update.endDate){
+            return new Date(this._update.endDate) > value;
+        }
+        else{
+            var condition;
+            await Trip.findById(this._conditions._id, function (err, trip) {
+                if (err) {
+                  throw new Error("Trip not found");
+                }
+                else {
+                    condition = trip.endDate > value;
+                }
+            });
+            return condition;
+        }
+    }
+
+    else{
+        return this.endDate > value;
+    }
+},'End date must be after start date')
+
+
+trip.Schema.path('manager').validate(function (value){
+    
+    // var manager_id;
+    // if(this._update){
+    //     manager_id = this._update.manager
+    // }
+    // else{
+    //     manager_id = this.manager
+    // }
+    var manager_id = value;
+
+    Actor.findOne({_id:manager_id}, function(err, result){
+        if(err){
+            return next(err);
+        }
+        if(!result){
+            trip.invalidate('manager', `Manager id ${trip.manager} does not reference an existing actor`, trip.manager);
+        }
+        else if(!result.role.includes('MANAGER')){
+            trip.invalidate('manager', `Referenced actor ${trip.manager} is not an explorer`, trip.manager);
+        }
+        return next();
+    });
+
+})
 
 
 // Check if manager is valid
@@ -135,8 +212,7 @@ tripSchema.pre('save', function(callback) {
 
 tripSchema.pre('findOneAndUpdate', function (next) {
     if(!this._update.stages){
-      next();
-      return;
+      return next();
     }
     var stages_price = this._update.stages.map((stage) => stage.price);
     var totalPrice = stages_price.reduce((a, b) => a + b, 0);
@@ -150,6 +226,7 @@ tripSchema.pre('findOneAndUpdate', function (next) {
     }
     next();
   });
+
 
 
 module.exports = mongoose.model('Trip', tripSchema);

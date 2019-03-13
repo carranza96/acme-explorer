@@ -93,45 +93,6 @@ exports.read_a_trip = function (req, res) {
 };
 
 
-exports.update_a_trip = function (req, res) {
-  
-  // Can only update if trip is not published
-
-  Trip.findById(req.params.tripId, function (err, trip) {
-    if (err) {
-      return res.send(err);
-    }
-    else if (!trip){
-      return res.status(404).send(`Trip with id ${tripId} does not exist in database`);
-    }
-    else {
-      if(trip.published){
-        return res.status(422).send("Validation error: Trip cannot be modified because it is already published"); 
-      }
-      else{
-        Trip.findOneAndUpdate({ _id: req.params.tripId }, req.body, { new: true }, function (err, trip) {
-          if (err) {
-            if (err.name == 'ValidationError') {
-              res.status(422).send(err);
-            }
-            else {
-              res.status(500).send(err);
-            }
-          }
-          else {
-            res.json(trip);
-          }
-        });
-      }
-    }
-  });
-
-
-  
-
-};
-
-
 
 exports.cancel_a_trip = function (req, res) {
   
@@ -199,6 +160,54 @@ exports.cancel_a_trip = function (req, res) {
   });
   
 };
+
+
+
+
+exports.update_a_trip = function (req, res) {
+  
+  // Can only update if trip is not published
+  var updated_trip = req.body
+
+  Trip.findById(req.params.tripId, function (err, trip) {
+    if (err) {
+      return res.send(err);
+    }
+    else if (!trip){
+      return res.status(404).send(`Trip with id ${tripId} does not exist in database`);
+    }
+    else{ 
+      // Check if trying to cancel the trip
+      if(updated_trip.cancelled=="true"){
+        exports.cancel_a_trip(req, res);
+      }
+
+      if(trip.published){
+        return res.status(422).send("Validation error: Trip cannot be modified because it is already published"); 
+      }
+
+      else{
+        Trip.findOneAndUpdate({ _id: req.params.tripId }, updated_trip, { new: true, runValidators:true, context:'query' }, function (err, trip) {
+          if (err) {
+            if (err.name == 'ValidationError') {
+              res.status(422).send(err);
+            }
+            else {
+              res.status(500).send(err);
+            }
+          }
+          else {
+            res.json(trip);
+          }
+        });
+      }
+    }
+  });  
+
+};
+
+
+
 
 
 
