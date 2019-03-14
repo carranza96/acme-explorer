@@ -15,12 +15,54 @@ module.exports = function(app) {
 	 * @section actors
 	 * @type get post
 	 * @url /v1/actors
-   * @param {string} role (EXPLORER|ADMINISTRATOR|MANAGER|SPONSOR)
+   * @param {string} role (EXPLORER|SPONSOR)
   */
   app.route('/v1/actors')
 	  .get(actors.list_all_actors)
 	  .post(actors.create_an_actor)
     .delete(actors.delete_all_actors);
+  /**
+   * Post a manager
+   *    RequiredRoles: ADMINISTRATOR
+	 * @section actors
+	 * @type  post
+	 * @url /v2/actors
+   *
+  */
+  app.route('/v1/actors/manager')
+	  .post(actors.create_a_manager)
+
+  /**
+   * Post an admin
+   *    RequiredRoles: ADMINISTRATOR
+	 * @section actors
+	 * @type  post
+	 * @url /v2/actors
+   *
+  */
+  app.route('/v1/actors/administrator')
+	  .post(actors.create_an_admin)
+  /**
+   * Post a manager
+   *    RequiredRoles: ADMINISTRATOR
+	 * @section actors
+	 * @type  post
+	 * @url /v2/actors
+   *
+  */
+  app.route('/v2/actors/manager')
+	  .post(authController.verifyUser(["ADMINISTRATOR"]),actors.create_a_manager)
+
+  /**
+   * Post an admin
+   *    RequiredRoles: ADMINISTRATOR
+	 * @section actors
+	 * @type  post
+	 * @url /v2/actors
+   *
+  */
+  app.route('/v2/actors/administrator')
+	  .post(authController.verifyUser(["ADMINISTRATOR"]),actors.create_an_admin)
 
   /**
    * Put an actor
@@ -47,7 +89,7 @@ module.exports = function(app) {
 	 * @section actors
 	 * @type get put
 	 * @url /v1/actors/:actorId
-  */  
+  */
  app.route('/v2/actors/:actorId')
  .get(actors.read_an_actor)
  .put(authController.verifyUser(["ADMINISTRATOR","EXPLORER","MANAGER","SPONSOR"])
