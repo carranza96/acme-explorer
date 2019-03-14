@@ -118,29 +118,35 @@ tripSchema.path('endDate').validate(async function(value){
 
 
 
-tripSchema.path('startDate').validate(async function(value){
+tripSchema.path('startDate').validate( function(value){
+
     if(this._update){
         if (this._update.endDate){
             return new Date(this._update.endDate) > value;
         }
         else{
-            var condition;
-            await Trip.findById(this._conditions._id, function (err, trip) {
-                if (err) {
-                  throw new Error();
-                }
-                else {
-                    condition = trip.endDate > value;
-                }
-            });
-            return condition;
+            var update_doc = this
+            return new Promise(function (resolve, reject) {                
+                Trip.findById(update_doc._conditions._id, function (err, trip) {
+                    if (err) {
+                        reject(new Error());
+                    }
+                    else {
+                        console.log(trip.endDate > value)
+                        resolve(trip.endDate > value);
+                    }
+                });
+        
+              });
         }
     }
 
     else{
         return this.endDate > value;
     }
-},'End date must be after start date')
+},'Start date must be before end date')
+
+
 
 
 

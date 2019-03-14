@@ -139,7 +139,7 @@ exports.cancel_a_trip = function (req, res) {
       }
 
 
-      Trip.findOneAndUpdate({ _id: req.params.tripId },  {$set: {cancelled:true, reasonCancellation:reasonCancellation}}, { new: true }, function (err, trip) {
+      Trip.findOneAndUpdate({ _id: req.params.tripId },  {$set: {cancelled:true, reasonCancellation:reasonCancellation}}, { new: true,  runValidators:true, context:'query'  }, function (err, trip) {
         if (err) {
           if (err.name == 'ValidationError') {
             res.status(422).send(err);
