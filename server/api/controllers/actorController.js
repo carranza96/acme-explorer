@@ -24,19 +24,67 @@ exports.list_all_actors = function(req, res) {
 
 exports.create_an_actor = function(req, res) {
   var new_actor = new Actor(req.body);
-  new_actor.save(function(err, actor) {
-    if (err){
-      if(err.name=='ValidationError') {
-          res.status(422).send(err);
+  if(new_actor.role.includes('ADMINISTRATOR') || new_actor.role.includes('MANAGER')){
+    res.status(422).send('You cannot create a new administrator/manager');
+  }
+  else{
+    new_actor.save(function(err, actor) {
+      if (err){
+        if(err.name=='ValidationError') {
+            res.status(422).send(err);
+        }
+        else{
+          res.status(500).send(err);
+        }
       }
       else{
-        res.status(500).send(err);
+        res.json(actor);
       }
-    }
-    else{
-      res.json(actor);
-    }
-  });
+    });
+  }
+};
+exports.create_a_manager = function(req, res) {
+  var new_actor = new Actor(req.body);
+  if(!new_actor.role.includes('MANAGER')){
+    res.status(422).send('Actor must be a manager');
+  }
+  else{
+    new_actor.save(function(err, actor) {
+      if (err){
+        if(err.name=='ValidationError') {
+            res.status(422).send(err);
+        }
+        else{
+          res.status(500).send(err);
+        }
+      }
+      else{
+        res.json(actor);
+      }
+    });
+  }
+};
+exports.create_an_admin = function(req, res) {
+  var new_actor = new Actor(req.body);
+  if(!new_actor.role.includes('ADMINISTRATOR')){
+    res.status(422).send('Actor must be an administrator');
+  }
+  else{
+    new_actor.save(function(err, actor) {
+      if (err){
+        if(err.name=='ValidationError') {
+            res.status(422).send(err);
+        }
+        else{
+          res.status(500).send(err);
+        }
+      }
+      else{
+        res.json(actor);
+      }
+    });
+  }
+
 };
 
 
@@ -139,7 +187,7 @@ exports.update_an_actor_v2 = function(req, res) {
         } else{
           res.status(403); //Auth error
           res.send('The Actor is trying to update an Actor that is not himself!');
-        }    
+        }
       } else if (actor.role.includes('ADMINISTRATOR')){
           Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
             if (err){
