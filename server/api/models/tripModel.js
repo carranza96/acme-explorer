@@ -1,7 +1,8 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema,
-    Actor = mongoose.model('Actor');
+    Actor = mongoose.model('Actor'),
+    Sponsorship = mongoose.model('Sponsorship');
 
 const generate = require('nanoid/generate');
 const dateformat = require('dateformat');
@@ -53,12 +54,6 @@ var tripSchema = new Schema({
     endDate: {
         type: Date,
         required: 'Kindly enter the end date',
-        // validate: {
-        //     validator: function (value) {
-        //         return this.startDate < value;
-        //     },
-        //     message: 'End date must be after start date'
-        // }
     },
     pictures: [{
         data: Buffer,
@@ -92,6 +87,8 @@ tripSchema.index({manager: 1})
 tripSchema.index({  price: 1, startDate: -1 }); //1 ascending,  -1 descending
 
 
+// Validation
+
 tripSchema.path('endDate').validate(async function(value){
     if(this._update){
         if (this._update.startDate){
@@ -119,7 +116,6 @@ tripSchema.path('endDate').validate(async function(value){
 
 
 tripSchema.path('startDate').validate( function(value){
-
     if(this._update){
         if (this._update.endDate){
             return new Date(this._update.endDate) > value;
@@ -140,7 +136,6 @@ tripSchema.path('startDate').validate( function(value){
               });
         }
     }
-
     else{
         return this.endDate > value;
     }
@@ -149,20 +144,18 @@ tripSchema.path('startDate').validate( function(value){
 
 
 
-
+// Check if manager is valid
 tripSchema.path('manager').validate(
 {
    validator: function (value){
-    
     return new Promise(function (resolve, reject) {
-
         var manager_id = value;
 
         Actor.findOne({_id:manager_id}, function(err, result){
         if(err){
             reject(new Error());
         }
-        if(!result){
+        else if(!result){
             reject(new Error(`Manager id ${manager_id} does not reference an existing actor`));
         }
         else if(!result.role.includes('MANAGER')){
@@ -177,6 +170,42 @@ tripSchema.path('manager').validate(
     }
  , message: function(props) { return props.reason.message; }} );
 
+
+
+
+
+// Check if sponsorships are valid
+tripSchema.path('sponsorships').validate(
+    {
+       validator: function (value){
+
+        return new Promise(function (resolve, reject) {
+
+            var sponsorship_ids = value;
+
+            var promises = sponsorship_ids.map( function(sponsorship_id){
+                return new Promise(function (resolve,reject){
+                    Sponsorship.findOne({_id:sponsorship_id}, function(err, result){
+                        if(err){
+                            reject(new Error());
+                        }
+                        else if(!result){
+                            reject(new Error(`Sponsorship id ${sponsorship_id} does not reference an existing sponsorship`));
+                        }
+                        else{
+                            resolve(true)
+                        }
+                    })
+                })
+            })
+
+            Promise.all(promises).then(res => resolve(res)).catch(e => reject(e))
+            
+            })
+    
+       
+        }
+     , message: function(props) { return props.reason.message; }} );
 
 
 // Check if manager is valid
@@ -238,5 +267,7 @@ tripSchema.pre('findOneAndUpdate', function (next) {
 
 
 
-module.exports = mongoose.model('Trip', tripSchema);
-module.exports = mongoose.model('Stage', stageSchema);
+module.exports = {
+    Stage: mongoose.model('Trip', tripSchema),
+    Trip : mongoose.model('Stage', stageSchema)
+}

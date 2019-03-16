@@ -228,7 +228,6 @@ exports.add_stage = function(req,res){
       }
     }
     else {
-      console.log("done");
       Trip.findById(trip_id, function (err, trip) {
         if(err){
           res.status(500).send(err);
@@ -306,4 +305,3 @@ exports.delete_all_trips = function (req, res) {
 
 
 
-/*---------------STAGE----------------------*/
