@@ -277,16 +277,6 @@ exports.delete_a_trip = function (req, res) {
     }
   });
 
-
-
- 
-
-
-
-
-
-
-
 };
 
 

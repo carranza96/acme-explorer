@@ -128,7 +128,6 @@ tripSchema.path('startDate').validate( function(value){
                         reject(new Error());
                     }
                     else {
-                        console.log(trip.endDate > value)
                         resolve(trip.endDate > value);
                     }
                 });
@@ -200,10 +199,7 @@ tripSchema.path('sponsorships').validate(
             })
 
             Promise.all(promises).then(res => resolve(res)).catch(e => reject(e))
-            
             })
-    
-       
         }
      , message: function(props) { return props.reason.message; }} );
 
@@ -254,6 +250,7 @@ tripSchema.pre('findOneAndUpdate', function (next) {
     }
     var stages_price = this._update.stages.map((stage) => stage.price);
     var totalPrice = stages_price.reduce((a, b) => a + b, 0);
+    console.log(totalPrice)
     this.update({},{ $set:{price: totalPrice}});
     next();
   });
