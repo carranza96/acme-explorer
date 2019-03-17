@@ -159,6 +159,9 @@ exports.read_an_actor_v2 = function(req, res) {
     if (err){
       res.send(err);
     }
+    else if (!actor){
+      return res.status(404).send(`Actor with id ${req.params.actorId} does not exist in database`);
+    }
     else{
       if (actor.role.includes('ADMINISTRATOR')){
         res.json(actor);
@@ -204,6 +207,9 @@ exports.update_an_actor_v2 = function(req, res) {
   Actor.findById(req.params.actorId, async function(err, actor) {
     if (err){
       res.send(err);
+    }
+    else if (!actor){
+      return res.status(404).send(`Actor with id ${req.params.actorId} does not exist in database`);
     }
     else{
       console.log('actor: '+actor);

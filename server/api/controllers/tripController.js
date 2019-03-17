@@ -2,11 +2,8 @@
 /*---------------TRIP----------------------*/
 var mongoose = require('mongoose'),
   Trip = mongoose.model('Trip'),
-  Actor = mongoose.model('Actor'),
   Application = mongoose.model('Application');
-  var admin = require('firebase-admin');
   var authController = require('./authController');
-  var actorController = require('./actorController');
 
 exports.list_all_trips = function (req, res) {
   //Check if the manager param exist
@@ -362,6 +359,7 @@ exports.cancel_a_trip_v2 = function (req, res) {
 exports.add_stage = function(req,res){
   var trip_id = req.params.tripId;
   var new_stage = req.body;
+  console.log(trip_id)
 
   Trip.update({ _id: trip_id}, {$push: {stages: new_stage}}, {new:true, runValidators:true}, function (err, succ) {
     if (err) {
@@ -377,9 +375,13 @@ exports.add_stage = function(req,res){
       Trip.findById(trip_id, function (err, trip) {
         if(err){
           res.status(500).send(err);
-        }else{
+        }
+        else if(!trip){
+          return res.status(404).send(`Trip with id ${trip_id} does not exist in database`);
+        }
+        else{
           var totalPrice = trip.price + new_stage.price;
-          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err_u, success){
+          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, {new:true, runValidators:true}, function(err_u, success){
             if(err){
               res.status(500).send(err);
             }else{
@@ -413,6 +415,9 @@ exports.add_stage_v2 = function(req,res){
         if(err){
           res.status(500).send(err);
         }
+        else if(!trip){
+          return res.status(404).send(`Trip with id ${trip_id} does not exist in database`);
+        }
         else{
           // Check if manager does not manage the trip
           var idToken = req.headers['idtoken'];
@@ -423,7 +428,7 @@ exports.add_stage_v2 = function(req,res){
 
           else{
             var totalPrice = trip.price + new_stage.price;
-            Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err, success){
+            Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, {new:true, runValidators:true}, function(err, success){
               if(err){
                 res.status(500).send(err);
               }else{
@@ -446,7 +451,7 @@ exports.update_stage = function(req,res){
   var new_stage = req.body;
   new_stage._id = stage_id;
 
-  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {'$set': {'stages.$': new_stage}}, {new:true}, function (err, succ) {
+  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {$set: {'stages.$': new_stage}}, {new:true, runValidators:true}, function (err, succ) {
 
     if (err) {
       if (err.name == 'ValidationError') {
@@ -462,11 +467,14 @@ exports.update_stage = function(req,res){
         if(err){
           res.status(500).send(err);
         }
+        else if(!trip){
+          return res.status(404).send(`Trip with id ${trip_id} does not exist in database`);
+        }
         else{
           var stages_price = trip.stages.map((stage) => stage.price);
           var totalPrice = stages_price.reduce((a, b) => a + b, 0);
 
-          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err_u, success){
+          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, {new:true, runValidators:true}, function(err_u, success){
             if(err){
               res.status(500).send(err);
             }else{
@@ -489,7 +497,7 @@ exports.update_stage_v2 = function(req,res){
   var new_stage = req.body;
   new_stage._id = stage_id;
 
-  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {'$set': {'stages.$': new_stage}}, {new:true}, function (err, succ) {
+  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {$set: {'stages.$': new_stage}}, {new:true, runValidators:true}, async function (err, succ) {
 
     if (err) {
       if (err.name == 'ValidationError') {
@@ -513,11 +521,14 @@ exports.update_stage_v2 = function(req,res){
         if(err){
           res.status(500).send(err);
         }
+        else if(!trip){
+          return res.status(404).send(`Trip with id ${trip_id} does not exist in database`);
+        }
         else{
           var stages_price = trip.stages.map((stage) => stage.price);
           var totalPrice = stages_price.reduce((a, b) => a + b, 0);
 
-          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err_u, success){
+          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, {new:true, runValidators:true}, function(err_u, success){
             if(err){
               res.status(500).send(err);
             }else{
@@ -537,8 +548,8 @@ exports.update_stage_v2 = function(req,res){
 exports.delete_stage = function(req,res){
   var trip_id = req.params.tripId;
   var stage_id = req.params.stageId;
-  Trip.stages.id(stage_id).remove()
-  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {'$set': {'stages.$': new_stage}}, {new:true}, function (err, succ) {
+
+  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {$pull: { stages: {_id: stage_id } } }, {new:true, runValidators:true}, function (err, succ) {
 
     if (err) {
       if (err.name == 'ValidationError') {
@@ -554,11 +565,14 @@ exports.delete_stage = function(req,res){
         if(err){
           res.status(500).send(err);
         }
+        else if(!trip){
+          return res.status(404).send(`Trip with id ${trip_id} does not exist in database`);
+        }
         else{
           var stages_price = trip.stages.map((stage) => stage.price);
           var totalPrice = stages_price.reduce((a, b) => a + b, 0);
 
-          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err_u, success){
+          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}},  {new:true, runValidators:true} , function(err_u, success){
             if(err){
               res.status(500).send(err);
             }else{
@@ -572,9 +586,63 @@ exports.delete_stage = function(req,res){
   });
 };
 
+
+
+
+exports.delete_stage_v2 = function(req,res){
+  var trip_id = req.params.tripId;
+  var stage_id = req.params.stageId;
+
+  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {$pull: { stages: {_id: stage_id } } }, {new:true, runValidators:true}, function (err, succ) {
+
+    if (err) {
+      if (err.name == 'ValidationError') {
+        res.status(422).send(err);
+      }
+      else {
+        console.log(err);
+        res.status(500).send(err);
+      }
+    }
+    else {
+      Trip.findById(trip_id, async function (err, trip) {
+        if(err){
+          res.status(500).send(err);
+        }
+        else if(!trip){
+          return res.status(404).send(`Trip with id ${trip_id} does not exist in database`);
+        }
+        else{
+          // Check if manager does not manage the trip
+          var idToken = req.headers['idtoken'];
+          var authenticatedUserId = await authController.getUserId(idToken);
+          if (authenticatedUserId == trip.manager){
+            return res.status(403).send(`The Manager ${authenticatedUserId} is trying to update a trip that does not manage`);
+          }
+          else{
+          var stages_price = trip.stages.map((stage) => stage.price);
+          var totalPrice = stages_price.reduce((a, b) => a + b, 0);
+
+          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}},  {new:true, runValidators:true} , function(err_u, success){
+            if(err){
+              res.status(500).send(err);
+            }
+            else{
+              trip.price=totalPrice;
+              res.json(trip);
+            }
+          });
+        }
+      }
+      });
+    }
+  });
+};
+
+
 exports.delete_a_trip = function (req, res) {
 
-  // Can only update if trip is not published
+  // Can only delete if trip is not published
 
   Trip.findById(req.params.tripId, function (err, trip) {
     if (err) {

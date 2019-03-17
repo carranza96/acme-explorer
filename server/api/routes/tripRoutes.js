@@ -199,14 +199,14 @@ module.exports = function(app) {
 
     /**
    * Put a stage v2
-   *    RequiredRoles: None
+   *    RequiredRoles: Manager that manages the trip
    *
 	 * @section trips
 	 * @type put
 	 * @url /v2/trips/:tripId/addStage
   */
  app.route('/v2/trips/:tripId/stages/:stageId')
- .put(trips.update_stage_v2)
- .delete(trips.delete_stage_v2);
+ .put(authController.verifyUser(["MANAGER"]),trips.update_stage_v2)
+ .delete(authController.verifyUser(["MANAGER"]),trips.delete_stage_v2);
 
 };
