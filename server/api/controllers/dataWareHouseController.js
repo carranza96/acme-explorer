@@ -210,7 +210,7 @@ function computeFinderKeyWordsStats(callback){
 	  { "$limit": 10 },
 	  {$project: {keyWord:"$_id", _id:0, count:"$count"}}
   ],function(err, res){
-     var res_ls= res.map(function(rankingObject) { return rankingObject.keyWord; });
+     var res_ls = res.map(function(rankingObject) { return rankingObject.keyWord; });
      callback(err, res_ls)
    });
 }

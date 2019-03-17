@@ -14,6 +14,7 @@ var express = require('express'),
   admin = require('firebase-admin'),
   serviceAccount = require('./acmeexplorerauth-serviceAccountKey.json'),
   https = require("https"),
+  cors = require('cors'),
   fs = require("fs");
 
   const options = {
@@ -44,6 +45,7 @@ mongoose.connect(mongoDBURI, {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -88,10 +90,10 @@ routesLogin(app);
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
-    app.listen(port, function () { 
+    app.listen(8000, function () { 
         console.log('ACME-Market RESTful API server started with https on: ' + port);
     });
-    // https.createServer(options, app).listen(port);
+    https.createServer(options, app).listen(port);
 });
 // mongoose.connection.dropDatabase()
 

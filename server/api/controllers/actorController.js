@@ -22,6 +22,8 @@ exports.list_all_actors = function(req, res) {
     });
 };
 
+
+
 exports.create_an_actor = function(req, res) {
   var new_actor = new Actor(req.body);
   if(new_actor.role.includes('ADMINISTRATOR') || new_actor.role.includes('MANAGER')){
@@ -45,6 +47,9 @@ exports.create_an_actor = function(req, res) {
 };
 exports.create_a_manager = function(req, res) {
   var new_actor = new Actor(req.body);
+  if(new_actor.role.includes('ADMINISTRATOR')){
+    res.status(422).send('You cannot create a new administrator');
+  }
   if(!new_actor.role.includes('MANAGER')){
     res.status(422).send('Actor must be a manager');
   }
@@ -64,6 +69,7 @@ exports.create_a_manager = function(req, res) {
     });
   }
 };
+
 exports.create_an_admin = function(req, res) {
   var new_actor = new Actor(req.body);
   if(!new_actor.role.includes('ADMINISTRATOR')){
@@ -147,8 +153,37 @@ exports.read_an_actor = function(req, res) {
   });
 };
 
-exports.update_an_actor_v1 = function(req, res) {
-    Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
+exports.read_an_actor_v2 = function(req, res) {
+  //Managers,Explorers and Sponsors can read theirselves, administrators can read any actor
+  Actor.findById(req.params.actorId, async function(err, actor) {
+    if (err){
+      res.send(err);
+    }
+    else{
+      if (actor.role.includes('ADMINISTRATOR')){
+        res.json(actor);
+      }
+      else if ( actor.role.includes('MANAGER') || actor.role.includes('EXPLORER') || actor.role.includes('SPONSOR')){
+        var idToken = req.headers['idtoken'];
+        var authenticatedUserId = await authController.getUserId(idToken);
+        if (authenticatedUserId == req.params.actorId){
+          res.json(actor)
+        }
+        else{
+          res.status(403); //Auth error
+          res.send('The Actor is trying to read an Actor that is not himself!');
+        }
+      }
+      else {
+        res.status(405); //Not allowed
+        res.send('The Actor has unidentified roles');
+      }
+    }
+  });
+};
+
+exports.update_an_actor = function(req, res) {
+    Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true, runValidators:true}, function(err, actor) {
       if (err){
         if(err.name=='ValidationError') {
             res.status(422).send(err);
@@ -176,7 +211,7 @@ exports.update_an_actor_v2 = function(req, res) {
       if (actor.role.includes('MANAGER') || actor.role.includes('EXPLORER') || actor.role.includes('SPONSOR') ){
         var authenticatedUserId = await authController.getUserId(idToken);
         if (authenticatedUserId == req.params.actorId){
-          Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
+          Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true, runValidators:true}, function(err, actor) {
             if (err){
               res.send(err);
             }
@@ -189,7 +224,7 @@ exports.update_an_actor_v2 = function(req, res) {
           res.send('The Actor is trying to update an Actor that is not himself!');
         }
       } else if (actor.role.includes('ADMINISTRATOR')){
-          Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true}, function(err, actor) {
+          Actor.findOneAndUpdate({_id: req.params.actorId}, req.body, {new: true, runValidators:true}, function(err, actor) {
             if (err){
               res.send(err);
             }
@@ -210,7 +245,7 @@ exports.update_an_actor_v2 = function(req, res) {
 exports.ban_an_actor = function(req, res) {
     //Check that the user is an Administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
     console.log("banning an actor with id: "+req.params.actorId)
-    Actor.findOneAndUpdate({_id: req.params.actorId},  { $set: {"banned": "true" }}, {new: true}, function(err, actor) {
+    Actor.findOneAndUpdate({_id: req.params.actorId},  { $set: {"banned": "true" }}, {new: true, runValidators:true}, function(err, actor) {
       if (err){
         res.send(err);
       }
@@ -219,10 +254,12 @@ exports.ban_an_actor = function(req, res) {
       }
     });
   };
+
+
 exports.unban_an_actor = function(req, res) {
     //Check that the user is an Administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
     console.log("banning an actor with id: "+req.params.actorId)
-    Actor.findOneAndUpdate({_id: req.params.actorId},  { $set: {"banned": "false" }}, {new: true}, function(err, actor) {
+    Actor.findOneAndUpdate({_id: req.params.actorId},  { $set: {"banned": "false" }}, {new: true, runValidators: true}, function(err, actor) {
       if (err){
         res.send(err);
       }

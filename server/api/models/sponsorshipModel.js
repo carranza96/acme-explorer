@@ -7,11 +7,11 @@ var Schema = mongoose.Schema,
 var sponsorshipSchema = new Schema({
     banner: {
         type: Buffer,
-        //required:"Please add an image for your sponsorship"
+        required:"Please add an image for your sponsorship"
     },
     landingPage: {
         type: String,
-        //required:"Please add an url to your landing page"
+        required:"Please add an url to your landing page"
     },
     paid: {
         type: Boolean,
