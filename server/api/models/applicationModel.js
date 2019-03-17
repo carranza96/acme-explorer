@@ -1,10 +1,9 @@
 'use strict';
 var mongoose = require('mongoose');
-
-
 var Schema = mongoose.Schema,
     Actor = mongoose.model('Actor'),
     Trip = mongoose.model('Trip');
+
 
 var applicationSchema = new Schema({
     moment:{
@@ -38,56 +37,63 @@ var applicationSchema = new Schema({
     }
 },  { strict: false })
 
-applicationSchema.index({trip:1, status:'text'})
-applicationSchema.index({explorer:1, moment:-1})
-applicationSchema.index({moment: -1})
+
+applicationSchema.index({ status:'text'})
+applicationSchema.index({ trip:1, status:'text'})
+applicationSchema.index({ explorer:1, status:'text'})
+applicationSchema.index({ moment: -1})
+
 
 // Check if explorer is valid
-applicationSchema.pre('validate', function(next) {
-    var application = this;
-    var explorer_id = application.explorer;
-    if (explorer_id) {
-        Actor.findOne({_id:explorer_id}, function(err, result){
+applicationSchema.path('explorer').validate(
+    {
+       validator: function (value){
+        return new Promise(function (resolve, reject) {
+            var explorer_id = value;
+    
+            Actor.findOne({_id:explorer_id}, function(err, result){
             if(err){
-                return next(err);
+                reject(new Error());
             }
-            if(!result){
-                application.invalidate('explorer', `Explorer id ${application.explorer} does not reference an existing actor`, application.explorer);
+            else if(!result){
+                reject(new Error(`Explorer id ${explorer_id} does not reference an existing actor`));
             }
             else if(!result.role.includes('EXPLORER')){
-                application.invalidate('explorer', `Referenced actor ${application.explorer} is not an explorer`, application.explorer);
+                reject(new Error(`Referenced actor ${explorer_id} is not an explorer`));
             }
-            return next();
-        });
-    }
-    else{
-        return next();
-    }
+            else{
+                resolve(true)
+            }
+            })
     
-  });
+          });
+        }
+     , message: function(props) { return props.reason.message; }} );
+    
 
 
-  // Check if trip is valid
-  applicationSchema.pre('validate', function(next) {
-    var application = this;
-    var trip_id = application.trip;
-    if (trip_id){
-        Trip.findOne({_id:trip_id}, function(err, result){
+// Check if trip is valid
+applicationSchema.path('trip').validate(
+    {
+       validator: function (value){
+        return new Promise(function (resolve, reject) {
+            var trip_id = value;
+    
+            Trip.findOne({_id:trip_id}, function(err, result){
             if(err){
-                return next(err);
+                reject(new Error());
             }
-            if(!result){
-                application.invalidate('trip', `Trip id ${application.trip} does not reference an existing trip`, application.trip);
+            else if(!result){
+                reject(new Error(`Trip id ${trip_id} does not reference an existing trip`));
             }
-            return next();
-        });
-    }
-    else{
-        return next();
-    }
+            else{
+                resolve(true)
+            }
+            })
     
-  });
-
+          });
+        }
+     , message: function(props) { return props.reason.message; }} );
 
 
 

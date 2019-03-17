@@ -2,17 +2,36 @@
 
 /*---------------Application----------------------*/
 var mongoose = require('mongoose'),
-    Application = mongoose.model('Application')
+    Application = mongoose.model('Application'),
+    Actor = mongoose.model('Actor')
     Trip = mongoose.model('Trip');
 var authController = require('./authController');
 
 /*---------------Methods---------------------*/
+
 exports.list_all_applications = function (req, res) {
   var match = {};
-  if(req.query.status){
-      var statusName=req.query.status;
-      match = {status:statusName};
+
+  if(req.query.explorer){
+    match.explorer = req.query.explorer;
   }
+
+  if(req.query.manager){
+    var manager_id = req.query.manager;
+    Trip.find( {manager:manager_id}, '_id' , function (err, trips) {
+        if(err){
+            res.status(500).send(err);
+        }
+        else{
+            match.trip = trips
+        }
+    })
+  }
+
+  if(req.query.status){
+      match.status = req.query.status;
+  }
+
   Application.find(match, function (err, applications) {
         if (err) {
             res.send(err);
@@ -22,6 +41,191 @@ exports.list_all_applications = function (req, res) {
         }
     });
 };
+
+
+
+exports.list_all_applications_v2 = async function (req, res) {
+    
+
+    if (req.query.explorer || req.query.manager){
+        var idToken = req.headers['idtoken'];
+        var authenticatedUserId = await authController.getUserId(idToken);
+        var role;
+        Actor.findById(authenticatedUserId, function(err, actor) {
+            if (err){
+                res.status(500).send(err);
+            }
+            else{
+            role = actor.role
+            }
+        });
+    }
+
+    var match = {};
+    
+    if(req.query.explorer){
+        if (!role.includes("EXPLORER")){
+            res.status(403).send('The authenticated Actor is not an explorer');
+        }
+        else if (authenticatedUserId != req.query.explorer){
+            res.status(403).send('The authenticated Actor is trying to read the applications of another explorer');
+        }
+        else{
+            match.explorer = req.query.explorer;
+        }
+    }
+  
+    if(req.query.manager){
+        if (!role.includes("MANAGER")){
+            res.status(403).send('The authenticated Actor is not a manager');
+        }
+        else if (authenticatedUserId != req.query.explorer){
+            res.status(403).send('The authenticated Actor is trying to read the applications managed by another manager');
+        }
+        else{
+            var manager_id = req.query.manager;
+            Trip.find( {manager:manager_id}, '_id' , function (err, trips) {
+                if(err){
+                    res.status(500).send(err);
+                }
+                else{
+                    match.trip = trips
+                }
+            })
+        }
+    }
+  
+    if(req.query.status){
+        match.status = req.query.status;
+    }
+  
+    Application.find(match, function (err, applications) {
+          if (err) {
+              res.send(err);
+          }
+          else {
+              res.json(applications);
+          }
+      });
+};
+  
+
+  
+exports.list_all_applications_manager = function (req, res) {
+    // Managers can only read the applications for the trips that they manage
+    var manager_id = req.params.managerId;
+    
+    Trip.find( {manager:manager_id}, '_id' , function (err, trips) {
+        if(err){
+            res.status(500).send(err);
+        }
+        else{
+            var match = {trip: trips}
+        
+            if(req.query.status){
+                var statusName=req.query.status;
+                match.status = statusName;
+            }
+            console.log(match)
+
+            Application.find(match, function (err, applications) {
+                if (err) {
+                    res.send(err);
+                }
+                else {
+                    res.json(applications);
+                }
+            });
+        }
+    })
+  };
+
+
+exports.list_all_applications_manager_v2 = async function (req, res) {
+    // Managers can only read the applications for the trips that they manage
+    var manager_id = req.params.managerId;
+    
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+    if (authenticatedUserId != manager_id){
+        res.status(403).send('The Manager is trying to read the applications of the trips managed by another manager');
+    }
+    else{
+    Trip.find( {manager:manager_id}, '_id' , function (err, trips) {
+        if(err){
+            res.status(500).send(err);
+        }
+        else{
+            var match = {trip: trips}
+        
+            if(req.query.status){
+                var statusName=req.query.status;
+                match.status = statusName;
+            }
+            console.log(match)
+
+            Application.find(match, function (err, applications) {
+                if (err) {
+                    res.send(err);
+                }
+                else {
+                    res.json(applications);
+                }
+            });
+        }
+    
+    })
+    }
+};
+
+
+exports.list_all_applications_explorer = function (req, res) {
+    // Explorers can only read the applications they have made
+    var explorer_id = req.params.explorerId;
+    
+    var match = {explorer: explorer_id};
+    if(req.query.status){
+        var statusName=req.query.status;
+        match.status = statusName;
+    }
+  
+    Application.find(match, function (err, applications) {
+          if (err) {
+              res.send(err);
+          }
+          else {
+              res.json(applications);
+          }
+      });
+  };
+
+
+exports.list_all_applications_explorer_v2 = async function (req, res) {
+    // Explorers can only read the applications they have made
+    var explorer_id = req.params.explorerId;
+    
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+    if (authenticatedUserId != explorer_id){
+        res.status(403).send('The Explorer is trying to read the applications of another explorer');
+    }
+
+    var match = {explorer: explorer_id};
+    if(req.query.status){
+        var statusName=req.query.status;
+        match.status = statusName;
+    }
+  
+    Application.find(match, function (err, applications) {
+          if (err) {
+              res.send(err);
+          }
+          else {
+              res.json(applications);
+          }
+      });
+};
+
 
 exports.create_an_application = function (req, res) {
     var new_application = new Application(req.body);
@@ -39,10 +243,16 @@ exports.create_an_application = function (req, res) {
           }
         }
         else{
-          var condition = (trip.published) && (trip.startDate < new Date()) && (!trip.cancelled);
-          if(!condition){
-            res.status(422).send("Trip not valid");
-          }else{
+          if(!trip.published){
+            res.status(422).send("Cannot create application because trip is not published yet");
+          }
+          else if ((trip.startDate < new Date())){
+            res.status(422).send("Cannot create application because trip has already started");
+          }
+          else if (trip.cancelled){
+            res.status(422).send("Cannot create application because trip is cancelled");
+          }
+          else{
             new_application.save(function (err, application) {
                 if (err) {
                     if (err.name == 'ValidationError') {
@@ -75,7 +285,7 @@ exports.read_an_application = function (req, res) {
 };
 
 exports.update_an_application = function (req, res) {
-    Application.findOneAndUpdate({_id: req.params.applicationId}, req.body, {new: true}, function (err, application) {
+    Application.findOneAndUpdate({_id: req.params.applicationId}, req.body, {new: true, runValidators:true}, function (err, application) {
         if (err) {
             if (err.name == 'ValidationError') {
                 res.status(422).send(err);

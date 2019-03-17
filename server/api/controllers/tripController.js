@@ -184,7 +184,7 @@ exports.update_a_trip_v2 = function (req, res) {
       // Check if manager does not manage the trip
       var idToken = req.headers['idtoken'];
       var authenticatedUserId = await authController.getUserId(idToken);
-      if (authenticatedUserId == trip.manager){
+      if (authenticatedUserId != trip.manager){
         return res.status(403).send(`The Manager ${authenticatedUserId} is trying to update a trip that does not manage`);
       }
 
@@ -306,7 +306,7 @@ exports.cancel_a_trip_v2 = function (req, res) {
       // Check if manager does not manage the trip
       var idToken = req.headers['idtoken'];
       var authenticatedUserId = await authController.getUserId(idToken);
-      if (authenticatedUserId == trip.manager){
+      if (authenticatedUserId != trip.manager){
         return res.status(403).send(`The Manager ${authenticatedUserId} is trying to update a trip that does not manage`);
       }
 
@@ -422,7 +422,7 @@ exports.add_stage_v2 = function(req,res){
           // Check if manager does not manage the trip
           var idToken = req.headers['idtoken'];
           var authenticatedUserId = await authController.getUserId(idToken);
-          if (authenticatedUserId == trip.manager){
+          if (authenticatedUserId != trip.manager){
             return res.status(403).send(`The Manager ${authenticatedUserId} is trying to update a trip that does not manage`);
           }
 
@@ -512,7 +512,7 @@ exports.update_stage_v2 = function(req,res){
        // Check if manager does not manage the trip
        var idToken = req.headers['idtoken'];
        var authenticatedUserId = await authController.getUserId(idToken);
-       if (authenticatedUserId == trip.manager){
+       if (authenticatedUserId != trip.manager){
          return res.status(403).send(`The Manager ${authenticatedUserId} is trying to update a trip that does not manage`);
        }
 
@@ -616,7 +616,7 @@ exports.delete_stage_v2 = function(req,res){
           // Check if manager does not manage the trip
           var idToken = req.headers['idtoken'];
           var authenticatedUserId = await authController.getUserId(idToken);
-          if (authenticatedUserId == trip.manager){
+          if (authenticatedUserId != trip.manager){
             return res.status(403).send(`The Manager ${authenticatedUserId} is trying to update a trip that does not manage`);
           }
           else{
