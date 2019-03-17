@@ -136,7 +136,7 @@ exports.update_a_trip = function (req, res) {
       return res.send(err);
     }
     else if (!trip){
-      return res.status(404).send(`Trip with id ${tripId} does not exist in database`);
+      return res.status(404).send(`Trip with id ${req.params.tripId} does not exist in database`);
     }
     else{ 
       // Check if trying to cancel the trip
@@ -181,7 +181,7 @@ exports.update_a_trip_v2 = function (req, res) {
       return res.send(err);
     }
     else if (!trip){
-      return res.status(404).send(`Trip with id ${tripId} does not exist in database`);
+      return res.status(404).send(`Trip with id ${req.params.tripId} does not exist in database`);
     }
     else{ 
       // Check if manager does not manage the trip
@@ -242,11 +242,14 @@ exports.cancel_a_trip = function (req, res) {
     }
     else{
 
+      if(trip.cancelled == true){
+        return res.status(422).send("Validation error: The trip is already cancelled");
+      }
       // Check conditions:
       // If the trip is published
       // - trip has not started
       // - trip does not have any existing applications
-      if(trip.published){
+      else if(trip.published){
         if(trip.startDate < new Date()){
           return res.status(422).send("Validation error: The trip cannot be cancelled because it has already started");
         }
@@ -295,7 +298,7 @@ exports.cancel_a_trip_v2 = function (req, res) {
   }
 
   
-  Trip.findById(req.params.tripId, function(err,trip){
+  Trip.findById(req.params.tripId, async function(err,trip){
     if (err) {
       return res.send(err);
     }
@@ -308,6 +311,10 @@ exports.cancel_a_trip_v2 = function (req, res) {
       var authenticatedUserId = await authController.getUserId(idToken);
       if (authenticatedUserId == trip.manager){
         return res.status(403).send(`The Manager ${authenticatedUserId} is trying to update a trip that does not manage`);
+      }
+
+      else if(trip.cancelled == true){
+        return res.status(422).send("Validation error: The trip is already cancelled");
       }
 
       // Check conditions:
@@ -352,13 +359,11 @@ exports.cancel_a_trip_v2 = function (req, res) {
 };
 
 
-
 exports.add_stage = function(req,res){
   var trip_id = req.params.tripId;
   var new_stage = req.body;
-  console.log(trip_id);
-  console.log(new_stage);
-  Trip.update({ _id: trip_id}, {$push: {stages: new_stage}}, {new:true}, function (err, succ) {
+
+  Trip.update({ _id: trip_id}, {$push: {stages: new_stage}}, {new:true, runValidators:true}, function (err, succ) {
     if (err) {
       if (err.name == 'ValidationError') {
         res.status(422).send(err);
@@ -376,7 +381,7 @@ exports.add_stage = function(req,res){
           var totalPrice = trip.price + new_stage.price;
           Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err_u, success){
             if(err){
-
+              res.status(500).send(err);
             }else{
               trip.price=totalPrice;
               res.json(trip);
@@ -389,13 +394,11 @@ exports.add_stage = function(req,res){
 };
 
 
-
-
 exports.add_stage_v2 = function(req,res){
   var trip_id = req.params.tripId;
   var new_stage = req.body;
 
-  Trip.update({ _id: trip_id}, {$push: {stages: new_stage}}, {new:true}, function (err, succ) {
+  Trip.update({ _id: trip_id}, {$push: {stages: new_stage}}, {new:true, runValidators:true}, function (err, succ) {
     if (err) {
       if (err.name == 'ValidationError') {
         res.status(422).send(err);
@@ -417,7 +420,7 @@ exports.add_stage_v2 = function(req,res){
           if (authenticatedUserId == trip.manager){
             return res.status(403).send(`The Manager ${authenticatedUserId} is trying to update a trip that does not manage`);
           }
-          
+
           else{
             var totalPrice = trip.price + new_stage.price;
             Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err, success){
@@ -429,6 +432,140 @@ exports.add_stage_v2 = function(req,res){
               }
             });
         }
+        }
+      });
+    }
+  });
+};
+
+
+
+exports.update_stage = function(req,res){
+  var trip_id = req.params.tripId;
+  var stage_id = req.params.stageId;
+  var new_stage = req.body;
+  new_stage._id = stage_id;
+
+  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {'$set': {'stages.$': new_stage}}, {new:true}, function (err, succ) {
+
+    if (err) {
+      if (err.name == 'ValidationError') {
+        res.status(422).send(err);
+      }
+      else {
+        console.log(err);
+        res.status(500).send(err);
+      }
+    }
+    else {
+      Trip.findById(trip_id, function (err, trip) {
+        if(err){
+          res.status(500).send(err);
+        }
+        else{
+          var stages_price = trip.stages.map((stage) => stage.price);
+          var totalPrice = stages_price.reduce((a, b) => a + b, 0);
+
+          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err_u, success){
+            if(err){
+              res.status(500).send(err);
+            }else{
+              trip.price=totalPrice;
+              res.json(trip);
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
+
+
+
+exports.update_stage_v2 = function(req,res){
+  var trip_id = req.params.tripId;
+  var stage_id = req.params.stageId;
+  var new_stage = req.body;
+  new_stage._id = stage_id;
+
+  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {'$set': {'stages.$': new_stage}}, {new:true}, function (err, succ) {
+
+    if (err) {
+      if (err.name == 'ValidationError') {
+        res.status(422).send(err);
+      }
+      else {
+        console.log(err);
+        res.status(500).send(err);
+      }
+    }
+    else {
+       // Check if manager does not manage the trip
+       var idToken = req.headers['idtoken'];
+       var authenticatedUserId = await authController.getUserId(idToken);
+       if (authenticatedUserId == trip.manager){
+         return res.status(403).send(`The Manager ${authenticatedUserId} is trying to update a trip that does not manage`);
+       }
+
+      else{
+        Trip.findById(trip_id, function (err, trip) {
+        if(err){
+          res.status(500).send(err);
+        }
+        else{
+          var stages_price = trip.stages.map((stage) => stage.price);
+          var totalPrice = stages_price.reduce((a, b) => a + b, 0);
+
+          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err_u, success){
+            if(err){
+              res.status(500).send(err);
+            }else{
+              trip.price=totalPrice;
+              res.json(trip);
+            }
+          });
+        }
+      });
+    }
+  }
+  });
+};
+
+
+
+exports.delete_stage = function(req,res){
+  var trip_id = req.params.tripId;
+  var stage_id = req.params.stageId;
+  Trip.stages.id(stage_id).remove()
+  Trip.update({ _id: trip_id, 'stages._id': stage_id},  {'$set': {'stages.$': new_stage}}, {new:true}, function (err, succ) {
+
+    if (err) {
+      if (err.name == 'ValidationError') {
+        res.status(422).send(err);
+      }
+      else {
+        console.log(err);
+        res.status(500).send(err);
+      }
+    }
+    else {
+      Trip.findById(trip_id, function (err, trip) {
+        if(err){
+          res.status(500).send(err);
+        }
+        else{
+          var stages_price = trip.stages.map((stage) => stage.price);
+          var totalPrice = stages_price.reduce((a, b) => a + b, 0);
+
+          Trip.update({ _id: trip_id}, {$set: {price:totalPrice}}, function(err_u, success){
+            if(err){
+              res.status(500).send(err);
+            }else{
+              trip.price=totalPrice;
+              res.json(trip);
+            }
+          });
         }
       });
     }

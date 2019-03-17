@@ -80,6 +80,18 @@ module.exports = function(app) {
 
 
   /**
+   * Post a stage v1
+   *    RequiredRoles: None
+   *
+	 * @section trips
+	 * @type put
+	 * @url /v1/trips/:tripId/addStage
+  */
+  app.route('/v1/trips/:tripId/stages')
+      .put(trips.add_stage);
+
+
+    /**
    * Put a stage v1
    *    RequiredRoles: None
    *
@@ -87,8 +99,9 @@ module.exports = function(app) {
 	 * @type put
 	 * @url /v1/trips/:tripId/addStage
   */
-  app.route('/v1/trips/:tripId/addStage')
-      .put(trips.add_stage);
+  app.route('/v1/trips/:tripId/stages/:stageId')
+    .put(trips.update_stage)
+    .delete(trips.delete_stage);
 
 
  
@@ -182,5 +195,18 @@ module.exports = function(app) {
   */
  app.route('/v2/trips/:tripId/addStage')
  .put(authController.verifyUser(["MANAGER"]),trips.add_stage_v2);
+
+
+    /**
+   * Put a stage v2
+   *    RequiredRoles: None
+   *
+	 * @section trips
+	 * @type put
+	 * @url /v2/trips/:tripId/addStage
+  */
+ app.route('/v2/trips/:tripId/stages/:stageId')
+ .put(trips.update_stage_v2)
+ .delete(trips.delete_stage_v2);
 
 };
