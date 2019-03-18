@@ -6,10 +6,38 @@ var mongoose = require('mongoose'),
 
 
 function get_results_finder(finder){
-    var query = {
-        $text: {$search: finder.keyWord},
+    // Build query filters
+    var query = {}
+
+    // KeyWord
+    if (finder.keyWord){
+        query.$text = {$search: finder.keyWord}
     }
 
+    if (finder.minPrice || finder.maxPrice){
+        query.price = {}
+        if(finder.minPrice){
+            query.price.$gte = finder.minPrice
+        }
+        if(finder.maxPrice){
+            query.price.$lte = finder.maxPrice
+        }
+    }
+
+    // Date range
+    if(finder.minDate || finder.maxDate){
+        query.startDate = {}
+        query.endDate = {}
+        if (finder.minDate){
+            query.startDate.$gte = finder.minDate
+            query.endDate.$gte = finder.minDate
+        }
+        if(finder.maxDate){
+            query.startDate.$lte = finder.maxDate
+            query.endDate.$lte = finder.maxDate
+        }
+    }
+       
     return new Promise( function(resolve,reject){
         Trip.find(query, function (err, trips) {
             if (err) {
@@ -18,7 +46,7 @@ function get_results_finder(finder){
             else{
                 resolve(trips);
             }
-    })
+        })
   });
 }
 
@@ -34,24 +62,27 @@ exports.list_all_finders  = function (req, res) {
 };
 
 
-exports.create_a_finder = function (req, res) {
+exports.create_a_finder =  function (req, res) {
     var new_finder = new Finder(req.body);
-    new_finder .save(function (err, finder ) {
-        if (err) {
-            if (err.name == 'ValidationError') {
-                res.status(422).send(err);
-            }
-            else {
-                res.status(500).send(err);
-            }
-        }
-        else {
-            get_results_finder(finder).then( trips => {
-                finder.results = trips;
-                res.json(finder)
-            }).catch(e => res.status(500).send(err))
-        }
-    });
+    get_results_finder(new_finder)
+        .then( trips => {
+            new_finder.results = trips;
+            new_finder.save(function (err, finder ) {
+                if (err) {
+                    if (err.name == 'ValidationError') {
+                        res.status(422).send(err);
+                    }
+                    else {
+                        res.status(500).send(err);
+                    }
+                }
+                else {
+                    res.json(finder)
+                }
+            });
+        })
+        .catch(e => res.status(500).send(err))
+
 };
 
 exports.read_a_finder  = function (req, res) {
@@ -60,10 +91,17 @@ exports.read_a_finder  = function (req, res) {
             res.status(500).send(err);
         }
         else {
-            get_results_finder(finder).then( trips => {
+            // Get results of a finder if empty
+            if(!finder.results){
+                get_results_finder(finder).then( trips => {
                     finder.results = trips;
                     res.json(finder)
-            }).catch(e => res.status(500).send(err))
+                }).catch(e => res.status(500).send(err))
+            }
+            else{
+                res.json(finder)
+            }
+            
         }
     });
 };

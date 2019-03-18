@@ -1,8 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
-var Schema = mongoose.Schema,
-  Finder = mongoose.model('Finder');
+var Schema = mongoose.Schema;
 
 
 var actorSchema = new Schema({
