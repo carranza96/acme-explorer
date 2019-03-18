@@ -51,10 +51,6 @@ var actorSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  finder:{
-    type: Schema.Types.ObjectId,
-    ref: "Finder"
-  }
 }, { strict: false });
 
 
@@ -89,28 +85,6 @@ actorSchema.methods.verifyPassword = function (password, cb) {
 
 
 
-// Check if finder is valid
-actorSchema.path('finder').validate(
-  {
-     validator: function (value){
-      return new Promise(function (resolve, reject) {
-          var finder_id = value;
-  
-          Finder.findOne({_id:finder_id}, function(err, result){
-          if(err){
-              reject(new Error());
-          }
-          else if(!result){
-              reject(new Error(`Finder id ${finder_id} does not reference an existing finder`));
-          }
-          else{
-              resolve(true)
-          }
-          })
-  
-        });
-      }
-   , message: function(props) { return props.reason.message; }} );
 
 
 module.exports = mongoose.model('Actor', actorSchema);

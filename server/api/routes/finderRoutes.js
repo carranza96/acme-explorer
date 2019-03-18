@@ -19,6 +19,7 @@ module.exports = function(app) {
 	  .post(finders.create_a_finder)
     .delete(finders.delete_all_finders);
 
+    
   /**
    * Put a finder
    *    RequiredRoles: EXPLORER
@@ -35,4 +36,7 @@ module.exports = function(app) {
     .get(finders.read_a_finder)
 	  .put(finders.update_a_finder)
     .delete(finders.delete_a_finder);
+
+
+
 };

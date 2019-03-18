@@ -1,7 +1,26 @@
 'use strict';
 /*---------------TRIP----------------------*/
 var mongoose = require('mongoose'),
-    Finder = mongoose.model('Finder');
+    Finder = mongoose.model('Finder'),
+    Trip = mongoose.model('Trip');
+
+
+function get_results_finder(finder){
+    var query = {
+        $text: {$search: finder.keyWord},
+    }
+
+    return new Promise( function(resolve,reject){
+        Trip.find(query, function (err, trips) {
+            if (err) {
+                reject(new Error(err));
+            }
+            else{
+                resolve(trips);
+            }
+    })
+  });
+}
 
 exports.list_all_finders  = function (req, res) {
     Finder.find({}, function (err, finder ) {
@@ -27,7 +46,10 @@ exports.create_a_finder = function (req, res) {
             }
         }
         else {
-            res.json(finder );
+            get_results_finder(finder).then( trips => {
+                finder.results = trips;
+                res.json(finder)
+            }).catch(e => res.status(500).send(err))
         }
     });
 };
@@ -35,10 +57,13 @@ exports.create_a_finder = function (req, res) {
 exports.read_a_finder  = function (req, res) {
     Finder.findById(req.params.finderId, function (err, finder ) {
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
         }
         else {
-            res.json(finder );
+            get_results_finder(finder).then( trips => {
+                    finder.results = trips;
+                    res.json(finder)
+            }).catch(e => res.status(500).send(err))
         }
     });
 };
@@ -46,7 +71,7 @@ exports.read_a_finder  = function (req, res) {
 exports.update_a_finder  = function (req, res) {
     // new: true means -> return the modified document rather than the original. defaults to false 
     // var opts = {new: true, runValidators:true, context: 'query'}
-    Finder.findOneAndUpdate({ _id: req.params.finderId }, req.body, { new: true }, function (err, finder ) {
+    Finder.findOneAndUpdate({ _id: req.params.finderId }, req.body, { new: true, runValidators:true }, function (err, finder ) {
         if (err) {
             if (err.name == 'ValidationError') {
                 res.status(422).send(err);

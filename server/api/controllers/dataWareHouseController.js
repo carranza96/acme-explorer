@@ -206,7 +206,7 @@ function computeFinderPriceStats(callback){
 
 function computeFinderKeyWordsStats(callback){
   Finder.aggregate([
-    {"$sortByCount": "$keyWord"},
+    {"$sortByCount": {"$toLower": "$keyWord"}},
 	  { "$limit": 10 },
 	  {$project: {keyWord:"$_id", _id:0, count:"$count"}}
   ],function(err, res){

@@ -551,7 +551,7 @@ exports.cancel_application = function(req,res){
         }
         else {
             var status = application.status;
-            var condition = (status=="ACCEPTED");
+            var condition = (status=="ACCEPTED" || status=="PENDING");
 
             if(condition){
                 Application.findOneAndUpdate({_id: req.params.applicationId}, { $set: {"status": "CANCELLED" }}, {new: true, runValidators:true}, function (err, application) {
@@ -569,7 +569,7 @@ exports.cancel_application = function(req,res){
                 });
             }
             else{
-                res.status(422).send(`Validation error: Cannot cancel application that has status ${status}. The application has to be in status ACCEPTED in order to be cancelled`);
+                res.status(422).send(`Validation error: Cannot cancel application that has status ${status}. The application has to be in status ACCEPTED or PENDING in order to be cancelled`);
             }
         }
     });
@@ -597,7 +597,7 @@ exports.cancel_application_v2 = function(req,res){
             }
             else{
                 var status = application.status;
-                var condition = (status=="ACCEPTED");
+                var condition = (status=="ACCEPTED" || status=="PENDING");
     
                 if(condition){
                     Application.findOneAndUpdate({_id: req.params.applicationId}, { $set: {"status": "CANCELLED" }}, {new: true, runValidators:true}, function (err, application) {
@@ -615,7 +615,7 @@ exports.cancel_application_v2 = function(req,res){
                     });
                 }
                 else{
-                    res.status(422).send(`Validation error: Cannot cancel application that has status ${status}. The application has to be in status ACCEPTED in order to be cancelled`);
+                    res.status(422).send(`Validation error: Cannot cancel application that has status ${status}. The application has to be in status ACCEPTED or PENDING in order to be cancelled`);
                 }
             }
             
