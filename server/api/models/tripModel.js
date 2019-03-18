@@ -264,8 +264,7 @@ tripSchema.pre('findOneAndUpdate', function (next) {
   });
 
 
-
 module.exports = {
-    Stage: mongoose.model('Trip', tripSchema),
-    Trip : mongoose.model('Stage', stageSchema)
+    Trip : mongoose.model('Trip', tripSchema),
+    Stage : mongoose.model('Stage', stageSchema)
 }

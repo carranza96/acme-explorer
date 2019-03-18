@@ -21,9 +21,14 @@ var configSchema = new Schema({
 
 }, { strict: false })
 
+
+// VALIDATION
+
+
 configSchema.methods.toJSON = function() {
  var obj = this.toObject();
  delete obj._id;
+ delete obj.__v
  return obj;
 }
 

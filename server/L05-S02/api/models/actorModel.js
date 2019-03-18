@@ -53,7 +53,7 @@ var ActorSchema = new Schema({
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   }
 }, { strict: false });
 

@@ -3,24 +3,52 @@
 var mongoose = require('mongoose'),
   Config = mongoose.model('Config');
 
-  exports.init_config = function(req, res) {
-    var newConfig = new Config();
-    Config.find({}, function(err, configs){
-      if(err){
-        res.send(err);
-      }
-      if(!configs.length){
-        newConfig.save(function(err1, configs1){
-            if(err1){
-              res.status(500).send(err1);
-            }
-            else{
-              res.json(configs1);
-            }
-        });
-      }
-    });
-  };
+
+function createInitialConfig(){
+  var newConfig = new Config();
+
+  Config.find({}, function(err, configs){
+    if(err){
+      console.log("Error initializing config")
+    }
+    if(!configs.length){
+      newConfig.save(function(err, configs){
+          if(err){
+            console.log("Error initializing config")
+          }
+          else{
+            console.log("Config succesfully saved")
+          }
+      });
+    }
+    else{
+      console.log("Config already initialized")
+    }
+  });
+}
+
+
+exports.init_config = function(req, res) {
+  var newConfig = new Config();
+  Config.find({}, function(err, configs){
+    if(err){
+      res.send(err);
+    }
+    if(!configs.length){
+      newConfig.save(function(err1, configs1){
+          if(err1){
+            res.status(500).send(err1);
+          }
+          else{
+            res.json(configs1);
+          }
+      });
+    }
+    else{
+      res.status(422).send("Config already initialized")
+    }
+  });
+};
 
   exports.get_config = function(req, res) {
 
@@ -83,3 +111,6 @@ var mongoose = require('mongoose'),
           }
       });
   };
+
+
+module.exports.createInitialConfig = createInitialConfig;

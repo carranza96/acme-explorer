@@ -1,15 +1,17 @@
 var express = require('express'),
   app = express(),
   port = process.env.PORT || 8080,
-  mongoose = require('mongoose'),
+  mongoose = require('mongoose')
+  Config = require('./api/models/configModel')
   Actor = require('./api/models/actorModel'),
-  Sponsorship = require('./api/models/sponsorshipModel')
-  Trip = require('./api/models/tripModel'),
+  Sponsorship = require('./api/models/sponsorshipModel'),
+  Trip = require('./api/models/tripModel').Trip,
+  Stage = require('./api/models/tripModel').Stage,
   Application = require('./api/models/applicationModel'),
   Finder = require('./api/models/finderModel'),
-  Config = require('./api/models/configModel'),
   DataWareHouse = require('./api/models/dataWareHouseModel'), 
   DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
+  ConfigController = require('./api/controllers/configController')
   bodyParser = require('body-parser');
   admin = require('firebase-admin'),
   serviceAccount = require('./acmeexplorerauth-serviceAccountKey.json'),
@@ -21,7 +23,6 @@ var express = require('express'),
     key: fs.readFileSync('./keys/server.key'),
     cert: fs.readFileSync('./keys/server.cert')
   };
-
 
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
@@ -103,3 +104,6 @@ mongoose.connection.on("error", function (err, conn) {
 
 
 DataWareHouseTools.createDataWareHouseJob();
+
+// Initialize config
+ConfigController.createInitialConfig();

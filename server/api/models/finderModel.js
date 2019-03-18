@@ -1,8 +1,6 @@
 'use strict';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema,
-Trip = mongoose.model('Trip')
-
+var Schema = mongoose.Schema;
 
 var finderSchema = new Schema({
     explorer: {
@@ -34,10 +32,13 @@ var finderSchema = new Schema({
     },
     results: [{
       type: Schema.Types.ObjectId,
-      ref: 'Trip'
-    }]
-
-  
+      ref: 'Trip',
+      expires:10
+    }],
+    lastUpdate: {
+      type: Date,
+      default: Date.now()
+    }
   }, { strict: false } )
 
 finderSchema.index({explorer:1})
@@ -197,8 +198,7 @@ finderSchema.path('maxPrice').validate( function(value){
 
 
 // Check if explorer is valid
-finderSchema.path('explorer').validate(
-  {
+finderSchema.path('explorer').validate({
      validator: function (value){
       return new Promise(function (resolve, reject) {
           var explorer_id = value;
@@ -220,7 +220,8 @@ finderSchema.path('explorer').validate(
   
         });
       }
-   , message: function(props) { return props.reason.message; }} );
+  , message: function(props) { return props.reason.message; }
+} );
 
 
 module.exports = mongoose.model('Finder', finderSchema);

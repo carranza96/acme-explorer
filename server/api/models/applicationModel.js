@@ -9,7 +9,7 @@ var applicationSchema = new Schema({
     moment:{
         type: Date,
         required: 'Kindly enter the moment',
-        default: Date.now
+        default: Date.now()
     },
     status:{
         type: String,

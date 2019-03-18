@@ -2,8 +2,8 @@
 /*---------------TRIP----------------------*/
 var mongoose = require('mongoose'),
     Finder = mongoose.model('Finder'),
-    Trip = mongoose.model('Trip');
-
+    Trip = mongoose.model('Trip'),
+    Config = mongoose.model('Config');
 
 function get_results_finder(finder){
     // Build query filters
@@ -37,14 +37,26 @@ function get_results_finder(finder){
             query.endDate.$lte = finder.maxDate
         }
     }
-       
+    
     return new Promise( function(resolve,reject){
-        Trip.find(query, function (err, trips) {
-            if (err) {
+        // Get max limit of trips
+        Config.findOne(function(err,config){
+            if(err){
                 reject(new Error(err));
             }
             else{
-                resolve(trips);
+                var limit = config.finderResultNumber;
+                Trip.find(query)
+                .limit(limit)
+                .lean()
+                .exec(function (err, trips) {
+                    if (err) {
+                        reject(new Error(err));
+                    }
+                    else{
+                        resolve(trips);
+                    }
+                })
             }
         })
   });
@@ -85,6 +97,7 @@ exports.create_a_finder =  function (req, res) {
 
 };
 
+
 exports.read_a_finder  = function (req, res) {
     Finder.findById(req.params.finderId, function (err, finder ) {
         if (err) {
@@ -92,9 +105,10 @@ exports.read_a_finder  = function (req, res) {
         }
         else {
             // Get results of a finder if empty
-            if(!finder.results){
+            if(finder.results.length == 0){
                 get_results_finder(finder).then( trips => {
                     finder.results = trips;
+                    finder.lastUpdate = Date.now();
                     res.json(finder)
                 }).catch(e => res.status(500).send(err))
             }
@@ -106,23 +120,35 @@ exports.read_a_finder  = function (req, res) {
     });
 };
 
+
 exports.update_a_finder  = function (req, res) {
-    // new: true means -> return the modified document rather than the original. defaults to false 
-    // var opts = {new: true, runValidators:true, context: 'query'}
-    Finder.findOneAndUpdate({ _id: req.params.finderId }, req.body, { new: true, runValidators:true }, function (err, finder ) {
-        if (err) {
-            if (err.name == 'ValidationError') {
-                res.status(422).send(err);
+    var new_finder = req.body;
+
+    get_results_finder(new_finder).then(trips => {
+        new_finder.lastUpdate = Date.now();
+        new_finder.results = trips;
+
+        Finder.findOneAndUpdate({ _id: req.params.finderId }, new_finder, { new: true, runValidators:true, context:'query' }, function (err, finder ) {
+            if (err) {
+                if (err.name == 'ValidationError') {
+                    res.status(422).send(err);
+                }
+                else {
+                    res.status(500).send(err);
+                }
             }
             else {
-                res.status(500).send(err);
+                res.json(finder)
             }
-        }
-        else {
-            res.json(finder );
-        }
-    });
+        });
+        
+    }).catch(e => res.status(500).send(err))
+        
+
+
+   
 };
+
 
 exports.delete_a_finder  = function (req, res) {
     Finder.deleteOne({ _id: req.params.finderId }, function (err, finder) {

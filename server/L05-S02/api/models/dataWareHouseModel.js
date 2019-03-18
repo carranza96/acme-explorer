@@ -25,7 +25,7 @@ var DataWareHouseSchema = new mongoose.Schema({
   },
   computationMoment: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   },
   rebuildPeriod: {
     type: String
