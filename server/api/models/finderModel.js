@@ -47,7 +47,10 @@ finderSchema.index({keyword:"text"})
 
 // Check min date is before max date
 finderSchema.path('minDate').validate( function(value){
-  if(this._update){
+  if(!value){
+    return true
+  }
+  else if(this._update){
       if (this._update.maxDate){
           return new Date(this._update.maxDate) > value;
       }
@@ -59,20 +62,22 @@ finderSchema.path('minDate').validate( function(value){
                       reject(new Error());
                   }
                   else {
-                      resolve(finder.maxDate > value);
+                      if (finder.maxDate){
+                        resolve(finder.maxDate > value)
+                      }
+                      else{
+                        resolve(true);
+                      }
                   }
               });
-      
             });
       }
   }
   else{
       if(!this.maxDate){
-        console.log("hola")
         return true;
       }
       else{
-        console.log("adios")
         return this.maxDate > value;
       }
   }
@@ -81,7 +86,10 @@ finderSchema.path('minDate').validate( function(value){
 
 // Check max date is after min date
 finderSchema.path('maxDate').validate( function(value){
-  if(this._update){
+  if(!value){
+    return true
+  }
+  else if(this._update){
       if (this._update.minDate){
           return new Date(this._update.minDate) < value;
       }
@@ -92,8 +100,11 @@ finderSchema.path('maxDate').validate( function(value){
                   if (err) {
                       reject(new Error());
                   }
-                  else {
-                      resolve(finder.minDate < value);
+                  if (finder.minDate){
+                    resolve(finder.minDate < value)
+                  }
+                  else{
+                    resolve(true);
                   }
               });
             });
@@ -107,13 +118,16 @@ finderSchema.path('maxDate').validate( function(value){
         return this.minDate < value;
       }
   }
-},'Min date must be before max date')
+},'Max date must be after min date')
 
 
 
 // Check min price is lower than max price
 finderSchema.path('minPrice').validate( function(value){
-  if(this._update){
+  if(!value){
+    return true
+  }
+  else if(this._update){
       if (this._update.maxPrice){
           return this._update.maxPrice > value;
       }
@@ -124,8 +138,11 @@ finderSchema.path('minPrice').validate( function(value){
                   if (err) {
                       reject(new Error());
                   }
-                  else {
-                      resolve(finder.maxPrice > value);
+                  if (finder.maxPrice){
+                    resolve(finder.maxPrice > value)
+                  }
+                  else{
+                    resolve(true);
                   }
               });
             });
@@ -142,6 +159,41 @@ finderSchema.path('minPrice').validate( function(value){
 },'Min price must be lower than max price')
 
 
+// Check max price is greater than min price
+finderSchema.path('maxPrice').validate( function(value){
+  if(!value){
+    return true
+  }
+  else if(this._update){
+      if (this._update.minPrice){
+          return this._update.minPrice < value;
+      }
+      else{
+          var update_doc = this
+          return new Promise(function (resolve, reject) {                
+              Finder.findById(update_doc._conditions._id, function (err, finder) {
+                  if (err) {
+                      reject(new Error());
+                  }
+                  if (finder.minPrice){
+                    resolve(finder.minPrice < value)
+                  }
+                  else{
+                    resolve(true);
+                  }
+              });
+            });
+      }
+  }
+  else{
+      if(!this.minPrice){
+        return true
+      }
+      else{
+        return this.minPrice < value;
+      }
+  }
+},'Max price must be greater than min price')
 
 
 // Check if explorer is valid
