@@ -18,7 +18,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/",
+							"raw": "https://localhost:8080/v1/actors/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -42,7 +43,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/5c65936ca2f60731a2ad3e2b",
+							"raw": "https://localhost:8080/v1/actors/5c65936ca2f60731a2ad3e2b",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -66,7 +68,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors?role=EXPLORER",
+							"raw": "https://localhost:8080/v1/actors?role=MANAGER",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -78,7 +81,7 @@
 							"query": [
 								{
 									"key": "role",
-									"value": "EXPLORER"
+									"value": "MANAGER"
 								}
 							]
 						}
@@ -102,7 +105,8 @@
 							"raw": "{\n\t\"name\":\"Manuel\",\n\t\"surname\":\"Carranza\",\n\t\"email\":\"mcg@us.es\",\n\t\"password\":\"sevilla\",\n\t\"phone\":\"608840009\",\n\t\"address\":\"Calle Sevilla\",\n\t\"role\":\"EXPLORER\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/",
+							"raw": "https://localhost:8080/v1/actors/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -130,10 +134,11 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"name\":\"Pedro\",\n\"surname\":\"Benitez\",\n\"email\":\"pb@us.es\",\n\"password\":\"betis\",\n\"phone\":\"608840010\",\n\"address\":\"Calle Betis\",\n\"role\":\"MANAGER\"\t\n}"
+							"raw": "{\n\"name\":\"Pedro\",\n\"surname\":\"Benitez\",\n\"email\":\"plb@us.es\",\n\"password\":\"betis\",\n\"phone\":\"608840010\",\n\"address\":\"Calle Betis\",\n\"role\":\"MANAGER\"\t\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/",
+							"raw": "https://localhost:8080/v1/actors/manager",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -141,7 +146,7 @@
 							"path": [
 								"v1",
 								"actors",
-								""
+								"manager"
 							]
 						}
 					},
@@ -164,7 +169,8 @@
 							"raw": "{\n\t\"name\":\"Miguel\",\n\t\"surname\":\"Esteban\",\n\t\"email\":\"meg@us.es\",\n\t\"password\":\"rebeca\",\n\t\"phone\":\"608840012\",\n\t\"address\":\"Calle Madrid\",\n\t\"role\":[\"ADMINISTRATOR\",\"MANAGER\"]\t\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/",
+							"raw": "https://localhost:8080/v1/actors/administrator",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -172,7 +178,7 @@
 							"path": [
 								"v1",
 								"actors",
-								""
+								"administrator"
 							]
 						}
 					},
@@ -195,7 +201,8 @@
 							"raw": "{\n\t\"name\":\"Jose María\",\n\t\"surname\":\"Luna\",\n\t\"email\":\"jml@us.es\",\n\t\"password\":\"paquetaun\",\n\t\"phone\":\"608840020\",\n\t\"address\":\"Calle Paquete\",\n\t\"role\":\"SPONSOR\"\t\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/",
+							"raw": "https://localhost:8080/v1/actors/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -223,10 +230,11 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"preferredLanguage\": \"en\",\n    \"role\": [\n        \"MANAGER\"\n    ],\n    \"banned\": true,\n    \"name\": \"Mal\",\n    \"surname\": \"Lara\",\n    \"email\": \"plb@us.es\",\n    \"password\": \"betis\",\n    \"phone\": \"608840010\",\n    \"address\": \"Calle Betis\"\n}"
+							"raw": "{\n    \"preferredLanguage\": \"en\",\n    \"role\": [\n        \"MANAGER\"\n    ],\n    \"name\": \"Mal\",\n    \"surname\": \"Lara\",\n    \"email\": \"plb@us.es\",\n    \"password\": \"betis\",\n    \"phone\": \"608840010\",\n    \"address\": \"Calle Betis\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/5c67f95a801e5b053c5cfb43",
+							"raw": "https://localhost:8080/v1/actors/5c8d81010734750bfe3f6e24",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -234,7 +242,7 @@
 							"path": [
 								"v1",
 								"actors",
-								"5c67f95a801e5b053c5cfb43"
+								"5c8d81010734750bfe3f6e24"
 							]
 						}
 					},
@@ -250,7 +258,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/5c65936ca2f60731a2ad3e2b/ban",
+							"raw": "https://localhost:8080/v1/actors/5c8d72d0c10dc96fef7e4f73/ban",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -258,7 +267,7 @@
 							"path": [
 								"v1",
 								"actors",
-								"5c65936ca2f60731a2ad3e2b",
+								"5c8d72d0c10dc96fef7e4f73",
 								"ban"
 							]
 						}
@@ -275,7 +284,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/5c65936ca2f60731a2ad3e2b/unban",
+							"raw": "https://localhost:8080/v1/actors/5c8d72d0c10dc96fef7e4f73/unban",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -283,7 +293,7 @@
 							"path": [
 								"v1",
 								"actors",
-								"5c65936ca2f60731a2ad3e2b",
+								"5c8d72d0c10dc96fef7e4f73",
 								"unban"
 							]
 						}
@@ -300,7 +310,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/",
+							"raw": "https://localhost:8080/v1/actors/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -324,7 +335,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/actors/5c6592bd757c762cc0f1f794",
+							"raw": "https://localhost:8080/v1/actors/5c6592bd757c762cc0f1f794",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -353,7 +365,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications/",
+							"raw": "https://localhost:8080/v1/applications/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -377,7 +390,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications?status=PENDING",
+							"raw": "https://localhost:8080/v1/applications?status=PENDING",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -407,7 +421,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications/5c6595c80fc97734022e0362",
+							"raw": "https://localhost:8080/v1/applications/5c8e9f211ec027442a404762",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -415,7 +430,101 @@
 							"path": [
 								"v1",
 								"applications",
-								"5c6595c80fc97734022e0362"
+								"5c8e9f211ec027442a404762"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Applications Manager",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/applications?manager=5c8d81010734750bfe3f6e25",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications"
+							],
+							"query": [
+								{
+									"key": "manager",
+									"value": "5c8d81010734750bfe3f6e25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Applications Explorer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/applications?explorer=5c8e260155d06831ba16c0c6",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications"
+							],
+							"query": [
+								{
+									"key": "explorer",
+									"value": "5c8e260155d06831ba16c0c6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Applications Explorer Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/applications?explorer=5c8e260155d06831ba16c0c6&status=PENDING",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications"
+							],
+							"query": [
+								{
+									"key": "explorer",
+									"value": "5c8e260155d06831ba16c0c6"
+								},
+								{
+									"key": "status",
+									"value": "PENDING"
+								}
 							]
 						}
 					},
@@ -435,10 +544,11 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"5c758a036a6b1a2b6319feb4\",\n\t\"trip\":\"5c7686ad0d48eb48017de9ed\"\n}"
+							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"5c8eb414d36ead54c6329b24\",\n\t\"trip\":\"5c8ebe987002d55adc61eea0\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications/",
+							"raw": "https://localhost:8080/v1/applications/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -466,10 +576,11 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"5c680c6288457117ae1c248f\"\n}"
+							"raw": "{\n\t\"comments\":[\"Menor de edad\",\"Celiaco\"],\n\t\"explorer\":\"5c680c6288457117ae1c2485\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications/5c6805f34e142b12bafcc144",
+							"raw": "https://localhost:8080/v1/applications/5c8e260155d06831ba16c0c6",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -477,7 +588,7 @@
 							"path": [
 								"v1",
 								"applications",
-								"5c6805f34e142b12bafcc144"
+								"5c8e260155d06831ba16c0c6"
 							]
 						}
 					},
@@ -493,7 +604,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications/5c67f775ef2b64039b70b719",
+							"raw": "https://localhost:8080/v1/applications/5c67f775ef2b64039b70b719",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -517,7 +629,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications/",
+							"raw": "https://localhost:8080/v1/applications/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -532,16 +645,24 @@
 					"response": []
 				},
 				{
-					"name": "PUT Change status",
+					"name": "PUT Change status by manager (PENDING -> DUE/REJECTED)",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\n\t\"status\": \"REJECTED\",\n\t\"rejectReason\":\"No cumple requisitos\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/applications/5c758ab36a6b1a2b6319febc/changeStatus?status=ACCEPTED",
+							"raw": "https://localhost:8080/v1/applications/5c8e9f211ec027442a404762/changeStatus",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -549,14 +670,76 @@
 							"path": [
 								"v1",
 								"applications",
-								"5c758ab36a6b1a2b6319febc",
+								"5c8e9f211ec027442a404762",
 								"changeStatus"
+							]
+						},
+						"description": "change status of an application"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Pay application by explorer (DUE -> ACCEPTED)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"status\": \"REJECTED\",\n\t\"rejectReason\":\"No cumple requisitos\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/applications/5c8ea890d17f9a4bbd9e0714/pay",
+							"protocol": "https",
+							"host": [
+								"localhost"
 							],
-							"query": [
-								{
-									"key": "status",
-									"value": "ACCEPTED"
-								}
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications",
+								"5c8ea890d17f9a4bbd9e0714",
+								"pay"
+							]
+						},
+						"description": "change status of an application"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Cancel application by explorer (ACCEPTED -> CANCELLED)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"status\": \"REJECTED\",\n\t\"rejectReason\":\"No cumple requisitos\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/applications/5c8ea890d17f9a4bbd9e0714/pay",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"applications",
+								"5c8ea890d17f9a4bbd9e0714",
+								"pay"
 							]
 						},
 						"description": "change status of an application"
@@ -578,7 +761,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/",
+							"raw": "https://localhost:8080/v1/trips/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -587,6 +771,36 @@
 								"v1",
 								"trips",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Trips with Manager",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/trips?manager=5c8d81010734750bfe3f6e25",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips"
+							],
+							"query": [
+								{
+									"key": "manager",
+									"value": "5c8d81010734750bfe3f6e25"
+								}
 							]
 						}
 					},
@@ -602,7 +816,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/search?keyword=excursión",
+							"raw": "https://localhost:8080/v1/trips/search?keyword=excursión",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -623,6 +838,31 @@
 					"response": []
 				},
 				{
+					"name": "GET TripByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/trips/5c8a820ddb305b155a05a627",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								"5c8a820ddb305b155a05a627"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "POST Trip",
 					"request": {
 						"method": "POST",
@@ -636,10 +876,11 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\":\"Excursión a Lebrija\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\": 0,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2020-07-01\",\n\t\"published\":\"true\",\n\t\"manager\": \"5c758a1a6a6b1a2b6319feb5\"\n}"
+							"raw": "{\n\t\"title\":\"Excursión a Lebrija\",\n\t\"description\":\"Grupo Joven\",\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-07-28\",\n\t\"endDate\": \"2022-07-01\",\n\t\"published\":\"false\",\n\t\"manager\": \"5c8d81010734750bfe3f6e25\",\n\t\"sponsorships\": [\"5c8cea5b46dc74495dc582ca\", \"5c8cea7d46dc74495dc582cd\"]\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/",
+							"raw": "https://localhost:8080/v1/trips/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -667,10 +908,11 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\":\"Excursión a Valencia\",\n\t\"description\":\"Grupo Joven\",\n\t\"price\":20,\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\":\"2019-05-28\",\n\t\"endDate\": \"2018-07-01\",\n\t\"published\": \"true\"\n}"
+							"raw": "{\n\t\"title\":\"Excursión a Valencia\",\n\t\"description\":\"Grupo Joven\",\n\t\"requirements\":[\"Carnet de socio\",\"Mayor de edad\"],\n\t\"startDate\": \"2016-02-01\",\n\t\"manager\":\"5c8d81010734750bfe3f6e25\",\n\t\"cancelled\": false,\n\t\"published\": true\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/5c7686540d48eb48017de9eb",
+							"raw": "https://localhost:8080/v1/trips/5c8ebe3b7002d55adc61ee9e",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -678,9 +920,43 @@
 							"path": [
 								"v1",
 								"trips",
-								"5c7686540d48eb48017de9eb"
+								"5c8ebe3b7002d55adc61ee9e"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Cancel Trip",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"reasonCancellation\":\"lesión\"\t\n}"
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/trips/5c8e251255d06831ba16c0c2/cancel",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								"5c8e251255d06831ba16c0c2",
+								"cancel"
+							]
+						},
+						"description": "Cancel a trip"
 					},
 					"response": []
 				},
@@ -694,7 +970,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/",
+							"raw": "https://localhost:8080/v1/trips/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -718,7 +995,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/5c671f8ee0a1bb5be474a92e",
+							"raw": "https://localhost:8080/v1/trips/5c87f28f0cc77c3711c90577",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -726,7 +1004,7 @@
 							"path": [
 								"v1",
 								"trips",
-								"5c671f8ee0a1bb5be474a92e"
+								"5c87f28f0cc77c3711c90577"
 							]
 						}
 					},
@@ -746,10 +1024,11 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\":\"Visitar la catedral\",\n\t\"description\": \"entraremos en la catedral y conoceremos sus secretos de la mano de un guía experto\",\n\t\"price\": 10\n}\n\t"
+							"raw": "{\n\t\"title\":\"Visitar la catedral\",\n\t\"description\": \"entraremos en la catedral y conoceremos sus secretos de la mano de un guía experto\",\n\t\"price\": 60\n}\n\t"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/5c767911510ab83bcc4430fd/addStage",
+							"raw": "https://localhost:8080/v1/trips/5c8e25fd55d06831ba16c0c7/stages",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -757,8 +1036,8 @@
 							"path": [
 								"v1",
 								"trips",
-								"5c767911510ab83bcc4430fd",
-								"addStage"
+								"5c8e25fd55d06831ba16c0c7",
+								"stages"
 							]
 						},
 						"description": "add a new stage to an existing trip"
@@ -766,16 +1045,24 @@
 					"response": []
 				},
 				{
-					"name": "PUT Cancel Trip",
+					"name": "PUT Edit Stage",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\n\t\"title\":\"Visitar la catedral\",\n\t\"description\": \"entraremos en la catedral y conoceremos sus secretos de la mano de un guía experto\",\n\t\"price\": 100\n}\n\t"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/trips/5c7686ad0d48eb48017de9ed/cancel?reasonCancellation=una razon",
+							"raw": "https://localhost:8080/v1/trips/5c8d9d5f1e125629fde1a1e2/stages/5c8e22e2a7844731434b7afe",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -783,17 +1070,39 @@
 							"path": [
 								"v1",
 								"trips",
-								"5c7686ad0d48eb48017de9ed",
-								"cancel"
-							],
-							"query": [
-								{
-									"key": "reasonCancellation",
-									"value": "una razon"
-								}
+								"5c8d9d5f1e125629fde1a1e2",
+								"stages",
+								"5c8e22e2a7844731434b7afe"
 							]
 						},
-						"description": "Cancel a trip"
+						"description": "add a new stage to an existing trip"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Stage",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/trips/5c8d9d5f1e125629fde1a1e2/stages/5c8e22eca7844731434b7aff",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"trips",
+								"5c8d9d5f1e125629fde1a1e2",
+								"stages",
+								"5c8e22eca7844731434b7aff"
+							]
+						}
 					},
 					"response": []
 				}
@@ -812,7 +1121,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/finders/",
+							"raw": "https://localhost:8080/v1/finders/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -840,10 +1150,11 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"keyWord\":\"sevilla\",\n\t\"minPrice\":50,\n\t\"maxPrice\":100,\n\t\"minDate\":\"2019-05-28\",\n\t\"maxDate\": \"2020-07-01\"\n}"
+							"raw": "{\n\t\"keyWord\":\"Sevilla\",\n\t\"minPrice\":50,\n\t\"maxPrice\":100,\n\t\"minDate\":\"2019-05-28\",\n\t\"maxDate\": \"2020-07-01\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/finders/",
+							"raw": "https://localhost:8080/v1/finders/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -874,7 +1185,8 @@
 							"raw": "{\n    \"keyWord\": \"barcelona\",\n    \"minPrice\": 50,\n    \"maxPrice\": 100,\n    \"minDate\": \"2019-05-28T00:00:00.000Z\",\n    \"maxDate\": \"2020-07-01T00:00:00.000Z\",\n    \"results\": [],\n    \"_id\": \"5c69965fd410896d5329fa08\",\n    \"__v\": 0\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/finders/5c69965fd410896d5329fa08",
+							"raw": "https://localhost:8080/v1/finders/5c69965fd410896d5329fa08",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -898,7 +1210,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/finders/",
+							"raw": "https://localhost:8080/v1/finders/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -922,7 +1235,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/finders/5c699748d410896d5329fa0b",
+							"raw": "https://localhost:8080/v1/finders/5c699748d410896d5329fa0b",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -951,7 +1265,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/sponsorships/",
+							"raw": "https://localhost:8080/v1/sponsorships/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -979,10 +1294,11 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"banner\":\"\",\n\t\"landingPage\":\"www.sponsors.com\",\n\t\"paid\":true,\n\t\"sponsor\":\"5c699a5ad410896d5329fa0d\"\n}"
+							"raw": "{\n\t\"banner\":\"img01\",\n\t\"landingPage\":\"www.sponsors.com\",\n\t\"paid\":false,\n\t\"sponsor\":\"5c8d834fab4c691356a8e0da\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/sponsorships/",
+							"raw": "https://localhost:8080/v1/sponsorships/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -1013,7 +1329,8 @@
 							"raw": "   {\n        \"paid\": true,\n        \"_id\": \"5c699a84d410896d5329fa0e\",\n        \"banner\": {\n            \"type\": \"Buffer\",\n            \"data\": []\n        },\n        \"landingPage\": \"www.sponsors_edited.com\",\n        \"sponsor\": \"5c699a5ad410896d5329fa0d\",\n        \"__v\": 0\n    }"
 						},
 						"url": {
-							"raw": "localhost:8080/v1/sponsorships/5c699a84d410896d5329fa0e",
+							"raw": "https://localhost:8080/v1/sponsorships/5c699a84d410896d5329fa0e",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -1037,7 +1354,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/sponsorships/",
+							"raw": "https://localhost:8080/v1/sponsorships/",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -1061,7 +1379,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/sponsorships/5c699ae1d410896d5329fa0f",
+							"raw": "https://localhost:8080/v1/sponsorships/5c699ae1d410896d5329fa0f",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -1090,7 +1409,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/dataWareHouse",
+							"raw": "https://localhost:8080/v1/dataWareHouse",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -1113,7 +1433,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/dataWareHouse/latest",
+							"raw": "https://localhost:8080/v1/dataWareHouse/latest",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
@@ -1137,7 +1458,8 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/v1/dataWareHouse",
+							"raw": "https://localhost:8080/v1/dataWareHouse",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
