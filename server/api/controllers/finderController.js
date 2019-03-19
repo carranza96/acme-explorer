@@ -177,3 +177,56 @@ exports.delete_all_finders  = function (req, res) {
         }
     });
 };
+
+
+
+var CronJob = require('cron').CronJob;
+var CronTime = require('cron').CronTime;
+
+var rebuildPeriod = '*/5 * * * *';  //El que se usará por defecto 5 minutos
+var computeCacheCleanerJob;
+
+exports.rebuildPeriod = function(req, res) {
+    console.log('Updating rebuild period. Request: period:'+req.query.rebuildPeriod);
+    rebuildPeriod = req.query.rebuildPeriod;
+    computeCacheCleanerJob.setTime(new CronTime(rebuildPeriod));
+    computeCacheCleanerJob.start();
+
+    res.json(req.query.rebuildPeriod);
+};
+
+function createCacheCleanerJob(){
+    computeCacheCleanerJob = new CronJob(rebuildPeriod,  function() {
+    Config.findOne({}, function(err,config){
+        if (err){
+            console.log("Error cleaning cache: "+err);
+        }
+        else{
+           
+            
+            var maxCacheTime = config.finderResultCacheTime;
+            var MS_PER_MINUTE = 60000;
+            var lastValidDate = new Date(Date.now() - maxCacheTime * MS_PER_MINUTE);
+
+            var query = {lastUpdate: {$lte: lastValidDate}}
+            Finder.findOneAndUpdate(query, {$set: {"results":[]}}, {new:true, runValidators:true}, function (err, finder) {
+                if (err) {
+                    if (err.name == 'ValidationError') {
+                        console.log("Error cleaning cache: "+err);
+                    }
+                    else {
+                        console.log("Error cleaning cache: "+err);
+                    }
+                  }
+                else{
+                    console.log("Finder Cache succesfully cleaned Date: "+new Date());
+                }
+            })
+
+        }
+    })
+  }, null, true, 'Europe/Madrid');
+}
+
+
+module.exports.createCacheCleanerJob = createCacheCleanerJob;

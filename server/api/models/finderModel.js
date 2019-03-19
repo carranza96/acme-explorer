@@ -4,17 +4,6 @@ var Schema = mongoose.Schema,
 Trip = mongoose.model('Trip');
 
 
-// var finderResultsSchema = new Schema({
-//   results: [Trip.schema],
-//   lastUpdate: {
-//     type: Date,
-//     default: Date.now()
-//   }
-// }, { strict: false } )
-
-// finderResultsSchema.index({ lastUpdate: 1 }, { expireAfterSeconds: 10 });
-
-
 var finderSchema = new Schema({
     explorer: {
       type: Schema.Types.ObjectId,
@@ -43,10 +32,6 @@ var finderSchema = new Schema({
       type: Date,
       default: null,
     },
-    // results: [{
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'Trip',
-    // }],
     results: [Trip.schema],
     lastUpdate: {
       type: Date,
@@ -55,10 +40,10 @@ var finderSchema = new Schema({
   }, { strict: false } )
 
 
-  finderSchema.index({ lastUpdate: 1 }, { expireAfterSeconds:40})
 
 finderSchema.index({explorer:1})
 finderSchema.index({keyword:"text"})
+finderSchema.index({lastUpdate:1})
 
 
 
@@ -80,6 +65,9 @@ finderSchema.path('minDate').validate( function(value){
               Finder.findById(update_doc._conditions._id, function (err, finder) {
                   if (err) {
                       reject(new Error());
+                  }
+                  else if(!finder){
+                    reject(new Error(`Finder id ${update_doc._conditions._id} does not exists in database`))
                   }
                   else {
                       if (finder.maxDate){
@@ -120,7 +108,10 @@ finderSchema.path('maxDate').validate( function(value){
                   if (err) {
                       reject(new Error());
                   }
-                  if (finder.minDate){
+                  else if(!finder){
+                    reject(new Error(`Finder id ${update_doc._conditions._id} does not exists in database`))
+                  } 
+                  else if (finder.minDate){
                     resolve(finder.minDate < value)
                   }
                   else{
@@ -158,7 +149,10 @@ finderSchema.path('minPrice').validate( function(value){
                   if (err) {
                       reject(new Error());
                   }
-                  if (finder.maxPrice){
+                  else if(!finder){
+                    reject(new Error(`Finder id ${update_doc._conditions._id} does not exists in database`))
+                  } 
+                  else if (finder.maxPrice){
                     resolve(finder.maxPrice > value)
                   }
                   else{
@@ -189,13 +183,18 @@ finderSchema.path('maxPrice').validate( function(value){
           return this._update.minPrice < value;
       }
       else{
+        console.log("adios")
+
           var update_doc = this
           return new Promise(function (resolve, reject) {                
               Finder.findById(update_doc._conditions._id, function (err, finder) {
                   if (err) {
                       reject(new Error());
                   }
-                  if (finder.minPrice){
+                  else if(!finder){
+                      reject(new Error(`Finder id ${update_doc._conditions._id} does not exists in database`))
+                  }
+                  else if(finder.minPrice){
                     resolve(finder.minPrice < value)
                   }
                   else{
