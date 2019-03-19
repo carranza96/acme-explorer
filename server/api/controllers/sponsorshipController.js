@@ -55,6 +55,9 @@ exports.update_a_sponsorship = function (req, res) {
                 res.status(500).send(err);
             }
         }
+        else if(!sponsorship){
+            res.status(404).send(`Sponsorship with id ${req.params.sponsorshipId} does not exist in database`);
+        }
         else {
             res.json(sponsorship);
         }
@@ -66,6 +69,9 @@ exports.delete_a_sponsorship = function (req, res) {
     Sponsorship.deleteOne({_id: req.params.sponsorshipId}, function (err, sponsorship) {
         if (err) {
             res.send(err);
+        }
+        else if(!sponsorship){
+            res.status(404).send(`Sponsorship with id ${req.params.sponsorshipId} does not exist in database`);
         }
         else {
             res.json({message: 'Sponsorship successfully deleted'});

@@ -2,6 +2,8 @@
 module.exports = function(app) {
   var sponsorships = require('../controllers/sponsorshipController');
 
+    /** V1: No authentication required */
+
   /**
    * Get all sponsorships
    *    RequiredRoles: None
@@ -35,4 +37,9 @@ module.exports = function(app) {
     .get(sponsorships.read_a_sponsorship)
 	  .put(sponsorships.update_a_sponsorship)
     .delete(sponsorships.delete_a_sponsorship);
+
+
+
+    /** V2: Authentication required */
+
 };

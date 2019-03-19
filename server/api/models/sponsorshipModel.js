@@ -26,29 +26,33 @@ var sponsorshipSchema = new Schema({
 
 sponsorshipSchema.index({sponsor:1, paid:1})
 
+// VALIDATION
 
-// Check if sponsor is valid
-sponsorshipSchema.pre('validate', function(next) {
-    var sponsorship = this;
-    var sponsor_id = sponsorship.sponsor;
-    if (sponsor_id) {
-        Actor.findOne({_id:sponsor_id}, function(err, result){
+  // Check if sponsor is valid
+
+  sponsorshipSchema.path('sponsor').validate(
+    {
+       validator: function (value){
+        return new Promise(function (resolve, reject) {
+            var sponsor_id = value;
+    
+            Actor.findOne({_id:sponsor_id}, function(err, result){
             if(err){
-                return next(err);
+                reject(new Error());
             }
-            if(!result){
-                sponsorship.invalidate('sponsor', `Sponsor id ${sponsorship.sponsor} does not reference an existing actor`, sponsorship.sponso);
+            else if(!result){
+                reject(new Error(`Sponsor id ${sponsor_id} does not reference an existing actor`));
             }
             else if(!result.role.includes('SPONSOR')){
-                sponsorship.invalidate('sponsor', `Referenced actor ${sponsorship.sponso} is not an sponsor`, sponsorship.sponso);
+                reject(new Error(`Referenced actor ${sponsor_id} is not an sponsor`));
             }
-            return next();
-        });
-    }
-    else{
-        return next();
-    }
+            else{
+                resolve(true)
+            }
+            })
     
-  });
+          });
+        }
+     , message: function(props) { return props.reason.message; }} );
 
 module.exports = mongoose.model('Sponsorship', sponsorshipSchema);
