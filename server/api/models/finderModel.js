@@ -1,12 +1,25 @@
 'use strict';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema,
+Trip = mongoose.model('Trip');
+
+
+// var finderResultsSchema = new Schema({
+//   results: [Trip.schema],
+//   lastUpdate: {
+//     type: Date,
+//     default: Date.now()
+//   }
+// }, { strict: false } )
+
+// finderResultsSchema.index({ lastUpdate: 1 }, { expireAfterSeconds: 10 });
+
 
 var finderSchema = new Schema({
     explorer: {
       type: Schema.Types.ObjectId,
       unique: true,
-      // required: 'Kindly enter the explorer',
+      required: 'Kindly enter the explorer',
       ref: 'Actor'
     },
     keyWord: {
@@ -30,19 +43,25 @@ var finderSchema = new Schema({
       type: Date,
       default: null,
     },
-    results: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Trip',
-      expires:10
-    }],
+    // results: [{
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'Trip',
+    // }],
+    results: [Trip.schema],
     lastUpdate: {
       type: Date,
       default: Date.now()
     }
   }, { strict: false } )
 
+
+  finderSchema.index({ lastUpdate: 1 }, { expireAfterSeconds:40})
+
 finderSchema.index({explorer:1})
 finderSchema.index({keyword:"text"})
+
+
+
 
 // VALIDATION
 

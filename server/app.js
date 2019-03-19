@@ -1,17 +1,18 @@
+
 var express = require('express'),
   app = express(),
   port = process.env.PORT || 8080,
   mongoose = require('mongoose')
-  Config = require('./api/models/configModel')
+  Config = require('./api/models/configModel'),
   Actor = require('./api/models/actorModel'),
   Sponsorship = require('./api/models/sponsorshipModel'),
   Trip = require('./api/models/tripModel').Trip,
   Stage = require('./api/models/tripModel').Stage,
   Application = require('./api/models/applicationModel'),
   Finder = require('./api/models/finderModel'),
+  ConfigController = require('./api/controllers/configController'),
   DataWareHouse = require('./api/models/dataWareHouseModel'), 
   DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
-  ConfigController = require('./api/controllers/configController')
   bodyParser = require('body-parser');
   admin = require('firebase-admin'),
   serviceAccount = require('./acmeexplorerauth-serviceAccountKey.json'),
@@ -96,7 +97,7 @@ mongoose.connection.on("open", function (err, conn) {
     });
     https.createServer(options, app).listen(port);
 });
-// mongoose.connection.dropDatabase()
+mongoose.connection.dropDatabase()
 
 mongoose.connection.on("error", function (err, conn) {
     console.error("DB init error " + err);
@@ -107,3 +108,4 @@ DataWareHouseTools.createDataWareHouseJob();
 
 // Initialize config
 ConfigController.createInitialConfig();
+ConfigController.createIndexFinderCache();

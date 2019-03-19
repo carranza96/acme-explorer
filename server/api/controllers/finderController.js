@@ -103,6 +103,9 @@ exports.read_a_finder  = function (req, res) {
         if (err) {
             res.status(500).send(err);
         }
+        else if(!finder){
+            res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
+        }
         else {
             // Get results of a finder if empty
             if(finder.results.length == 0){
@@ -136,6 +139,9 @@ exports.update_a_finder  = function (req, res) {
                 else {
                     res.status(500).send(err);
                 }
+            }
+            else if(!finder){
+                res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
             }
             else {
                 res.json(finder)

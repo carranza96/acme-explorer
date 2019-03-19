@@ -1,7 +1,8 @@
 'use strict';
 /*---------------CONFIG----------------------*/
 var mongoose = require('mongoose'),
-  Config = mongoose.model('Config');
+  Config = mongoose.model('Config'),
+  Finder = mongoose.model('Finder');
 
 
 function createInitialConfig(){
@@ -25,6 +26,32 @@ function createInitialConfig(){
       console.log("Config already initialized")
     }
   });
+}
+
+function createIndexFinderCache(){
+  // var promise = new Promise(function(resolve,reject){
+  //   Config.findOne(function (err,config){
+  //     if(err){
+  //       resolve(60*60)
+  //     }
+  //     else{
+  //       if(!config){
+  //         resolve(40)
+  //       }
+  //       else{
+  //         resolve(config.finderResultCacheTime)
+  //       }
+  //     }
+  //   })
+  // })
+
+  // promise.then(maxTime=> {
+  //   console.log(maxTime);
+  //   Finder.schema.index({ lastUpdate: 1 }, { expireAfterSeconds:maxTime})
+  // });
+
+  Finder.schema.index({ lastUpdate: 1 }, { expireAfterSeconds:40})
+
 }
 
 
@@ -114,3 +141,4 @@ exports.init_config = function(req, res) {
 
 
 module.exports.createInitialConfig = createInitialConfig;
+module.exports.createIndexFinderCache = createIndexFinderCache;
