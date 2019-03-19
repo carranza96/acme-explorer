@@ -1,7 +1,9 @@
 'use strict';
 /*---------------ACTOR----------------------*/
 var mongoose = require('mongoose'),
-  Actor = mongoose.model('Actor');
+Actor = mongoose.model('Actor');
+Application = mongoose.model('Application');
+Trip = mongoose.model('Trip');
 var admin = require('firebase-admin');
 var authController = require('./authController');
 
@@ -313,34 +315,48 @@ exports.compute_cube = function (req, res) {
     res.send("The period query param must be provided or is not allowed.")
   } else if (actor_id !== '') {
 
-    // both parameters are provided, compute cube:
+    // both parameters are provided, check this actor is an explorer:
 
     Actor.findById(actor_id, function (err, actor) {
       if (err) {
         res.send(err);
       }
       else {
-        // check this actor is an explorer
+        // check
         if(!actor.roles.includes("EXPLORER")){
           res.status(402);
           res.send("The actor provided is not an explorer");
         }
 
+        // it's an explorer, compute cube:
         var explorer_id = actor._id;
-        var amount = parseInt(extracted_period.amount);
+        var period_amount = parseInt(extracted_period.amount);
         
         if(extracted_period.period==='Y'){
           // We compute it yearly for the last X amount of years
+          var past_date = new Date();
+          past_date = past_date.setFullYear(past_date.getFullYear() - period_amount);
 
+          // Find applications paid by this explorer in the period
+          Application.find({explorer:explorer_id,paid:true,moment:{$gte:past_date}}).lean().exec(function(err,applications){
+            if(err){
+              res.send(err);
+            }else{
+            // TODO: Aggregate the sum of the price of the trips of those applications:
+            var trip_ids = applications;
+            }
+          });
         }else{
           // We compute it monthly for the last X amount of months
+          var past_date = new Date();
           
         }
       }
     });
 
   } else {
-    // only period is provided, we return explorers that satisfy a condition
+    // only period is provided, we return explorers that satisfy a condition over cube:
+
   }
 
 }
