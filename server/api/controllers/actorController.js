@@ -1,7 +1,7 @@
 'use strict';
 /*---------------ACTOR----------------------*/
 var mongoose = require('mongoose'),
-Actor = mongoose.model('Actor');
+  Actor = mongoose.model('Actor');
 Application = mongoose.model('Application');
 Trip = mongoose.model('Trip');
 var admin = require('firebase-admin');
@@ -298,11 +298,11 @@ exports.delete_all_actors = function (req, res) {
 };
 
 /** 
- * Compute a cube of stats about an given explorer.
+ * Compute a cube of stats about a given explorer.
  * We expect an explorer and a period p.
  * Period p can take: any value in M01-M36, that's any of
  * the last previous MXX months. Any value in Y01-Y03,
- * to denotes 1 to 3 previous years.
+ * to denote 1 to 3 previous years.
 */
 
 exports.compute_cube = function (req, res) {
@@ -310,20 +310,24 @@ exports.compute_cube = function (req, res) {
   var actor_id = req.query.explorerId;
   var extracted_period = extract_period(req.query.period);
 
+  console.log(new Date(), actor_id);
+  console.log(new Date(), extracted_period);
+  console.log(new Date(), money);
+  console.log(new Date(), operator);
+  
   if (extracted_period.period === 'Not Allowed' || extracted_period.period === 'None') {
     res.status(402);
-    res.send("The period query param must be provided or is not allowed.")
+    res.send("The period query param must be provided or is not in the correct format (ie. Y01-Y03 or M01-M36).")
   } else if (actor_id !== '') {
 
     // both parameters are provided, check this actor is an explorer:
-
     Actor.findById(actor_id, function (err, actor) {
       if (err) {
         res.send(err);
       }
       else {
         // check
-        if(!actor.roles.includes("EXPLORER")){
+        if (!actor.roles.includes("EXPLORER")) {
           res.status(402);
           res.send("The actor provided is not an explorer");
         }
@@ -331,32 +335,85 @@ exports.compute_cube = function (req, res) {
         // it's an explorer, compute cube:
         var explorer_id = actor._id;
         var period_amount = parseInt(extracted_period.amount);
-        
-        if(extracted_period.period==='Y'){
+
+        if (extracted_period.period === 'Y') {
           // We compute it yearly for the last X amount of years
           var past_date = new Date();
           past_date = past_date.setFullYear(past_date.getFullYear() - period_amount);
 
+          // TODO: this could be put into a funtion to clean up code, it's used twice.
           // Find applications paid by this explorer in the period
-          Application.find({explorer:explorer_id,paid:true,moment:{$gte:past_date}}).lean().exec(function(err,applications){
-            if(err){
+          Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).lean().exec(function (err, applications) {
+            if (err) {
               res.send(err);
-            }else{
-            // TODO: Aggregate the sum of the price of the trips of those applications:
-            var trip_ids = applications;
+            } else {
+              var trip_ids = applications.map(function (application) { return application._id; });
+              console.log(new Date(), trip_ids)
+
+              // Aggregate the sum of the price of the trips of those applications:
+              Trip.aggregate([
+                { $match: { _id: { $in: trip_ids } } },
+                {
+                  $group: {
+                    total_price: { $sum: "$price" },
+                  }
+                },
+                { $project: { _id: 0 } }
+              ],
+                function (err, res) {
+                  if (err) {
+                    res.send(error);
+                  } else {
+                    res.status(200);
+                    res.json(res);
+                  }
+                });
             }
           });
-        }else{
+
+        } else {
           // We compute it monthly for the last X amount of months
           var past_date = new Date();
-          
+          past_date = past_date - period_amount; // TODO: do this with months, rn is as if was days
+
+          // Find applications paid by this explorer in the period
+          Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).lean().exec(function (err, applications) {
+            if (err) {
+              res.send(err);
+            } else {
+              var trip_ids = applications.map(function (application) { return application._id; });
+              console.log(new Date(), trip_ids)
+
+              // Aggregate the sum of the price of the trips of those applications:
+              Trip.aggregate([
+                { $match: { _id: { $in: trip_ids } } },
+                {
+                  $group: {
+                    total_price: { $sum: "$price" },
+                  }
+                },
+                { $project: { _id: 0 } }
+              ],
+                function (err, res) {
+                  if (err) {
+                    res.send(error);
+                  } else {
+                    res.status(200);
+                    res.json(res);
+                  }
+                });
+            }
+          });
         }
       }
     });
 
   } else {
     // only period is provided, we return explorers that satisfy a condition over cube:
-
+    if(money==='' || operator===''){
+      res.status(402);
+      res.send("Money or query operators must be provided if no explorer is given for a query of type B.");
+    }
   }
 
 }
@@ -366,20 +423,20 @@ exports.compute_cube = function (req, res) {
  * @param {*} string_period the parameter denoting the period to compute the calculation for.
  * @returns An object containing the given period (Not allowed if none complies) and the amount of such period.
  */
-function extract_period(string_period){
+function extract_period(string_period) {
 
-  var res = {period:'Not allowed',amount:'None'};
+  var res = { period: 'Not allowed', amount: 'None' };
   var yearly = string_period.match(/^Y0[1-3]$/);
   var monthly = string_period.match(/^M[0-3][1-6]$/);
-  
-  if(yearly.length>0){
+
+  if (yearly.length > 0) {
     res.period = "Y";
-    res.amount = yearly[0].substring(1,);
+    res.amount = yearly[0].substring(1);
   }
 
-  if(monthly.length>0){
-    res.period="M";
-    res.amount= monthly[0].substring(1,);
+  if (monthly.length > 0) {
+    res.period = "M";
+    res.amount = monthly[0].substring(1);
   }
 
   return res;
