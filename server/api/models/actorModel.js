@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
 
-
+// Defining actor schema and validation
 var actorSchema = new Schema({
   name: {
     type: String,
@@ -52,8 +52,12 @@ var actorSchema = new Schema({
   },
 }, { strict: false });
 
+/**The strict option makes it possible to ensure that values added
+ *  to our model instance that were not specified in our schema do
+ *  not get saved to the db. */
 
-actorSchema.index({role:'text'})
+// Added an index on the role text field
+actorSchema.index({ role: 'text' })
 
 actorSchema.pre('save', function (callback) {
   var actor = this;
@@ -63,7 +67,7 @@ actorSchema.pre('save', function (callback) {
   // Password changed so we need to hash it
   bcrypt.genSalt(5, function (err, salt) {
     if (err) return callback(err);
-
+    // hash new password
     bcrypt.hash(actor.password, salt, function (err, hash) {
       if (err) return callback(err);
       actor.password = hash;
@@ -72,18 +76,13 @@ actorSchema.pre('save', function (callback) {
   });
 });
 
-actorSchema.methods.verifyPassword = function (password, cb) {
+actorSchema.methods.verifyPassword = function (password, callback) {
   bcrypt.compare(password, this.password, function (err, isMatch) {
     console.log('verifying password in actorModel: ' + password);
     if (err) return cb(err);
-    console.log('iMatch: ' + isMatch);
-    cb(null, isMatch);
+    console.log('isMatch: ' + isMatch);
+    callback(null, isMatch);
   });
 };
-
-
-
-
-
 
 module.exports = mongoose.model('Actor', actorSchema);

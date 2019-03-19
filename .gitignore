@@ -5,6 +5,9 @@ L00.code-workspace
 # intellij
 .idea
 
+# mac
+.DS_Store
+
 # Logs
 logs
 *.log

@@ -1,9 +1,10 @@
 'use strict';
-module.exports = function(app) {
+module.exports = function (app) {
   var actors = require('../controllers/actorController');
   var authController = require('../controllers/authController');
 
-/** V1: No authentication required */
+  /** V1: No authentication required */
+
   /** 
    * Get all actors by role
    *    Required role: None
@@ -18,8 +19,8 @@ module.exports = function(app) {
    * @param {string} role (EXPLORER|SPONSOR|MANAGER|ADMINISTRATOR)
   */
   app.route('/v1/actors')
-	  .get(actors.list_all_actors)
-	  .post(actors.create_an_actor)
+    .get(actors.list_all_actors)
+    .post(actors.create_an_actor)
     .delete(actors.delete_all_actors);
 
 
@@ -32,7 +33,7 @@ module.exports = function(app) {
    *
   */
   app.route('/v1/actors/manager')
-	  .post(actors.create_a_manager)
+    .post(actors.create_a_manager)
 
 
   /**
@@ -44,8 +45,8 @@ module.exports = function(app) {
    *
   */
   app.route('/v1/actors/administrator')
-	  .post(actors.create_an_admin)
-  
+    .post(actors.create_an_admin)
+
 
   /**
    * Put an actor
@@ -61,7 +62,7 @@ module.exports = function(app) {
   */
   app.route('/v1/actors/:actorId')
     .get(actors.read_an_actor)
-	  .put(actors.update_an_actor)
+    .put(actors.update_an_actor)
     .delete(actors.delete_an_actor);
 
 
@@ -75,7 +76,7 @@ module.exports = function(app) {
 	 * @param {string} actorId
 	*/
   app.route('/v1/actors/:actorId/ban')
-  .put(actors.ban_an_actor)
+    .put(actors.ban_an_actor)
 
   /**
    * Unban an actor by actorId
@@ -87,59 +88,57 @@ module.exports = function(app) {
    * @param {string} actorId
   */
   app.route('/v1/actors/:actorId/unban')
-  .put(actors.unban_an_actor)
+    .put(actors.unban_an_actor)
 
 
 
 
+  /** V2: Authentication required */
 
 
-/** V2: Authentication required */
-
-
-   /** 
-   * Get all actors by role
-   *    Required role: Administrator
-   * Post an actor with role explorer/sponsor
-   *    RequiredRoles: None
-	 * Delete all
-   *    this is just for debugging, it should be removed before production
-   *
-	 * @section actors
-	 * @type get post delete
-	 * @url /v2/actors
-   * @param {string} role (EXPLORER|SPONSOR|MANAGER|ADMINISTRATOR)
-  */
- app.route('/v2/actors')
- .get(authController.verifyUser(["ADMINISTRATOR"]),actors.list_all_actors)
- .post(actors.create_an_actor)
- .delete(authController.verifyUser(["ADMINISTRATOR"]),actors.delete_all_actors);
-
-
-
-   /**
-   * Create a manager
-   *    RequiredRoles: ADMINISTRATOR
-	 * @section actors
-	 * @type  post
-	 * @url /v2/actors/manager
-   *
-  */
- app.route('/v2/actors/manager')
- .post(authController.verifyUser(["ADMINISTRATOR"]),actors.create_a_manager)
+  /** 
+  * Get all actors by role
+  *    Required role: Administrator
+  * Post an actor with role explorer/sponsor
+  *    RequiredRoles: None
+  * Delete all
+  *    Required role: Administrator
+  *
+  * @section actors
+  * @type get post delete
+  * @url /v2/actors
+  * @param {string} role (EXPLORER|SPONSOR|MANAGER|ADMINISTRATOR)
+ */
+  app.route('/v2/actors')
+    .get(authController.verifyUser(["ADMINISTRATOR"]), actors.list_all_actors)
+    .post(actors.create_an_actor)
+    .delete(authController.verifyUser(["ADMINISTRATOR"]), actors.delete_all_actors);
 
 
 
-   /**
-   * Create an admin
-   *    RequiredRoles: ADMINISTRATOR
-	 * @section actors
-	 * @type  post
-	 * @url /v2/actors/administrator
-   *
-  */
- app.route('/v2/actors/administrator')
- .post(authController.verifyUser(["ADMINISTRATOR"]),actors.create_an_admin)
+  /**
+  * Create a manager
+  *    RequiredRoles: ADMINISTRATOR
+  * @section actors
+  * @type  post
+  * @url /v2/actors/manager
+  *
+ */
+  app.route('/v2/actors/manager')
+    .post(authController.verifyUser(["ADMINISTRATOR"]), actors.create_a_manager)
+
+
+
+  /**
+  * Create an admin
+  *    RequiredRoles: ADMINISTRATOR
+  * @section actors
+  * @type  post
+  * @url /v2/actors/administrator
+  *
+ */
+  app.route('/v2/actors/administrator')
+    .post(authController.verifyUser(["ADMINISTRATOR"]), actors.create_an_admin)
 
 
 
@@ -155,24 +154,24 @@ module.exports = function(app) {
 	 * @type get put
 	 * @url /v2/actors/:actorId
   */
- app.route('/v2/actors/:actorId')
- .get(authController.verifyUser(["ADMINISTRATOR","EXPLORER","MANAGER","SPONSOR"]), actors.read_an_actor_v2)
- .put(authController.verifyUser(["ADMINISTRATOR","EXPLORER","MANAGER","SPONSOR"])
- ,actors.update_an_actor_v2) //Manager, Explorer, Sponsor no puede modificar la info de otro Manager/Explorer/Sponsor
- .delete(authController.verifyUser(["ADMINISTRATOR"]),actors.delete_an_actor);
+  app.route('/v2/actors/:actorId')
+    .get(authController.verifyUser(["ADMINISTRATOR", "EXPLORER", "MANAGER", "SPONSOR"]), actors.read_an_actor_v2)
+    .put(authController.verifyUser(["ADMINISTRATOR", "EXPLORER", "MANAGER", "SPONSOR"])
+      , actors.update_an_actor_v2) //Manager, Explorer, Sponsor no puede modificar la info de otro Manager/Explorer/Sponsor
+    .delete(authController.verifyUser(["ADMINISTRATOR"]), actors.delete_an_actor);
 
 
-   /**
-	 * Ban an actor by actorId
-   *    RequiredRole: Administrator
-	 *
-	 * @section actors
-	 * @type put
-	 * @url /v2/actors/:actorId/ban
-	 * @param {string} actorId
-	*/
+  /**
+  * Ban an actor by actorId
+  *    RequiredRole: Administrator
+  *
+  * @section actors
+  * @type put
+  * @url /v2/actors/:actorId/ban
+  * @param {string} actorId
+ */
   app.route('/v2/actors/:actorId/ban')
-  .put(authController.verifyUser(["ADMINISTRATOR"]),actors.ban_an_actor)
+    .put(authController.verifyUser(["ADMINISTRATOR"]), actors.ban_an_actor)
 
   /**
    * Unban an actor by actorId
@@ -184,7 +183,7 @@ module.exports = function(app) {
    * @param {string} actorId
   */
   app.route('/v2/actors/:actorId/unban')
-  .put(authController.verifyUser(["ADMINISTRATOR"]),actors.unban_an_actor)
+    .put(authController.verifyUser(["ADMINISTRATOR"]), actors.unban_an_actor)
 
 
 };
