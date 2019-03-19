@@ -42,7 +42,7 @@ var finderSchema = new Schema({
 
 
 finderSchema.index({explorer:1})
-finderSchema.index({keyword:"text"})
+finderSchema.index({keyWord:"text"})
 finderSchema.index({lastUpdate:1})
 
 
