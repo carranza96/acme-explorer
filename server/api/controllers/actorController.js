@@ -294,3 +294,77 @@ exports.delete_all_actors = function (req, res) {
     }
   });
 };
+
+/** 
+ * Compute a cube of stats about an given explorer.
+ * We expect an explorer and a period p.
+ * Period p can take: any value in M01-M36, that's any of
+ * the last previous MXX months. Any value in Y01-Y03,
+ * to denotes 1 to 3 previous years.
+*/
+
+exports.compute_cube = function (req, res) {
+
+  var actor_id = req.query.explorerId;
+  var extracted_period = extract_period(req.query.period);
+
+  if (extracted_period.period === 'Not Allowed' || extracted_period.period === 'None') {
+    res.status(402);
+    res.send("The period query param must be provided or is not allowed.")
+  } else if (actor_id !== '') {
+
+    // both parameters are provided, compute cube:
+
+    Actor.findById(actor_id, function (err, actor) {
+      if (err) {
+        res.send(err);
+      }
+      else {
+        // check this actor is an explorer
+        if(!actor.roles.includes("EXPLORER")){
+          res.status(402);
+          res.send("The actor provided is not an explorer");
+        }
+
+        var explorer_id = actor._id;
+        var amount = parseInt(extracted_period.amount);
+        
+        if(extracted_period.period==='Y'){
+          // We compute it yearly for the last X amount of years
+
+        }else{
+          // We compute it monthly for the last X amount of months
+          
+        }
+      }
+    });
+
+  } else {
+    // only period is provided, we return explorers that satisfy a condition
+  }
+
+}
+
+/**
+ * Extracts the period parameter so that we can use it's value.
+ * @param {*} string_period the parameter denoting the period to compute the calculation for.
+ * @returns An object containing the given period (Not allowed if none complies) and the amount of such period.
+ */
+function extract_period(string_period){
+
+  var res = {period:'Not allowed',amount:'None'};
+  var yearly = string_period.match(/^Y0[1-3]$/);
+  var monthly = string_period.match(/^M[0-3][1-6]$/);
+  
+  if(yearly.length>0){
+    res.period = "Y";
+    res.amount = yearly[0].substring(1,);
+  }
+
+  if(monthly.length>0){
+    res.period="M";
+    res.amount= monthly[0].substring(1,);
+  }
+
+  return res;
+}
