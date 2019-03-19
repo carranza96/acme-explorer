@@ -108,13 +108,13 @@ exports.init_config = function(req, res) {
               var v = config_ls[0].__v;
               req.body._id = id;
               req.body.__v = v;
-              Config.findOneAndUpdate({_id: id}, req.body, {new: true}, function(err1, config) {
+              Config.findOneAndUpdate({_id: id}, req.body, {new: true, runValidators:true}, function(err1, config) {
                 if (err1){
                   if(err1.name=='ValidationError') {
-                      res.status(422).send(err);
+                      res.status(422).send(err1);
                   }
                   else{
-                    res.status(500).send(err);
+                    res.status(500).send(err1);
                   }
                 }
                 else{

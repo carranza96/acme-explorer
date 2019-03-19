@@ -11,6 +11,7 @@ var configSchema = new Schema({
     },
     finderResultNumber: {
         type: Number,
+        min: 0,
         default: 10,
         max: 100
     },
@@ -21,8 +22,6 @@ var configSchema = new Schema({
 
 }, { strict: false })
 
-
-// VALIDATION
 
 
 configSchema.methods.toJSON = function() {

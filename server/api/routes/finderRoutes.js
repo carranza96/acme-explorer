@@ -80,6 +80,7 @@ module.exports = function(app) {
 	 * @type get put delete
 	 * @url /v2/finders/:finderId
   */
+ 
  app.route('/v2/finders/:finderId')
  .get(authController.verifyUser(["EXPLORER"]),finders.read_a_finder_v2)
  .put(authController.verifyUser(["EXPLORER"]),finders.update_a_finder_v2)

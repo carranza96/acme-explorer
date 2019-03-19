@@ -183,8 +183,6 @@ finderSchema.path('maxPrice').validate( function(value){
           return this._update.minPrice < value;
       }
       else{
-        console.log("adios")
-
           var update_doc = this
           return new Promise(function (resolve, reject) {                
               Finder.findById(update_doc._conditions._id, function (err, finder) {

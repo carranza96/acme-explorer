@@ -174,11 +174,11 @@ exports.list_all_finders_v2  = async function (req, res) {
                         res.json(finder);
                     }
                     else{
-                        res.send("An explorer is trying to read the finder of another explorer")
+                        res.status(403).send("An explorer is trying to read the finder of another explorer")
                     }
                 }
                 else{
-                    res.send("An explorer is trying to read all finders")
+                    res.status(403).send("An explorer is trying to read all finders")
                 }
             }
         });
@@ -227,7 +227,7 @@ exports.read_a_finder  = function (req, res) {
                 // Get maxCacheTime
                 Config.findOne({}, function(err,config){
                     if (err){
-                        res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
+                        res.status(404).send(`Config does not exist in database`);
                     }
                     else{
                         var maxCacheTime = config.finderResultCacheTime;
@@ -268,21 +268,37 @@ exports.read_a_finder_v2  = async function (req, res) {
             res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
         }
         else if(finder.explorer!= authenticatedUserId){
-            res.status(404).send(`Explorer with id ${authenticatedUserId} is trying to read the finder of another explorer`);
+            res.status(403).send(`Explorer with id ${authenticatedUserId} is trying to read the finder of another explorer`);
         }
         else {
-            // Get results of a finder if empty
-            if(finder.results.length == 0){
-                get_results_finder(finder).then( trips => {
-                    finder.results = trips;
-                    finder.lastUpdate = Date.now();
-                    res.json(finder)
-                }).catch(e => res.status(500).send(err))
+              // Get results of a finder if empty and cacheTime has expired
+              if(finder.results.length == 0){
+
+                // Get maxCacheTime
+                Config.findOne({}, function(err,config){
+                    if (err){
+                        res.status(404).send(`Config does not exist in database`);
+                    }
+                    else{
+                        var maxCacheTime = config.finderResultCacheTime;
+                        var lastValidDate = new Date(Date.now() - maxCacheTime * 60000);
+                        if(finder.lastUpdate > lastValidDate){
+                            res.json(finder)
+                        }
+                        else{
+                            get_results_finder(finder).then( trips => {
+                                finder.results = trips;
+                                finder.lastUpdate = Date.now();
+                                res.json(finder)
+                            }).catch(e => res.status(500).send(err))
+                        }
+                    }
+                });
             }
+        
             else{
                 res.json(finder)
-            }
-            
+            }  
         }
     });
 };
@@ -311,7 +327,7 @@ exports.update_a_finder  = function (req, res) {
             }
         });
         
-    }).catch(e => res.status(500).send(err))
+    }).catch(err => res.status(500).send(err))
         
 
 
@@ -343,7 +359,7 @@ exports.update_a_finder_v2  = async function (req, res) {
                 res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
             }
             else if(finder.explorer!= authenticatedUserId){
-                res.status(404).send(`Explorer with id ${authenticatedUserId} is trying to read the finder of another explorer`);
+                res.status(403).send(`Explorer with id ${authenticatedUserId} is trying to read the finder of another explorer`);
             }
             else {
                 res.json(finder)
@@ -357,7 +373,21 @@ exports.update_a_finder_v2  = async function (req, res) {
    
 };
 
-exports.delete_a_finder  = async function (req, res) {
+
+
+exports.delete_a_finder  = function (req, res) {
+
+    Finder.deleteOne({ _id: req.params.finderId }, function (err, finder) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.json({ message: 'Finder successfully deleted' });
+        }
+    });
+};
+
+exports.delete_a_finder_v2  = async function (req, res) {
     // Get userId
     var idToken = req.headers['idtoken'];
     var authenticatedUserId = await authController.getUserId(idToken);
@@ -370,7 +400,7 @@ exports.delete_a_finder  = async function (req, res) {
             res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
         }
         else if(finder.explorer!= authenticatedUserId){
-            res.status(404).send(`Explorer with id ${authenticatedUserId} is trying to read the finder of another explorer`);
+            res.status(403).send(`Explorer with id ${authenticatedUserId} is trying to read the finder of another explorer`);
         }
         else{
             res.json({ message: 'Finder successfully deleted' });
@@ -378,18 +408,6 @@ exports.delete_a_finder  = async function (req, res) {
     });
 };
 
-
-exports.delete_a_finder_v2  = function (req, res) {
-
-    Finder.deleteOne({ _id: req.params.finderId }, function (err, finder) {
-        if (err) {
-            res.send(err);
-        }
-        else {
-            res.json({ message: 'Finder successfully deleted' });
-        }
-    });
-};
 
 exports.delete_all_finders  = function (req, res) {
     Finder.deleteMany({}, function (err, finder) {
