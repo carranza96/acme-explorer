@@ -355,7 +355,7 @@ exports.compute_cube = function (req, res) {
 
           // TODO: this could be put into a funtion to clean up code, it's used twice.
           // Find applications paid by this explorer in the period
-          Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).lean().exec(function (err, applications) {
+          Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).exec(function (err, applications) {
             if (err) {
               res.send(err);
             } else {
@@ -390,7 +390,7 @@ exports.compute_cube = function (req, res) {
           past_date = past_date - period_amount; // TODO: do this with months, rn is as if was days
 
           // Find applications paid by this explorer in the period
-          Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).lean().exec(function (err, applications) {
+          Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).exec(function (err, applications) {
             if (err) {
               res.send(err);
             } else {

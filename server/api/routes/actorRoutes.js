@@ -90,7 +90,22 @@ module.exports = function (app) {
   app.route('/v1/actors/:actorId/unban')
     .put(actors.unban_an_actor)
 
-
+  /**
+ *  Compute a cube M(e,p) for a
+ *  given explorerId e and a given period p concerning
+ *  the money spend by such actor in trips during such period.
+ *  RequiredRole: None
+ *
+ * @section actors
+ * @type get
+ * @url /v1/actors/computeCube
+ * @param {string} explorerId
+ * @param {string} period
+ * @param {string} money
+ * @param {string} operator
+*/
+  app.route('/v1/actors/computeCube')
+    .get(actors.compute_cube)
 
 
   /** V2: Authentication required */
@@ -149,10 +164,10 @@ module.exports = function (app) {
    *    RequiredRoles: to be the proper actor or an Administrator
    * Delete an actor
    *    RequiredRoles: Administrator
-	 *
-	 * @section actors
-	 * @type get put
-	 * @url /v2/actors/:actorId
+   *
+   * @section actors
+   * @type get put
+   * @url /v2/actors/:actorId
   */
   app.route('/v2/actors/:actorId')
     .get(authController.verifyUser(["ADMINISTRATOR", "EXPLORER", "MANAGER", "SPONSOR"]), actors.read_an_actor_v2)
