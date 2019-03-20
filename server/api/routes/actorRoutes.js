@@ -23,6 +23,25 @@ module.exports = function (app) {
     .post(actors.create_an_actor)
     .delete(actors.delete_all_actors);
 
+  /**
+  *  Compute a cube M(e,p) for a
+  *  given explorerId e and a given period p concerning
+  *  the money spend by such actor in trips during such period.
+  *  RequiredRole: None
+  *
+  * @section actors
+  * @type get
+  * @url /v1/actors/computeCube
+  * @param {string} explorerId
+  * @param {string} period
+  * @param {string} money
+  * @param {string} operator
+ */
+  app.route('/v1/actors/computeCube')
+    .get(actors.compute_cube);
+
+
+
 
   /**
    * Create a manager
@@ -89,24 +108,6 @@ module.exports = function (app) {
   */
   app.route('/v1/actors/:actorId/unban')
     .put(actors.unban_an_actor)
-
-  /**
- *  Compute a cube M(e,p) for a
- *  given explorerId e and a given period p concerning
- *  the money spend by such actor in trips during such period.
- *  RequiredRole: None
- *
- * @section actors
- * @type get
- * @url /v1/actors/computeCube
- * @param {string} explorerId
- * @param {string} period
- * @param {string} money
- * @param {string} operator
-*/
-  app.route('/v1/actors/computeCube')
-    .get(actors.compute_cube)
-
 
   /** V2: Authentication required */
 

@@ -322,15 +322,16 @@ exports.compute_cube = function (req, res) {
   var money = req.query.money;
   var operator = req.query.operator;
 
+  console.log(new Date(), "Computing cube for explorer:")
   console.log(new Date(), actor_id);
   console.log(new Date(), extracted_period);
   console.log(new Date(), money);
   console.log(new Date(), operator);
 
-  if (extracted_period.period === 'Not Allowed' || extracted_period.period === 'None') {
+  if (!extracted_period.period) {
     res.status(402);
     res.send("The period query param must be provided or is not in the correct format (ie. Y01-Y03 or M01-M36).")
-  } else if (actor_id !== '') {
+  } else if (actor_id !== undefined) {
 
     // both parameters are provided, check this actor is an explorer:
     Actor.findById(actor_id, function (err, actor) {
@@ -338,8 +339,9 @@ exports.compute_cube = function (req, res) {
         res.send(err);
       }
       else {
+
         // check
-        if (!actor.roles.includes("EXPLORER")) {
+        if (!actor.role.includes("EXPLORER")) {
           res.status(402);
           res.send("The actor provided is not an explorer");
         }
@@ -351,7 +353,7 @@ exports.compute_cube = function (req, res) {
         if (extracted_period.period === 'Y') {
           // We compute it yearly for the last X amount of years
           var past_date = new Date();
-          past_date = past_date.setFullYear(past_date.getFullYear() - period_amount);
+          past_date.setFullYear(past_date.getFullYear() - period_amount);
 
           // TODO: this could be put into a funtion to clean up code, it's used twice.
           // Find applications paid by this explorer in the period
@@ -359,26 +361,25 @@ exports.compute_cube = function (req, res) {
             if (err) {
               res.send(err);
             } else {
-              var trip_ids = applications.map(function (application) { return application._id; });
-              console.log(new Date(), trip_ids)
+              var trip_ids = applications.map(function (application) { return application.trip; });
 
               // Aggregate the sum of the price of the trips of those applications:
               Trip.aggregate([
                 { $match: { _id: { $in: trip_ids } } },
                 {
                   $group: {
-                    _id: "",
+                    _id: '',
                     total_price: { $sum: "$price" },
                   }
                 },
                 { $project: { _id: 0, total_price: "$total_price" } }
               ],
-                function (err, res) {
+                function (err, query_result) {
                   if (err) {
                     res.send(error);
                   } else {
                     res.status(200);
-                    res.json(res);
+                    res.json(query_result);
                   }
                 });
             }
@@ -387,14 +388,21 @@ exports.compute_cube = function (req, res) {
         } else {
           // We compute it monthly for the last X amount of months
           var past_date = new Date();
-          past_date = past_date - period_amount; // TODO: do this with months, rn is as if was days
+
+          let years = Math.floor(period_amount/12);
+          let months = period_amount - 12*years;
+
+          // Go back X years
+          past_date.setFullYear(past_date.getFullYear() - years);
+          // Go back X months
+          past_date.setMonth(past_date.getMonth()-months);
 
           // Find applications paid by this explorer in the period
           Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).exec(function (err, applications) {
             if (err) {
               res.send(err);
             } else {
-              var trip_ids = applications.map(function (application) { return application._id; });
+              var trip_ids = applications.map(function (application) { return application.trip; });
               console.log(new Date(), trip_ids)
 
               // Aggregate the sum of the price of the trips of those applications:
@@ -402,18 +410,18 @@ exports.compute_cube = function (req, res) {
                 { $match: { _id: { $in: trip_ids } } },
                 {
                   $group: {
-                    _id: "",
+                    _id: '',
                     total_price: { $sum: "$price" },
                   }
                 },
                 { $project: { _id: 0, total_price: "$total_price" } }
               ],
-                function (err, res) {
+                function (err, query_result) {
                   if (err) {
                     res.send(error);
                   } else {
                     res.status(200);
-                    res.json(res);
+                    res.json(query_result);
                   }
                 });
             }
@@ -439,16 +447,17 @@ exports.compute_cube = function (req, res) {
  */
 function extract_period(string_period) {
 
-  var res = { period: 'Not allowed', amount: 'None' };
-  var yearly = string_period.match(/^Y0[1-3]$/);
-  var monthly = string_period.match(/^M[0-3][1-6]$/);
+  var res = { period: false, amount: 'None' };
 
-  if (yearly.length > 0) {
+  if (string_period === undefined) { return res; }
+
+  var yearly = string_period.match(/^Y0[1-3]$/);
+  var monthly = string_period.match(/^(M0[0-9]|M[1-2][0-9]|M3[0-6])$/); 
+
+  if (yearly !== null && yearly.length > 0) {
     res.period = "Y";
     res.amount = yearly[0].substring(1);
-  }
-
-  if (monthly.length > 0) {
+  } else if (monthly !== null && monthly.length > 0) {
     res.period = "M";
     res.amount = monthly[0].substring(1);
   }
