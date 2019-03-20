@@ -47,66 +47,73 @@ exports.list_all_applications = function (req, res) {
 exports.list_all_applications_v2 = async function (req, res) {
     
 
-    if (req.query.explorer || req.query.manager){
-        var idToken = req.headers['idtoken'];
-        var authenticatedUserId = await authController.getUserId(idToken);
-        var role;
-        Actor.findById(authenticatedUserId, function(err, actor) {
-            if (err){
-                res.status(500).send(err);
-            }
-            else{
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+    var role;
+    Actor.findById(authenticatedUserId, function(err, actor) {
+        if (err){
+            res.status(500).send(err);
+        }
+        else{
             role = actor.role
-            }
-        });
-    }
 
-    var match = {};
+            var match = {};
+
+            if(!req.query.manager && !req.query.explorer && !role.includes("ADMINISTRATOR") ){
+                    res.status(403).send('The authenticated Actor is trying to read the applications all the applications and is not an ADMINISTRATOR');
+            }
     
-    if(req.query.explorer){
-        if (!role.includes("EXPLORER")){
-            res.status(403).send('The authenticated Actor is not an explorer');
-        }
-        else if (authenticatedUserId != req.query.explorer){
-            res.status(403).send('The authenticated Actor is trying to read the applications of another explorer');
-        }
-        else{
-            match.explorer = req.query.explorer;
-        }
-    }
-  
-    if(req.query.manager){
-        if (!role.includes("MANAGER")){
-            res.status(403).send('The authenticated Actor is not a manager');
-        }
-        else if (authenticatedUserId != req.query.explorer){
-            res.status(403).send('The authenticated Actor is trying to read the applications managed by another manager');
-        }
-        else{
-            var manager_id = req.query.manager;
-            Trip.find( {manager:manager_id}, '_id' , function (err, trips) {
-                if(err){
-                    res.status(500).send(err);
+            if(req.query.explorer){
+                if (!role.includes("EXPLORER")){
+                    res.status(403).send('The authenticated Actor is not an explorer');
+                }
+                else if (authenticatedUserId != req.query.explorer){
+                    res.status(403).send('The authenticated Actor is trying to read the applications of another explorer');
                 }
                 else{
-                    match.trip = trips
+                    match.explorer = req.query.explorer;
                 }
-            })
+            }
+          
+            if(req.query.manager){
+                if (!role.includes("MANAGER")){
+                    res.status(403).send('The authenticated Actor is not a manager');
+                }
+                else if (authenticatedUserId != req.query.explorer){
+                    res.status(403).send('The authenticated Actor is trying to read the applications managed by another manager');
+                }
+                else{
+                    var manager_id = req.query.manager;
+                    Trip.find( {manager:manager_id}, '_id' , function (err, trips) {
+                        if(err){
+                            res.status(500).send(err);
+                        }
+                        else{
+                            match.trip = trips
+                        }
+                    })
+                }
+            }
+          
+            if(req.query.status){
+                match.status = req.query.status;
+            }
+            
+            Application.find(match, function (err, applications) {
+                if (err) {
+                    res.send(err);
+                }
+                else {
+                    res.json(applications);
+                }
+            });
+
+
         }
-    }
-  
-    if(req.query.status){
-        match.status = req.query.status;
-    }
-  
-    Application.find(match, function (err, applications) {
-          if (err) {
-              res.send(err);
-          }
-          else {
-              res.json(applications);
-          }
-      });
+    });
+    
+
+   
 };
   
 
@@ -182,50 +189,49 @@ exports.read_an_application_v2 = async function (req, res) {
             res.status(500).send(err);
         }
         else{
-        role = actor.role
-        }
-    });
-
-    Application.findById(req.params.applicationId, function (err, application) {
-        if (err) {
-            res.status(500).send(err);
-        }
-        else {
-            if(role.includes("ADMINISTRATOR")){
-                res.json(application);
-            }
-            // Explorer can only read their applications
-            else if(role.includes("EXPLORER")){
-                if(authenticatedUserId != application.explorer ){
-                    res.status(403).send('The authenticated Explorer is trying to read an application of another explorer');
+            role = actor.role
+            Application.findById(req.params.applicationId, function (err, application) {
+                if (err) {
+                    res.status(500).send(err);
                 }
-                else{
-                    res.json(application);
-                }
-            }
-            // Manager can only read an application if it is for a trip that they manage
-            else if(role.includes("MANAGER")){
-                var trip_id = application.trip;
-                Trip.findById(trip_id, function(err,trip){
-                    if (err){
-                        res.status(500).send(err);
+                else {
+                    if(role.includes("ADMINISTRATOR")){
+                        res.json(application);
                     }
-                    else{
-                        if(authenticatedUserId != trip.manager){
-                            res.status(403).send('The authenticated Manager is trying to read an application of a trip that is managed by another manager');
+                    // Explorer can only read their applications
+                    else if(role.includes("EXPLORER")){
+                        if(authenticatedUserId != application.explorer ){
+                            res.status(403).send('The authenticated Explorer is trying to read an application of another explorer');
                         }
                         else{
                             res.json(application);
                         }
                     }
-
-                })
-
-            }
-            else{
-                res.status(405).send('The Actor does not have proper roles');
-            }
-
+                    // Manager can only read an application if it is for a trip that they manage
+                    else if(role.includes("MANAGER")){
+                        var trip_id = application.trip;
+                        Trip.findById(trip_id, function(err,trip){
+                            if (err){
+                                res.status(500).send(err);
+                            }
+                            else{
+                                if(authenticatedUserId != trip.manager){
+                                    res.status(403).send('The authenticated Manager is trying to read an application of a trip that is managed by another manager');
+                                }
+                                else{
+                                    res.json(application);
+                                }
+                            }
+        
+                        })
+        
+                    }
+                    else{
+                        res.status(405).send('The Actor does not have proper roles');
+                    }
+        
+                }
+            })
         }
     });
 };
@@ -274,44 +280,46 @@ exports.update_an_application_v2 = function (req, res) {
                     res.status(500).send(err);
                 }
                 else{
-                role = actor.role
+                    role = actor.role
+                }
+
+                if(role.includes("ADMINISTRATOR")){
+                    res.json(application);
+                }
+                // Explorer can only read their applications
+                else if(role.includes("EXPLORER")){
+                    if(authenticatedUserId != application.explorer ){
+                        res.status(403).send('The authenticated Explorer is trying to read an application of another explorer');
+                    }
+                    else{
+                        res.json(application);
+                    }
+                }
+                // Manager can only read an application if it is for a trip that they manage
+                else if(role.includes("MANAGER")){
+                    var trip_id = application.trip;
+                    Trip.findById(trip_id, function(err,trip){
+                        if (err){
+                            res.status(500).send(err);
+                        }
+                        else{
+                            if(authenticatedUserId != trip.manager){
+                                res.status(403).send('The authenticated Manager is trying to read an application of a trip that is managed by another manager');
+                            }
+                            else{
+                                res.json(application);
+                            }
+                        }
+    
+                    })
+    
+                }
+                else{
+                    res.status(405).send('The Actor does not have proper roles');
                 }
             });
 
-            if(role.includes("ADMINISTRATOR")){
-                res.json(application);
-            }
-            // Explorer can only read their applications
-            else if(role.includes("EXPLORER")){
-                if(authenticatedUserId != application.explorer ){
-                    res.status(403).send('The authenticated Explorer is trying to read an application of another explorer');
-                }
-                else{
-                    res.json(application);
-                }
-            }
-            // Manager can only read an application if it is for a trip that they manage
-            else if(role.includes("MANAGER")){
-                var trip_id = application.trip;
-                Trip.findById(trip_id, function(err,trip){
-                    if (err){
-                        res.status(500).send(err);
-                    }
-                    else{
-                        if(authenticatedUserId != trip.manager){
-                            res.status(403).send('The authenticated Manager is trying to read an application of a trip that is managed by another manager');
-                        }
-                        else{
-                            res.json(application);
-                        }
-                    }
-
-                })
-
-            }
-            else{
-                res.status(405).send('The Actor does not have proper roles');
-            }
+           
         }
     });
 };

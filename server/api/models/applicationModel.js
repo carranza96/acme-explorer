@@ -38,9 +38,8 @@ var applicationSchema = new Schema({
 },  { strict: false })
 
 
-applicationSchema.index({ status:'text'})
-applicationSchema.index({ trip:1, status:'text'})
 applicationSchema.index({ explorer:1, status:'text'})
+applicationSchema.index({ trip:1 })
 applicationSchema.index({ moment: -1})
 
 

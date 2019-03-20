@@ -115,6 +115,9 @@ exports.read_a_trip = function (req, res) {
     if (err) {
       res.send(err);
     }
+    else if(!trip){
+      return res.status(404).send(`Trip with id ${trip_id} does not exist in database`);
+    }
     else {
       res.json(trip);
     }

@@ -10,6 +10,7 @@ var express = require('express'),
   Stage = require('./api/models/tripModel').Stage,
   Application = require('./api/models/applicationModel'),
   Finder = require('./api/models/finderModel'),
+  FinderController = require('./api/controllers/finderController'),
   ConfigController = require('./api/controllers/configController'),
   DataWareHouse = require('./api/models/dataWareHouseModel'), 
   DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
@@ -97,7 +98,8 @@ mongoose.connection.on("open", function (err, conn) {
     });
     https.createServer(options, app).listen(port);
 });
-mongoose.connection.dropDatabase()
+
+// mongoose.connection.dropDatabase()
 
 mongoose.connection.on("error", function (err, conn) {
     console.error("DB init error " + err);
@@ -106,6 +108,6 @@ mongoose.connection.on("error", function (err, conn) {
 
 DataWareHouseTools.createDataWareHouseJob();
 
-// Initialize config
+// Initialize config and cache cleaner Job
 ConfigController.createInitialConfig();
-ConfigController.createIndexFinderCache();
+FinderController.createCacheCleanerJob();

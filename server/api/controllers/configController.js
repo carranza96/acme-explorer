@@ -28,31 +28,29 @@ function createInitialConfig(){
   });
 }
 
-function createIndexFinderCache(){
-  // var promise = new Promise(function(resolve,reject){
-  //   Config.findOne(function (err,config){
-  //     if(err){
-  //       resolve(60*60)
-  //     }
-  //     else{
-  //       if(!config){
-  //         resolve(40)
-  //       }
-  //       else{
-  //         resolve(config.finderResultCacheTime)
-  //       }
-  //     }
-  //   })
-  // })
+// function createIndexFinderCache(){
+//   var promise = new Promise(function(resolve,reject){
+//     Config.findOne(function (err,config){
+//       if(err){
+//         resolve(60*60)
+//       }
+//       else{
+//         if(!config){
+//           resolve(80)
+//         }
+//         else{
+//           resolve(config.finderResultCacheTime)
+//         }
+//       }
+//     })
+//   })
 
-  // promise.then(maxTime=> {
-  //   console.log(maxTime);
-  //   Finder.schema.index({ lastUpdate: 1 }, { expireAfterSeconds:maxTime})
-  // });
+//   promise.then(maxTime=> {
+//     console.log(maxTime);
+//     Finder.schema.index({ lastUpdate: 1 }, { expireAfterSeconds:maxTime})
+//   });
 
-  Finder.schema.index({ lastUpdate: 1 }, { expireAfterSeconds:40})
-
-}
+// }
 
 
 exports.init_config = function(req, res) {
@@ -110,13 +108,13 @@ exports.init_config = function(req, res) {
               var v = config_ls[0].__v;
               req.body._id = id;
               req.body.__v = v;
-              Config.findOneAndUpdate({_id: id}, req.body, {new: true}, function(err1, config) {
+              Config.findOneAndUpdate({_id: id}, req.body, {new: true, runValidators:true}, function(err1, config) {
                 if (err1){
                   if(err1.name=='ValidationError') {
-                      res.status(422).send(err);
+                      res.status(422).send(err1);
                   }
                   else{
-                    res.status(500).send(err);
+                    res.status(500).send(err1);
                   }
                 }
                 else{
@@ -141,4 +139,3 @@ exports.init_config = function(req, res) {
 
 
 module.exports.createInitialConfig = createInitialConfig;
-module.exports.createIndexFinderCache = createIndexFinderCache;

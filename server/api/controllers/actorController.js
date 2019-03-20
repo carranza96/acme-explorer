@@ -45,6 +45,7 @@ exports.create_an_actor = function (req, res) {
     });
   }
 };
+
 exports.create_a_manager = function (req, res) {
   var new_actor = new Actor(req.body);
   if (new_actor.role.includes('ADMINISTRATOR')) {
@@ -255,6 +256,9 @@ exports.ban_an_actor = function (req, res) {
     if (err) {
       res.send(err);
     }
+    else if(!actor){
+      res.status(404).send(`Actor with id ${req.params.actorId} does not exist in database`);
+    }
     else {
       res.json(actor);
     }
@@ -269,6 +273,9 @@ exports.unban_an_actor = function (req, res) {
     if (err) {
       res.send(err);
     }
+    else if(!actor){
+      res.status(404).send(`Actor with id ${req.params.actorId} does not exist in database`);
+    }
     else {
       res.json(actor);
     }
@@ -279,6 +286,9 @@ exports.delete_an_actor = function (req, res) {
   Actor.deleteOne({ _id: req.params.actorId }, function (err, actor) {
     if (err) {
       res.send(err);
+    }
+    else if(!actor){
+      res.status(404).send(`Actor with id ${req.params.actorId} does not exist in database`);
     }
     else {
       res.json({ message: 'Actor successfully deleted' });

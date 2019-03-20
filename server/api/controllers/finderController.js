@@ -5,6 +5,66 @@ var mongoose = require('mongoose'),
     Trip = mongoose.model('Trip'),
     Config = mongoose.model('Config');
 
+
+/** ---------------- */
+/** Cache cleaner */
+
+
+var CronJob = require('cron').CronJob;
+var CronTime = require('cron').CronTime;
+
+var rebuildPeriod = '*/5 * * * *';  //El que se usará por defecto 5 minutos
+var computeCacheCleanerJob;
+
+exports.rebuildPeriod = function(req, res) {
+    console.log('Updating rebuild period. Request: period:'+req.query.rebuildPeriod);
+    rebuildPeriod = req.query.rebuildPeriod;
+    computeCacheCleanerJob.setTime(new CronTime(rebuildPeriod));
+    computeCacheCleanerJob.start();
+
+    res.json(req.query.rebuildPeriod);
+};
+
+function createCacheCleanerJob(){
+    computeCacheCleanerJob = new CronJob(rebuildPeriod,  function() {
+    Config.findOne({}, function(err,config){
+        if (err){
+            console.log("Error cleaning cache: "+err);
+        }
+        else{
+            
+            
+            var maxCacheTime = config.finderResultCacheTime;
+            var MS_PER_MINUTE = 60000;
+            var lastValidDate = new Date(Date.now() - maxCacheTime * MS_PER_MINUTE);
+
+            var query = {lastUpdate: {$lte: lastValidDate}}
+            Finder.findOneAndUpdate(query, {$set: {"results":[]}}, {new:true, runValidators:true}, function (err, finder) {
+                if (err) {
+                    if (err.name == 'ValidationError') {
+                        console.log("Error cleaning cache: "+err);
+                    }
+                    else {
+                        console.log("Error cleaning cache: "+err);
+                    }
+                    }
+                else{
+                    console.log("Finder Cache succesfully cleaned Date: "+new Date());
+                }
+            })
+
+        }
+    })
+    }, null, true, 'Europe/Madrid');
+}
+
+
+module.exports.createCacheCleanerJob = createCacheCleanerJob;
+
+
+
+/** ---------------- */
+
 function get_results_finder(finder){
     // Build query filters
     var query = {}
@@ -62,8 +122,15 @@ function get_results_finder(finder){
   });
 }
 
+
+
 exports.list_all_finders  = function (req, res) {
-    Finder.find({}, function (err, finder ) {
+    var match = {};
+    if (req.query.explorer) {
+        match = { explorer: req.query.explorer };
+    }
+
+    Finder.find(match, function (err, finder ) {
         if (err) {
             res.send(err);
         }
@@ -73,6 +140,53 @@ exports.list_all_finders  = function (req, res) {
     });
 };
 
+
+exports.list_all_finders_v2  = async function (req, res) {
+    var match = {};
+    if (req.query.explorer) {
+        match = { explorer: req.query.explorer };
+    }
+
+    // Get role of user
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+    var role;
+    Actor.findById(authenticatedUserId, function(err, actor) {
+        if (err){
+            res.status(500).send(err);
+        }
+        else{
+            role = actor.role
+        }
+
+        Finder.find(match, function (err, finder ) {
+            if (err) {
+                res.send(err);
+            }
+            
+            if(role.includes("ADMINISTRATOR")){
+                res.json(finder);
+
+            }
+            else {
+                if(req.query.explorer){
+                    if(authenticatedUserId==req.query.explorer){
+                        res.json(finder);
+                    }
+                    else{
+                        res.status(403).send("An explorer is trying to read the finder of another explorer")
+                    }
+                }
+                else{
+                    res.status(403).send("An explorer is trying to read all finders")
+                }
+            }
+        });
+
+    });
+
+   
+};
 
 exports.create_a_finder =  function (req, res) {
     var new_finder = new Finder(req.body);
@@ -107,14 +221,31 @@ exports.read_a_finder  = function (req, res) {
             res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
         }
         else {
-            // Get results of a finder if empty
+            // Get results of a finder if empty and cacheTime has expired
             if(finder.results.length == 0){
-                get_results_finder(finder).then( trips => {
-                    finder.results = trips;
-                    finder.lastUpdate = Date.now();
-                    res.json(finder)
-                }).catch(e => res.status(500).send(err))
+
+                // Get maxCacheTime
+                Config.findOne({}, function(err,config){
+                    if (err){
+                        res.status(404).send(`Config does not exist in database`);
+                    }
+                    else{
+                        var maxCacheTime = config.finderResultCacheTime;
+                        var lastValidDate = new Date(Date.now() - maxCacheTime * 60000);
+                        if(finder.lastUpdate > lastValidDate){
+                            res.json(finder)
+                        }
+                        else{
+                            get_results_finder(finder).then( trips => {
+                                finder.results = trips;
+                                finder.lastUpdate = Date.now();
+                                res.json(finder)
+                            }).catch(e => res.status(500).send(err))
+                        }
+                    }
+                });
             }
+        
             else{
                 res.json(finder)
             }
@@ -123,6 +254,54 @@ exports.read_a_finder  = function (req, res) {
     });
 };
 
+exports.read_a_finder_v2  = async function (req, res) {
+    
+    // Get userId
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+
+    Finder.findById(req.params.finderId, function (err, finder ) {
+        if (err) {
+            res.status(500).send(err);
+        }
+        else if(!finder){
+            res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
+        }
+        else if(finder.explorer!= authenticatedUserId){
+            res.status(403).send(`Explorer with id ${authenticatedUserId} is trying to read the finder of another explorer`);
+        }
+        else {
+              // Get results of a finder if empty and cacheTime has expired
+              if(finder.results.length == 0){
+
+                // Get maxCacheTime
+                Config.findOne({}, function(err,config){
+                    if (err){
+                        res.status(404).send(`Config does not exist in database`);
+                    }
+                    else{
+                        var maxCacheTime = config.finderResultCacheTime;
+                        var lastValidDate = new Date(Date.now() - maxCacheTime * 60000);
+                        if(finder.lastUpdate > lastValidDate){
+                            res.json(finder)
+                        }
+                        else{
+                            get_results_finder(finder).then( trips => {
+                                finder.results = trips;
+                                finder.lastUpdate = Date.now();
+                                res.json(finder)
+                            }).catch(e => res.status(500).send(err))
+                        }
+                    }
+                });
+            }
+        
+            else{
+                res.json(finder)
+            }  
+        }
+    });
+};
 
 exports.update_a_finder  = function (req, res) {
     var new_finder = req.body;
@@ -148,6 +327,45 @@ exports.update_a_finder  = function (req, res) {
             }
         });
         
+    }).catch(err => res.status(500).send(err))
+        
+
+
+   
+};
+
+
+exports.update_a_finder_v2  = async function (req, res) {
+    var new_finder = req.body;
+
+     // Get userId
+     var idToken = req.headers['idtoken'];
+     var authenticatedUserId = await authController.getUserId(idToken);
+
+    get_results_finder(new_finder).then(trips => {
+        new_finder.lastUpdate = Date.now();
+        new_finder.results = trips;
+
+        Finder.findOneAndUpdate({ _id: req.params.finderId }, new_finder, { new: true, runValidators:true, context:'query' }, function (err, finder ) {
+            if (err) {
+                if (err.name == 'ValidationError') {
+                    res.status(422).send(err);
+                }
+                else {
+                    res.status(500).send(err);
+                }
+            }
+            else if(!finder){
+                res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
+            }
+            else if(finder.explorer!= authenticatedUserId){
+                res.status(403).send(`Explorer with id ${authenticatedUserId} is trying to read the finder of another explorer`);
+            }
+            else {
+                res.json(finder)
+            }
+        });
+        
     }).catch(e => res.status(500).send(err))
         
 
@@ -156,7 +374,9 @@ exports.update_a_finder  = function (req, res) {
 };
 
 
+
 exports.delete_a_finder  = function (req, res) {
+
     Finder.deleteOne({ _id: req.params.finderId }, function (err, finder) {
         if (err) {
             res.send(err);
@@ -166,6 +386,28 @@ exports.delete_a_finder  = function (req, res) {
         }
     });
 };
+
+exports.delete_a_finder_v2  = async function (req, res) {
+    // Get userId
+    var idToken = req.headers['idtoken'];
+    var authenticatedUserId = await authController.getUserId(idToken);
+
+    Finder.deleteOne({ _id: req.params.finderId }, function (err, finder) {
+        if (err) {
+            res.send(err);
+        }
+        else if(!finder){
+            res.status(404).send(`Finder with id ${req.params.finderId} does not exist in database`);
+        }
+        else if(finder.explorer!= authenticatedUserId){
+            res.status(403).send(`Explorer with id ${authenticatedUserId} is trying to read the finder of another explorer`);
+        }
+        else{
+            res.json({ message: 'Finder successfully deleted' });
+        }
+    });
+};
+
 
 exports.delete_all_finders  = function (req, res) {
     Finder.deleteMany({}, function (err, finder) {
@@ -177,3 +419,7 @@ exports.delete_all_finders  = function (req, res) {
         }
     });
 };
+
+
+
+
