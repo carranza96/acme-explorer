@@ -256,7 +256,7 @@ exports.ban_an_actor = function (req, res) {
     if (err) {
       res.send(err);
     }
-    else if(!actor){
+    else if (!actor) {
       res.status(404).send(`Actor with id ${req.params.actorId} does not exist in database`);
     }
     else {
@@ -273,7 +273,7 @@ exports.unban_an_actor = function (req, res) {
     if (err) {
       res.send(err);
     }
-    else if(!actor){
+    else if (!actor) {
       res.status(404).send(`Actor with id ${req.params.actorId} does not exist in database`);
     }
     else {
@@ -287,7 +287,7 @@ exports.delete_an_actor = function (req, res) {
     if (err) {
       res.send(err);
     }
-    else if(!actor){
+    else if (!actor) {
       res.status(404).send(`Actor with id ${req.params.actorId} does not exist in database`);
     }
     else {
@@ -319,12 +319,14 @@ exports.compute_cube = function (req, res) {
 
   var actor_id = req.query.explorerId;
   var extracted_period = extract_period(req.query.period);
+  var money = req.query.money;
+  var operator = req.query.operator;
 
   console.log(new Date(), actor_id);
   console.log(new Date(), extracted_period);
   console.log(new Date(), money);
   console.log(new Date(), operator);
-  
+
   if (extracted_period.period === 'Not Allowed' || extracted_period.period === 'None') {
     res.status(402);
     res.send("The period query param must be provided or is not in the correct format (ie. Y01-Y03 or M01-M36).")
@@ -365,10 +367,11 @@ exports.compute_cube = function (req, res) {
                 { $match: { _id: { $in: trip_ids } } },
                 {
                   $group: {
+                    _id: "",
                     total_price: { $sum: "$price" },
                   }
                 },
-                { $project: { _id: 0 } }
+                { $project: { _id: 0, total_price: "$total_price" } }
               ],
                 function (err, res) {
                   if (err) {
@@ -399,10 +402,11 @@ exports.compute_cube = function (req, res) {
                 { $match: { _id: { $in: trip_ids } } },
                 {
                   $group: {
+                    _id: "",
                     total_price: { $sum: "$price" },
                   }
                 },
-                { $project: { _id: 0 } }
+                { $project: { _id: 0, total_price: "$total_price" } }
               ],
                 function (err, res) {
                   if (err) {
@@ -420,7 +424,7 @@ exports.compute_cube = function (req, res) {
 
   } else {
     // only period is provided, we return explorers that satisfy a condition over cube:
-    if(money==='' || operator===''){
+    if (money === '' || operator === '') {
       res.status(402);
       res.send("Money or query operators must be provided if no explorer is given for a query of type B.");
     }

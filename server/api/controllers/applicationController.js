@@ -138,7 +138,7 @@ exports.create_an_application = function (req, res) {
           if(!trip.published){
             res.status(422).send("Cannot create application because trip is not published yet");
           }
-          else if ((trip.startDate > new Date())){
+          else if ((trip.startDate < new Date())){
             res.status(422).send("Cannot create application because trip has already started");
           }
           else if (trip.cancelled){
