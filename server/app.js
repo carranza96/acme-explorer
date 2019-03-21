@@ -12,7 +12,7 @@ var express = require('express'),
   Finder = require('./api/models/finderModel'),
   FinderController = require('./api/controllers/finderController'),
   ConfigController = require('./api/controllers/configController'),
-  DataWareHouse = require('./api/models/dataWareHouseModel'), 
+  DataWareHouse = require('./api/models/dataWareHouseModel'),
   DataWareHouseTools = require('./api/controllers/dataWareHouseController'),
   bodyParser = require('body-parser');
   admin = require('firebase-admin'),
@@ -70,12 +70,13 @@ admin.initializeApp(adminConfig);
 
 var routesActors = require('./api/routes/actorRoutes');
 var routesTrip = require('./api/routes/tripRoutes');
-var routesApplication = require('./api/routes/applicationRoutes'); 
-var routesSponsorship = require('./api/routes/sponsorshipRoutes'); 
-var routesFinder = require('./api/routes/finderRoutes'); 
+var routesApplication = require('./api/routes/applicationRoutes');
+var routesSponsorship = require('./api/routes/sponsorshipRoutes');
+var routesFinder = require('./api/routes/finderRoutes');
 var routesConfig = require('./api/routes/configRoutes');
 var routesDataWareHouse = require('./api/routes/dataWareHouseRoutes');
 var routesLogin = require('./api/routes/loginRoutes');
+var routesStore = require('./api/routes/storeRoutes');
 
 
 
@@ -87,13 +88,14 @@ routesFinder(app)
 routesConfig(app);
 routesDataWareHouse(app);
 routesLogin(app);
+routesStore(app);
 
 
 
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
-    app.listen(8000, function () { 
+    app.listen(8000, function () {
         console.log('ACME-Market RESTful API server started with https on: ' + port);
     });
     https.createServer(options, app).listen(port);
