@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a2be6403-a4ab-431f-b81d-f4744ab68818",
+		"_postman_id": "b5e08086-614f-4f0e-8a72-a1d127f87d2b",
 		"name": "Acme-explorer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -134,7 +134,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"name\":\"Pedro\",\n\"surname\":\"Benitez\",\n\"email\":\"plb@us.es\",\n\"password\":\"betis\",\n\"phone\":\"608840010\",\n\"address\":\"Calle Betis\",\n\"role\":\"MANAGER\"\t\n}"
+							"raw": "{\n\"_id\": \"aaaaaaaaaaaaaaaaaaaaaaaa\",\n\"name\":\"Pedro\",\n\"surname\":\"Benitez\",\n\"email\":\"plb@us.es\",\n\"password\":\"betis\",\n\"phone\":\"608840010\",\n\"address\":\"Calle Betis\",\n\"role\":\"MANAGER\"\t\n}"
 						},
 						"url": {
 							"raw": "https://localhost:8080/v1/actors/manager",
@@ -1672,6 +1672,146 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "store",
+			"item": [
+				{
+					"name": "POST insertMany TRIPS ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/store/insertMany?dbURL=mongodb://myUser:myUserPassword@localhost:27017/ACME-Explorer&mongooseModel=Trip&sourceFile=/tmp/ACME-Explorer.trips.fs.json\n",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"store",
+								"insertMany"
+							],
+							"query": [
+								{
+									"key": "dbURL",
+									"value": "mongodb://myUser:myUserPassword@localhost:27017/ACME-Explorer"
+								},
+								{
+									"key": "mongooseModel",
+									"value": "Trip"
+								},
+								{
+									"key": "sourceFile",
+									"value": "/tmp/ACME-Explorer.trips.fs.json\n"
+								}
+							]
+						},
+						"description": "Load trips"
+					},
+					"response": []
+				},
+				{
+					"name": "POST fs TRIPS",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/store/fs?dbURL=mongodb://myUser:myUserPassword@localhost:27017/Acme-Explorer&collection=trips&batchSize=20&parseString=*&sourceFile=/tmp/ACME-Explorer.trips.fs.json",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"store",
+								"fs"
+							],
+							"query": [
+								{
+									"key": "dbURL",
+									"value": "mongodb://myUser:myUserPassword@localhost:27017/Acme-Explorer"
+								},
+								{
+									"key": "collection",
+									"value": "trips"
+								},
+								{
+									"key": "batchSize",
+									"value": "20"
+								},
+								{
+									"key": "parseString",
+									"value": "*"
+								},
+								{
+									"key": "sourceFile",
+									"value": "/tmp/ACME-Explorer.trips.fs.json"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST url TRIPS",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:8080/v1/store/url?dbURL=mongodb://myUser:myUserPassword@localhost:27017/Acme-Explorer&collection=trips&batchSize=50&parseString=*&sourceURL=https://next.json-generator.com/api/json/get/E1x1dhEcvI",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"store",
+								"url"
+							],
+							"query": [
+								{
+									"key": "dbURL",
+									"value": "mongodb://myUser:myUserPassword@localhost:27017/Acme-Explorer"
+								},
+								{
+									"key": "collection",
+									"value": "trips"
+								},
+								{
+									"key": "batchSize",
+									"value": "50"
+								},
+								{
+									"key": "parseString",
+									"value": "*"
+								},
+								{
+									"key": "sourceURL",
+									"value": "https://next.json-generator.com/api/json/get/E1x1dhEcvI"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Load massive data"
 		}
 	]
 }
