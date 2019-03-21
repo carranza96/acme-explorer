@@ -330,7 +330,7 @@ exports.compute_cube = function (req, res) {
 
   if (!extracted_period.period) {
     res.status(402);
-    res.send("The period query param must be provided or is not in the correct format (ie. Y01-Y03 or M01-M36).")
+    res.send("The period query param must be provided or is not in the correct format (i.e. Y01-Y03 or M01-M36).")
   } else if (actor_id !== undefined) {
 
     // both parameters are provided, check this actor is an explorer:
@@ -355,86 +355,58 @@ exports.compute_cube = function (req, res) {
           var past_date = new Date();
           past_date.setFullYear(past_date.getFullYear() - period_amount);
 
-          // TODO: this could be put into a funtion to clean up code, it's used twice.
           // Find applications paid by this explorer in the period
-          Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).exec(function (err, applications) {
-            if (err) {
-              res.send(err);
-            } else {
-              var trip_ids = applications.map(function (application) { return application.trip; });
-
-              // Aggregate the sum of the price of the trips of those applications:
-              Trip.aggregate([
-                { $match: { _id: { $in: trip_ids } } },
-                {
-                  $group: {
-                    _id: '',
-                    total_price: { $sum: "$price" },
-                  }
-                },
-                { $project: { _id: 0, total_price: "$total_price" } }
-              ],
-                function (err, query_result) {
-                  if (err) {
-                    res.send(error);
-                  } else {
-                    res.status(200);
-                    res.json(query_result);
-                  }
-                });
-            }
-          });
+          calculate_money_spent(res, explorer_id, past_date);
 
         } else {
           // We compute it monthly for the last X amount of months
           var past_date = new Date();
 
-          let years = Math.floor(period_amount/12);
-          let months = period_amount - 12*years;
+          let years = Math.floor(period_amount / 12);
+          let months = period_amount - 12 * years;
 
           // Go back X years
           past_date.setFullYear(past_date.getFullYear() - years);
           // Go back X months
-          past_date.setMonth(past_date.getMonth()-months);
+          past_date.setMonth(past_date.getMonth() - months);
 
           // Find applications paid by this explorer in the period
-          Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).exec(function (err, applications) {
-            if (err) {
-              res.send(err);
-            } else {
-              var trip_ids = applications.map(function (application) { return application.trip; });
-              console.log(new Date(), trip_ids)
-
-              // Aggregate the sum of the price of the trips of those applications:
-              Trip.aggregate([
-                { $match: { _id: { $in: trip_ids } } },
-                {
-                  $group: {
-                    _id: '',
-                    total_price: { $sum: "$price" },
-                  }
-                },
-                { $project: { _id: 0, total_price: "$total_price" } }
-              ],
-                function (err, query_result) {
-                  if (err) {
-                    res.send(error);
-                  } else {
-                    res.status(200);
-                    res.json(query_result);
-                  }
-                });
-            }
-          });
+          calculate_money_spent(res, explorer_id, past_date);
         }
       }
     });
 
   } else {
     // only period is provided, we return explorers that satisfy a condition over cube:
-    if (money === '' || operator === '') {
+    if (money === undefined || operator === undefined) {
       res.status(402);
       res.send("Money or query operators must be provided if no explorer is given for a query of type B.");
+    } else {
+
+      var period_amount = parseInt(extracted_period.amount);
+
+      if (extracted_period.period === 'Y') {
+        // We compute it yearly for the last X amount of years
+        var past_date = new Date();
+        past_date.setFullYear(past_date.getFullYear() - period_amount);
+
+        explorer_satisfying_cond(res, past_date, operator, money);
+
+      } else {
+
+        // We compute it monthly for the last X amount of months
+        var past_date = new Date();
+
+        let years = Math.floor(period_amount / 12);
+        let months = period_amount - 12 * years;
+
+        // Go back X years
+        past_date.setFullYear(past_date.getFullYear() - years);
+        // Go back X months
+        past_date.setMonth(past_date.getMonth() - months);
+
+        explorer_satisfying_cond(res, past_date, operator, money);
+      }
     }
   }
 
@@ -452,7 +424,7 @@ function extract_period(string_period) {
   if (string_period === undefined) { return res; }
 
   var yearly = string_period.match(/^Y0[1-3]$/);
-  var monthly = string_period.match(/^(M0[0-9]|M[1-2][0-9]|M3[0-6])$/); 
+  var monthly = string_period.match(/^(M0[0-9]|M[1-2][0-9]|M3[0-6])$/);
 
   if (yearly !== null && yearly.length > 0) {
     res.period = "Y";
@@ -463,4 +435,67 @@ function extract_period(string_period) {
   }
 
   return res;
+}
+
+function calculate_money_spent(res, explorer_id, past_date) {
+  Application.find({ explorer: explorer_id, paid: true, moment: { $gte: past_date } }).exec(function (err, applications) {
+    if (err) {
+      res.send(err);
+    } else {
+      var trip_ids = applications.map(function (application) { return application.trip; });
+
+      // Aggregate the sum of the price of the trips of those applications:
+      Trip.aggregate([
+        { $match: { _id: { $in: trip_ids } } },
+        {
+          $group: {
+            _id: '',
+            total_price: { $sum: "$price" },
+          }
+        },
+        { $project: { _id: 0, total_price: "$total_price" } }
+      ],
+        function (err, query_result) {
+          if (err) {
+            res.send(error);
+          } else {
+            res.status(200);
+            res.json(query_result);
+          }
+        });
+    }
+  });
+}
+
+function explorer_satisfying_cond(res, past_date, operator, money) {
+  Application.aggregate([
+    { $match: { paid: true, moment: { $gte: past_date } } },
+    { $group: { _id: "$explorer", trips: { $push: "$trip" } } },
+    {
+      $lookup: {
+        from: "trips",
+        localField: "trips",
+        foreignField: "_id",
+        as: "trips"
+      }
+    },
+    {
+      $project: {
+        "money": {
+          $reduce: {
+            input: "$trips",
+            initialValue: 0,
+            in: { $sum: ["$$value", "$$this.price"] }
+          }
+        }
+      }
+    }]).exec(function (err, agg_res) {
+      if (err) {
+        res.send(err);
+      } else {
+        // Filter by those who pass the given condition
+        agg_res = agg_res.filter(function (agg_res) { return eval("agg_res.money".concat(operator, money)); });
+        res.json(agg_res);
+      }
+    });
 }
