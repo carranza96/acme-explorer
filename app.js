@@ -46,8 +46,7 @@ routesDataWareHouse(app);
 
 run().then(function () {
   /*We will watch all connections which alter the DataWareHouse and re-calculate it if any of them changes. 
-  I don't think this is a good practice if our system has a high volume of operations.
-*/
+  I don't think this is a good practice if our system has a high volume of operations.*/
   Actor.watch().
     on('change', function (data) {
       console.log(new Date(), "Actor changed, updating DataWarehouse...");
