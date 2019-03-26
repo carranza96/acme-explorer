@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b5e08086-614f-4f0e-8a72-a1d127f87d2b",
+		"_postman_id": "e4541a52-bf47-4084-878d-1240d6aaf7fb",
 		"name": "Acme-explorer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -85,6 +85,22 @@
 								}
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Actors EXPLORER computeCube",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": ""
+						},
+						"description": "Calculates the cube specified for A functional requirements."
 					},
 					"response": []
 				},
@@ -1686,7 +1702,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://localhost:8080/v1/store/insertMany?dbURL=mongodb://myUser:myUserPassword@localhost:27017/ACME-Explorer&mongooseModel=Trip&sourceFile=/tmp/ACME-Explorer.trips.fs.json\n",
+							"raw": "https://localhost:8080/v1/store/insertMany?dbURL=mongodb://myUser:myUserPassword@localhost:27017/ACME-Explorer&mongooseModel=Trip&sourceFile=/tmp/ACME-Explorer.trips.fs.json",
 							"protocol": "https",
 							"host": [
 								"localhost"
