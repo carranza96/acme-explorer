@@ -26,6 +26,9 @@ var express = require('express'),
     cert: fs.readFileSync('./keys/server.cert')
   };
 
+// Needed for artillery tests to run against HTTPS, should be removed during production!
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
 var mongoDBPass = process.env.mongoDBPass || "myUserPassword";

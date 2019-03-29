@@ -1,0 +1,34 @@
+config:
+  target: "https://localhost:8080/v1"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+  variables:
+    period_intervals:
+      - ["Y01", "Y02", "Y03"]
+      - ["M01", "M03", "M36"]
+
+scenarios:
+  - name: "Explore all avaliable trips and choose one"
+    flow:
+      - get:
+          url: "/trips"
+          capture:
+            json: "$.results[0].id"
+            as: "id"
+      - think: 3
+      - get:
+          url: "/trips/{{ id }}"
+
+  - name: "List explorers and perform a cube computation over different period intervals"
+    flow:
+        - get:
+            url: "/actors?role=EXPLORER"
+            capture:
+              json: "$.results[0].id"
+              as: "explorer_id"
+        - loop:
+          - get:
+              url: "/actors/computeCube?explorerId={{ explorer_id }}&period={{ $loopElement }}"
+          over: period_intervals
+
