@@ -29,7 +29,6 @@ sponsorshipSchema.index({sponsor:1, paid:1})
 // VALIDATION
 
   // Check if sponsor is valid
-
   sponsorshipSchema.path('sponsor').validate(
     {
        validator: function (value){

@@ -40,13 +40,9 @@ var finderSchema = new Schema({
   }, { strict: false } )
 
 
-
 finderSchema.index({explorer:1})
 finderSchema.index({keyWord:"text"})
 finderSchema.index({lastUpdate:1})
-
-
-
 
 // VALIDATION
 

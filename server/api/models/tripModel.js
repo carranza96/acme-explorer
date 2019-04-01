@@ -87,9 +87,7 @@ tripSchema.index({startDate:-1, endDate:-1});
 tripSchema.index({ price: 1 });
 tripSchema.index({manager: 1});
 
-
 // Validation
-
 tripSchema.path('endDate').validate(async function(value){
     if(this._update){
         if (this._update.startDate){
@@ -142,8 +140,6 @@ tripSchema.path('startDate').validate( function(value){
 },'Start date must be before end date')
 
 
-
-
 // Check if manager is valid
 tripSchema.path('manager').validate(
 {
@@ -169,9 +165,6 @@ tripSchema.path('manager').validate(
       });
     }
  , message: function(props) { return props.reason.message; }} );
-
-
-
 
 
 // Check if sponsorships are valid

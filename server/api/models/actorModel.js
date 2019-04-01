@@ -52,7 +52,7 @@ var actorSchema = new Schema({
   },
 }, { strict: false });
 
-/**The strict option makes it possible to ensure that values added
+/** The strict option makes it possible to ensure that values added
  *  to our model instance that were not specified in our schema do
  *  not get saved to the db. */
 

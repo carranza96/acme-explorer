@@ -27,7 +27,7 @@ var express = require('express'),
   };
 
 // Needed for artillery tests to run against HTTPS, should be removed during production!
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
 // MongoDB URI building
 var mongoDBUser = process.env.mongoDBUser || "myUser";
@@ -82,7 +82,6 @@ var routesLogin = require('./api/routes/loginRoutes');
 var routesStore = require('./api/routes/storeRoutes');
 
 
-
 routesActors(app);
 routesTrip(app);
 routesApplication(app);
@@ -92,8 +91,6 @@ routesConfig(app);
 routesDataWareHouse(app);
 routesLogin(app);
 routesStore(app);
-
-
 
 
 console.log("Connecting DB to: " + mongoDBURI);
@@ -110,7 +107,7 @@ mongoose.connection.on("error", function (err, conn) {
     console.error("DB init error " + err);
 });
 
-
+// Initialize datawarehouse job
 DataWareHouseTools.createDataWareHouseJob();
 
 // Initialize config and cache cleaner Job

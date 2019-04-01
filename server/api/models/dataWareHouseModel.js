@@ -61,8 +61,7 @@ var DataWareHouseSchema = new mongoose.Schema({
 
 }, { strict: false });
 
-
-
+// So that we can query the last saved element fast
 DataWareHouseSchema.index({ computationMoment: -1 });
 
 module.exports = mongoose.model('DataWareHouse', DataWareHouseSchema);

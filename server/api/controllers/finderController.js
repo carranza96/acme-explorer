@@ -4,11 +4,9 @@ var mongoose = require('mongoose'),
     Finder = mongoose.model('Finder'),
     Trip = mongoose.model('Trip'),
     Config = mongoose.model('Config');
-
-
 /** ---------------- */
-/** Cache cleaner */
 
+/** Cache cleaner */
 
 var CronJob = require('cron').CronJob;
 var CronTime = require('cron').CronTime;
@@ -38,7 +36,9 @@ function createCacheCleanerJob(){
             var MS_PER_MINUTE = 60000;
             var lastValidDate = new Date(Date.now() - maxCacheTime * MS_PER_MINUTE);
 
+            // If lastUpdate <= lastValidDate according to cache, then we should delete cached results
             var query = {lastUpdate: {$lte: lastValidDate}}
+            // Return the document after updates are applied with option new:true
             Finder.findOneAndUpdate(query, {$set: {"results":[]}}, {new:true, runValidators:true}, function (err, finder) {
                 if (err) {
                     if (err.name == 'ValidationError') {
