@@ -23,7 +23,7 @@
     "cron": "^1.6.0",
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
-    "mongoose": "^5.4.8",
+    "mongoose": "^5.7.5",
     "nanoid": "^2.0.1"
   }
 }
