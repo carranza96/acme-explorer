@@ -7,7 +7,7 @@
     "doc": "doc"
   },
   "dependencies": {
-    "bcrypt": "^3.0.4",
+    "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "cron": "^1.6.0",
     "dateformat": "^3.0.3",
