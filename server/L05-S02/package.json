@@ -24,6 +24,6 @@
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.8",
-    "nanoid": "^2.0.1"
+    "nanoid": "^3.1.31"
   }
 }
