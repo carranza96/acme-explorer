@@ -22,7 +22,7 @@
     "body-parser": "^1.18.3",
     "cron": "^1.6.0",
     "dateformat": "^3.0.3",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "mongoose": "^5.4.8",
     "nanoid": "^2.0.1"
   }
